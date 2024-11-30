@@ -33,7 +33,6 @@ const routes: Routes = [
       import('./components/user/user.module').then((m) => m.UserModule),
     canActivate: [authGuard],
   },
-  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

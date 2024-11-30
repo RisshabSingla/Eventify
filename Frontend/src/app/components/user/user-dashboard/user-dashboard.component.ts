@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -14,7 +15,7 @@ export class UserDashboardComponent implements OnInit {
   // Boolean to check if the screen is small
   isSmallScreen: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.currentRole = this.authService.getCurrentUserRole();
