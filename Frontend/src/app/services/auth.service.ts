@@ -22,7 +22,12 @@ export class AuthService {
 
   private currentUser: { email: string; role: string } | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser = JSON.parse(storedUser);
+    }
+  }
 
   // Login with email
   login(email: string, password: string): boolean {
@@ -31,6 +36,7 @@ export class AuthService {
     );
     if (user) {
       this.currentUser = { email: user.email, role: user.role };
+      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       this.router.navigate([user.role === 'admin' ? '/admin' : '/user']);
       return true;
     }
@@ -53,6 +59,8 @@ export class AuthService {
     this.currentUser = { email, role };
     console.log('User registered successfully:', name);
 
+    // Store the user data in local storage
+    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
     this.router.navigate([role === 'admin' ? '/admin' : '/user']);
     return 'Registration successful';
   }
@@ -60,6 +68,8 @@ export class AuthService {
   // Logout
   logout(): void {
     this.currentUser = null;
+    // Remove user data from local storage
+    localStorage.removeItem('currentUser');
     this.router.navigate(['/auth/login']);
   }
 
