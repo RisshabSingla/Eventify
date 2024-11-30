@@ -42,11 +42,10 @@ export class AuthService {
     email: string,
     password: string,
     role: 'admin' | 'user'
-  ): boolean {
+  ): string {
     const userExists = this.users.some((u) => u.email === email);
     if (userExists) {
-      console.log('User already exists with this email');
-      return false;
+      return 'User already exists with this email';
     }
 
     this.users.push({ name, email, password, role });
@@ -55,7 +54,7 @@ export class AuthService {
     this.navbarService.setRole(role);
     this.router.navigate([role === 'admin' ? '/admin' : '/user']);
 
-    return true;
+    return 'Registration successful';
   }
 
   // Logout

@@ -12,19 +12,27 @@ export class RegisterComponent {
   password: string = '';
   role: 'admin' | 'user' = 'user';
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
   register() {
-    const isRegistered = this.authService.register(
+    const result = this.authService.register(
       this.name,
       this.email,
       this.password,
       this.role
     );
 
-    if (!isRegistered) {
-      this.errorMessage = 'User already exists with this email.';
+    if (result === 'User already exists with this email') {
+      this.errorMessage = result;
+      this.successMessage = '';
+    } else if (result === 'Registration successful') {
+      this.successMessage = result;
+      this.errorMessage = '';
+    } else {
+      this.errorMessage = 'Registration failed, please try again.';
+      this.successMessage = '';
     }
   }
 }
