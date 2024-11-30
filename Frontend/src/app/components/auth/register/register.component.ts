@@ -19,7 +19,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     const currentRole = this.authService.getCurrentUserRole();
-    if (currentRole) {
+    if (currentRole !== 'guest') {
       this.router.navigate([currentRole === 'admin' ? '/admin' : '/user']);
     }
   }

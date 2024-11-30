@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavbarService } from './navbar.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +22,7 @@ export class AuthService {
 
   private currentUser: { email: string; role: string } | null = null;
 
-  constructor(private router: Router, private navbarService: NavbarService) {}
+  constructor(private router: Router) {}
 
   // Login with email
   login(email: string, password: string): boolean {
@@ -32,7 +31,6 @@ export class AuthService {
     );
     if (user) {
       this.currentUser = { email: user.email, role: user.role };
-      this.navbarService.setRole(user.role as 'admin' | 'user');
       this.router.navigate([user.role === 'admin' ? '/admin' : '/user']);
       return true;
     }
@@ -55,22 +53,21 @@ export class AuthService {
     this.currentUser = { email, role };
     console.log('User registered successfully:', name);
 
-    this.navbarService.setRole(role);
     this.router.navigate([role === 'admin' ? '/admin' : '/user']);
-
     return 'Registration successful';
   }
 
   // Logout
   logout(): void {
-    this.navbarService.setRole('guest');
     this.currentUser = null;
     this.router.navigate(['/auth/login']);
   }
 
   // Get the current logged-in user's role
-  getCurrentUserRole(): string | null {
-    return this.currentUser ? this.currentUser.role : null;
+  getCurrentUserRole(): 'admin' | 'user' | 'guest' {
+    return this.currentUser
+      ? (this.currentUser.role as 'admin' | 'user' | 'guest')
+      : 'guest';
   }
 
   // Reset password by email

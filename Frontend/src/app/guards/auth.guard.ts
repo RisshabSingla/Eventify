@@ -5,24 +5,26 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { NavbarService } from '../services/navbar.service';
+
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class authGuard implements CanActivate {
-  constructor(private navbarService: NavbarService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const userRole = this.navbarService.getRole();
+    const userRole = this.authService.getCurrentUserRole();
+    console.log('User Role:', userRole);
 
-    if (userRole !== 'guest') {
+    if (userRole && userRole !== 'guest') {
       return true;
-    } else {
-      this.router.navigate(['/auth/login']);
-      return false;
     }
+
+    this.router.navigate(['/auth/login']);
+    return false;
   }
 }

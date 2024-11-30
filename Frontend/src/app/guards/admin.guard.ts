@@ -5,24 +5,24 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { NavbarService } from '../services/navbar.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class adminGuard implements CanActivate {
-  constructor(private navbarService: NavbarService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const userRole = this.navbarService.getRole();
+    const userRole = this.authService.getCurrentUserRole();
 
     if (userRole === 'admin') {
       return true;
     } else {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/auth/register']);
       return false;
     }
   }

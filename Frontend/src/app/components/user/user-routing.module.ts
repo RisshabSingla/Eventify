@@ -3,7 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 const routes: Routes = [
-  { path: '', children: [{ path: '', component: UserDashboardComponent }] },
+  {
+    path: '',
+    component: UserDashboardComponent,
+    children: [
+      {
+        path: 'event',
+        loadChildren: () =>
+          import('../events/events.module').then((m) => m.EventsModule),
+      },
+    ],
+  },
 ];
 
 @NgModule({

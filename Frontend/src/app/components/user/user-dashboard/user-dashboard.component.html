@@ -8,16 +8,6 @@
   >
     <!-- Sidebar Menu -->
     <div class="flex flex-col space-y-4">
-      <!-- Close button (cross) -->
-      <button
-        class="md:hidden absolute top-4 right-4 text-white"
-        (click)="toggleSidebar()"
-      >
-        <i class="fa" [ngClass]="isSidebarOpen ? 'fa-times' : 'fa-bars'"></i>
-      </button>
-
-      <!-- Sidebar Logo -->
-
       <!-- Dashboard Link -->
       <button
         (click)="selectSection('dashboard')"
@@ -90,6 +80,8 @@
 
   <!-- Main Content -->
   <div class="flex-grow p-6 bg-gray-100 ml-0">
+    <router-outlet />
+
     <div *ngIf="selectedSection === 'dashboard'">
       <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
       <p>Welcome to your dashboard!</p>

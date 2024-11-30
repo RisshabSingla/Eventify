@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
-import { NavbarService } from '../../../services/navbar.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -15,13 +14,10 @@ export class UserDashboardComponent implements OnInit {
   // Boolean to check if the screen is small
   isSmallScreen: boolean = false;
 
-  constructor(
-    private authService: AuthService,
-    private navbarService: NavbarService
-  ) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.currentRole = this.navbarService.getRole();
+    this.currentRole = this.authService.getCurrentUserRole();
     this.checkScreenSize();
   }
 
@@ -49,6 +45,5 @@ export class UserDashboardComponent implements OnInit {
   // Logout function
   logout() {
     this.authService.logout();
-    this.navbarService.setRole('guest');
   }
 }
