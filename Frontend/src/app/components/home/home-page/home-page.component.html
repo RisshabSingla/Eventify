@@ -1,1 +1,377 @@
-<p>home-page works!</p>
+<div class="bg-gray-800 text-white font-sans">
+  <!-- Hero Section -->
+  <header
+    class="flex flex-col justify-center items-center py-20 bg-gray-800 text-white bg-cover bg-center"
+  >
+    <h1 class="text-5xl font-bold mb-4 text-center text-white">
+      Welcome to the Event Management System
+    </h1>
+    <p class="text-xl mb-6 text-center text-white">
+      Effortlessly manage events from creation to attendee feedback in one
+      platform.
+    </p>
+    <a
+      routerLink="/auth/register"
+      class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300 shadow-lg"
+    >
+      Get Started
+    </a>
+  </header>
+
+  <!-- Features Section -->
+  <section id="features" class="bg-gray-800 py-20">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-semibold text-white mb-10">Key Features</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">Event Creation</h3>
+          <p class="text-gray-300">
+            Admins can create, edit, or cancel events with detailed information,
+            deadlines, and more. Make your event management hassle-free!
+          </p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">
+            User Registration
+          </h3>
+          <p class="text-gray-300">
+            Allow users to browse and register for events. We ensure
+            registration limits are enforced to avoid overcrowding and maintain
+            quality.
+          </p>
+        </div>
+        <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">
+            Attendance Tracking
+          </h3>
+          <p class="text-gray-300">
+            Track attendee participation through manual or QR code scanning,
+            generating detailed reports for future planning.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Event Categories Section -->
+  <section class="py-20 bg-gray-700 text-white">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-semibold text-white mb-10">Event Categories</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">Conferences</h3>
+          <img
+            src="https://picsum.photos/400/300?random=5"
+            alt="Conference"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <p class="text-gray-300">
+            Discover a variety of conferences across different industries and
+            fields, connecting you with top-tier professionals.
+          </p>
+        </div>
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">Workshops</h3>
+          <img
+            src="https://picsum.photos/400/300?random=6"
+            alt="Workshop"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <p class="text-gray-300">
+            Enhance your skills in hands-on workshops designed for deep learning
+            and practical experience in your chosen field.
+          </p>
+        </div>
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <h3 class="text-2xl font-semibold text-white mb-4">Webinars</h3>
+          <img
+            src="https://picsum.photos/400/300?random=7"
+            alt="Webinar"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <p class="text-gray-300">
+            Join live webinars from industry leaders and thought influencers in
+            a wide range of topics, available from the comfort of your home.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">What Our Users Say</h2>
+    <div
+      class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12"
+    >
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <img
+          src="https://picsum.photos/100/100"
+          alt="User 1"
+          class="w-20 h-20 rounded-full mx-auto mb-4"
+        />
+        <p class="text-gray-300 mb-4">
+          "This platform has transformed the way we manage our events. It's easy
+          to use, and the features are intuitive!"
+        </p>
+        <p class="text-white font-semibold">John Doe</p>
+        <p class="text-gray-400">Event Organizer</p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <img
+          src="https://picsum.photos/100/100"
+          alt="User 2"
+          class="w-20 h-20 rounded-full mx-auto mb-4"
+        />
+        <p class="text-gray-300 mb-4">
+          "A user-friendly platform with all the tools I need to stay on top of
+          event registrations and attendees. Love it!"
+        </p>
+        <p class="text-white font-semibold">Jane Smith</p>
+        <p class="text-gray-400">Attendee</p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <img
+          src="https://picsum.photos/100/100"
+          alt="User 3"
+          class="w-20 h-20 rounded-full mx-auto mb-4"
+        />
+        <p class="text-gray-300 mb-4">
+          "Managing events has never been easier. The interface is clean, and
+          everything is just a few clicks away."
+        </p>
+        <p class="text-white font-semibold">Michael Johnson</p>
+        <p class="text-gray-400">Admin</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upcoming Events Section -->
+  <section class="py-20 bg-gray-700 text-white">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-semibold text-white mb-10">Upcoming Events</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <img
+            src="https://picsum.photos/400/250"
+            alt="Tech Conference"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <h3 class="text-2xl font-semibold mb-4">Tech Conference 2024</h3>
+          <p class="text-gray-300">
+            Join us for a full day of innovation and networking with industry
+            leaders.
+          </p>
+          <p class="text-white font-semibold mt-4">Date: March 22, 2024</p>
+        </div>
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <img
+            src="https://picsum.photos/400/250"
+            alt="Web Development Workshop"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <h3 class="text-2xl font-semibold mb-4">Workshop: Web Development</h3>
+          <p class="text-gray-300">
+            Enhance your skills in web development with hands-on training from
+            experts.
+          </p>
+          <p class="text-white font-semibold mt-4">Date: April 15, 2024</p>
+        </div>
+        <div class="bg-gray-600 p-6 rounded-lg shadow-lg">
+          <img
+            src="https://picsum.photos/400/250"
+            alt="Marketing Webinar"
+            class="w-full h-48 object-cover rounded-lg mb-4"
+          />
+          <h3 class="text-2xl font-semibold mb-4">
+            Online Webinar: Marketing Strategies
+          </h3>
+          <p class="text-gray-300">
+            Discover new marketing strategies and tactics for the digital age.
+          </p>
+          <p class="text-white font-semibold mt-4">Date: May 10, 2024</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">
+      Frequently Asked Questions
+    </h2>
+    <div
+      class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-12"
+    >
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold text-white mb-4">
+          How do I create an event?
+        </h3>
+        <p class="text-gray-300">
+          Once you're logged in, simply click on the "Create Event" button, fill
+          in the event details, and publish your event.
+        </p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold text-white mb-4">
+          How do I register for an event?
+        </h3>
+        <p class="text-gray-300">
+          Browse through upcoming events, select one, and click on the
+          "Register" button to sign up.
+        </p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold text-white mb-4">
+          Can I cancel my event registration?
+        </h3>
+        <p class="text-gray-300">
+          Yes, you can cancel your registration through the "My Events" section
+          in your profile.
+        </p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold text-white mb-4">
+          What payment options are available?
+        </h3>
+        <p class="text-gray-300">
+          We currently support payments through PayPal, Stripe, and direct bank
+          transfer for event registrations.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners Section -->
+  <section class="py-20 bg-gray-700 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">
+      Our Trusted Partners
+    </h2>
+    <div
+      class="container mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-12"
+    >
+      <img
+        src="https://picsum.photos/150?random=1"
+        alt="Partner 1"
+        class="max-w-full h-auto object-contain"
+      />
+      <img
+        src="https://picsum.photos/150?random=2"
+        alt="Partner 2"
+        class="max-w-full h-auto object-contain"
+      />
+      <img
+        src="https://picsum.photos/150?random=3"
+        alt="Partner 3"
+        class="max-w-full h-auto object-contain"
+      />
+      <img
+        src="https://picsum.photos/150?random=4"
+        alt="Partner 4"
+        class="max-w-full h-auto object-contain"
+      />
+    </div>
+  </section>
+
+  <!-- Why Choose Us Section -->
+  <section class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">Why Choose Us?</h2>
+    <div
+      class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12"
+    >
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold text-white mb-4">
+          Seamless Integration
+        </h3>
+        <p class="text-gray-300">
+          Our platform integrates smoothly with various tools to make event
+          management as easy as possible.
+        </p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold text-white mb-4">
+          Real-Time Updates
+        </h3>
+        <p class="text-gray-300">
+          Stay updated in real-time with notifications for event changes,
+          registrations, and feedback.
+        </p>
+      </div>
+      <div class="bg-gray-700 p-6 rounded-lg shadow-lg">
+        <h3 class="text-2xl font-semibold text-white mb-4">24/7 Support</h3>
+        <p class="text-gray-300">
+          Our dedicated support team is available round the clock to assist you
+          with any queries.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Engagement Section -->
+  <section class="py-20 bg-gray-700 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">Join the Community</h2>
+    <div class="container mx-auto">
+      <p class="text-lg text-gray-300 mb-6">
+        Be part of our growing community of event organizers, attendees, and
+        professionals. Share your experiences and connect with others on social
+        media.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section class="py-20 bg-gray-800 text-center">
+    <h2 class="text-4xl font-semibold text-white mb-10">Contact Us</h2>
+    <div class="container mx-auto">
+      <p class="text-lg text-gray-300 mb-6">
+        Have questions or need assistance? We're here to help!
+      </p>
+      <form
+        action="https://usebasin.com/f/a51969709215"
+        method="POST"
+        class="max-w-xl mx-auto bg-gray-700 p-6 rounded-lg shadow-lg"
+      >
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          class="w-full p-3 mb-4 bg-gray-600 text-white rounded-lg"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          class="w-full p-3 mb-4 bg-gray-600 text-white rounded-lg"
+          required
+        />
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          class="w-full p-3 mb-4 bg-gray-600 text-white rounded-lg"
+          rows="4"
+          required
+        ></textarea>
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300"
+        >
+          Send Message
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-6 text-center">
+    <div class="container mx-auto mb-4">
+      <ul class="flex justify-center space-x-6">
+        <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+        <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+        <li><a href="#" class="hover:text-gray-400">Help</a></li>
+        <li><a href="#" class="hover:text-gray-400">Contact</a></li>
+      </ul>
+    </div>
+    <p>&copy; 2024 Event Management System | All Rights Reserved</p>
+  </footer>
+</div>

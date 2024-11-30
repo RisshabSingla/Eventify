@@ -1,1 +1,47 @@
-<p>home-nav-bar works!</p>
+<nav class="bg-blue-600 text-white shadow-lg">
+  <div class="container mx-auto flex justify-between items-center py-4 px-6">
+    <!-- Logo -->
+    <a routerLink="/" class="text-3xl font-bold hover:text-gray-200"
+      >Eventify</a
+    >
+
+    <!-- Hamburger Menu -->
+    <button
+      class="md:hidden focus:outline-none text-2xl"
+      (click)="isMenuOpen = !isMenuOpen"
+    >
+      <i [ngClass]="isMenuOpen ? 'fa fa-times' : 'fa fa-bars'"></i>
+    </button>
+
+    <!-- Full Navbar Links (hidden on small screens) -->
+    <ul class="hidden md:flex space-x-8 text-lg">
+      <li><a routerLink="/" class="hover:text-gray-200">Home</a></li>
+      <li><a routerLink="/events" class="hover:text-gray-200">Events</a></li>
+      <li><a routerLink="/auth/login" class="hover:text-gray-200">Login</a></li>
+      <li>
+        <a routerLink="/auth/register" class="hover:text-gray-200">Register</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Dropdown Menu for Small Screens -->
+  <div
+    *ngIf="isMenuOpen"
+    class="bg-blue-700 text-center py-4 md:hidden transition-all duration-300"
+  >
+    <ul class="space-y-4 text-lg">
+      <li><a routerLink="/" class="block hover:text-gray-200">Home</a></li>
+      <li>
+        <a routerLink="/events" class="block hover:text-gray-200">Events</a>
+      </li>
+      <li>
+        <a routerLink="/auth/login" class="block hover:text-gray-200">Login</a>
+      </li>
+      <li>
+        <a routerLink="/auth/register" class="block hover:text-gray-200"
+          >Register</a
+        >
+      </li>
+    </ul>
+  </div>
+</nav>
