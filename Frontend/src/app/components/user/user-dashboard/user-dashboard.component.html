@@ -1,1 +1,136 @@
-<p>user-dashboard works!</p>
+<div class="min-h-screen flex bg-gray-100">
+  <!-- Sidebar -->
+  <div
+    class="sidebar bg-blue-600 text-white p-4 w-64 flex-shrink-0 transition-transform duration-300 ease-in-out"
+    [class.hidden]="!isSidebarOpen && isSmallScreen"
+    [class.flex]="!isSmallScreen"
+    [class.hidden]="isSmallScreen && !isSidebarOpen"
+  >
+    <!-- Sidebar Menu -->
+    <div class="flex flex-col space-y-4">
+      <!-- Close button (cross) -->
+      <button
+        class="md:hidden absolute top-4 right-4 text-white"
+        (click)="toggleSidebar()"
+      >
+        <i class="fa" [ngClass]="isSidebarOpen ? 'fa-times' : 'fa-bars'"></i>
+      </button>
+
+      <!-- Sidebar Logo -->
+
+      <!-- Dashboard Link -->
+      <button
+        (click)="selectSection('dashboard')"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-tachometer-alt text-xl"></i>
+        <span class="text-lg">Dashboard</span>
+      </button>
+
+      <!-- Events Section -->
+      <div class="space-y-2">
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('explore')"
+        >
+          <i class="fa fa-search text-xl"></i>
+          <span class="text-lg">Explore</span>
+        </button>
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('registered')"
+        >
+          <i class="fa fa-list-alt text-xl"></i>
+          <span class="text-lg">Registered</span>
+        </button>
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('upcoming')"
+        >
+          <i class="fa fa-calendar-check-o text-xl"></i>
+          <span class="text-lg">Upcoming</span>
+        </button>
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('qrCode')"
+        >
+          <i class="fa fa-qrcode text-xl"></i>
+          <span class="text-lg">QR Code</span>
+        </button>
+      </div>
+
+      <!-- Feedback Section -->
+      <div class="space-y-2">
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('giveFeedback')"
+        >
+          <i class="fa fa-comment-o text-xl"></i>
+          <span class="text-lg">Give Feedback</span>
+        </button>
+        <button
+          class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+          (click)="selectSection('viewFeedback')"
+        >
+          <i class="fa fa-eye text-xl"></i>
+          <span class="text-lg">View Feedback</span>
+        </button>
+      </div>
+
+      <!-- Logout Button -->
+      <button
+        (click)="logout()"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 mt-4 w-full text-left"
+      >
+        <i class="fa fa-sign-out-alt text-xl"></i>
+        <span class="text-lg">Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow p-6 bg-gray-100 ml-0">
+    <div *ngIf="selectedSection === 'dashboard'">
+      <h2 class="text-2xl font-bold mb-4">Dashboard</h2>
+      <p>Welcome to your dashboard!</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'explore'">
+      <h2 class="text-2xl font-bold mb-4">Explore Events</h2>
+      <p>Explore the events happening around you.</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'registered'">
+      <h2 class="text-2xl font-bold mb-4">Registered Events</h2>
+      <p>Here are the events you've registered for.</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'upcoming'">
+      <h2 class="text-2xl font-bold mb-4">Upcoming Events</h2>
+      <p>These are the upcoming events you can attend.</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'qrCode'">
+      <h2 class="text-2xl font-bold mb-4">QR Code</h2>
+      <p>Here is your event QR code for check-in.</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'giveFeedback'">
+      <h2 class="text-2xl font-bold mb-4">Give Feedback</h2>
+      <p>Provide your valuable feedback for the events you've attended.</p>
+    </div>
+
+    <div *ngIf="selectedSection === 'viewFeedback'">
+      <h2 class="text-2xl font-bold mb-4">View Given Feedback</h2>
+      <p>Here are the feedbacks you've provided for events.</p>
+    </div>
+  </div>
+
+  <!-- Mobile Sidebar Toggle Button -->
+  <button
+    class="md:hidden fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full"
+    (click)="toggleSidebar()"
+  >
+    <i class="fa" [ngClass]="isSidebarOpen ? 'fa-times' : 'fa-bars'"></i>
+  </button>
+</div>

@@ -65,7 +65,7 @@ export class AuthService {
   logout(): void {
     this.navbarService.setRole('guest');
     this.currentUser = null;
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // Get the current logged-in user's role

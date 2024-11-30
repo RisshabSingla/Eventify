@@ -1,1 +1,58 @@
-<p>user-nav-bar works!</p>
+<nav class="bg-blue-600 text-white shadow-lg">
+  <div class="container mx-auto flex justify-between items-center py-4 px-6">
+    <a routerLink="/" class="text-3xl font-bold hover:text-gray-200"
+      >Eventify</a
+    >
+
+    <!-- Hamburger Menu -->
+    <button
+      class="md:hidden focus:outline-none text-2xl"
+      (click)="toggleSidebar()"
+    >
+      <i [ngClass]="isMenuOpen ? 'fa fa-times' : 'fa fa-bars'"></i>
+    </button>
+
+    <!-- Full Navbar Links (hidden on small screens) -->
+    <ul class="hidden md:flex items-center space-x-8 text-lg">
+      <!-- Profile Image -->
+      <li class="flex items-center space-x-2">
+        <img
+          src="https://via.placeholder.com/40"
+          alt="Profile"
+          class="rounded-full w-10 h-10"
+        />
+      </li>
+
+      <!-- Logout Button -->
+      <li>
+        <button (click)="logout()" class="text-white hover:text-gray-200">
+          Logout
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Dropdown Menu for Small Screens -->
+  <div
+    *ngIf="isMenuOpen"
+    class="bg-blue-700 text-center py-4 md:hidden transition-all duration-300"
+  >
+    <ul class="space-y-4 text-lg">
+      <!-- Profile Image -->
+      <li>
+        <img
+          src="https://via.placeholder.com/40"
+          alt="Profile"
+          class="rounded-full w-10 h-10 mx-auto"
+        />
+      </li>
+
+      <!-- Logout Button -->
+      <li>
+        <button (click)="logout()" class="text-white hover:text-gray-200">
+          Logout
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
