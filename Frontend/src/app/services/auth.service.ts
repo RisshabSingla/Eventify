@@ -14,7 +14,6 @@ export class AuthService {
   constructor(private router: Router, private navbarService: NavbarService) {}
 
   login(username: string, password: string): boolean {
-    console.log(username, password);
     const user = this.users.find(
       (u) => u.username === username && u.password === password
     );
@@ -24,6 +23,26 @@ export class AuthService {
       return true;
     }
     return false;
+  }
+
+  register(
+    username: string,
+    password: string,
+    role: 'admin' | 'user'
+  ): boolean {
+    const userExists = this.users.some((u) => u.username === username);
+    if (userExists) {
+      console.log('User already exists');
+      return false;
+    }
+
+    this.users.push({ username, password, role });
+    console.log('User registered successfully:', username);
+
+    this.navbarService.setRole(role);
+    this.router.navigate([role === 'admin' ? '/admin' : '/user']);
+
+    return true;
   }
 
   logout(): void {
