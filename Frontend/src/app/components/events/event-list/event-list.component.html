@@ -1,1 +1,43 @@
-<p>event-list works!</p>
+<div class="bg-gray-100 min-h-screen">
+  <!-- Page Header -->
+  <header class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-4xl font-bold">Upcoming Events in India</h1>
+      <p class="text-lg mt-2">
+        Mark your calendars for exciting events across the country!
+      </p>
+    </div>
+  </header>
+
+  <!-- Events Grid -->
+  <main class="container mx-auto px-4 py-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Loop through events -->
+      <div
+        *ngFor="let event of events"
+        class="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer"
+        (click)="navigateToEvent(event.id)"
+      >
+        <img
+          [src]="event.image"
+          [alt]="event.title"
+          class="w-full h-48 object-cover"
+        />
+        <div class="p-6">
+          <h3 class="text-2xl font-semibold mb-2">{{ event.title }}</h3>
+          <!-- Description with min height for 2 lines -->
+          <p class="text-gray-600 min-h-[3rem] line-clamp-2">
+            {{ event.description }}
+          </p>
+          <p class="text-sm text-gray-500 mt-4">📅 Date: {{ event.date }}</p>
+          <p class="text-sm text-gray-500">📍 Location: {{ event.location }}</p>
+          <a
+            class="block bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg mt-4 transition duration-300"
+          >
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
