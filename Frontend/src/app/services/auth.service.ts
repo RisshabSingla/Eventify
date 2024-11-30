@@ -21,6 +21,8 @@ export class AuthService {
     },
   ];
 
+  private currentUser: { email: string; role: string } | null = null;
+
   constructor(private router: Router, private navbarService: NavbarService) {}
 
   // Login with email
@@ -29,6 +31,7 @@ export class AuthService {
       (u) => u.email === email && u.password === password
     );
     if (user) {
+      this.currentUser = { email: user.email, role: user.role };
       this.navbarService.setRole(user.role as 'admin' | 'user');
       this.router.navigate([user.role === 'admin' ? '/admin' : '/user']);
       return true;
@@ -49,6 +52,7 @@ export class AuthService {
     }
 
     this.users.push({ name, email, password, role });
+    this.currentUser = { email, role };
     console.log('User registered successfully:', name);
 
     this.navbarService.setRole(role);
@@ -60,7 +64,13 @@ export class AuthService {
   // Logout
   logout(): void {
     this.navbarService.setRole('guest');
+    this.currentUser = null;
     this.router.navigate(['/login']);
+  }
+
+  // Get the current logged-in user's role
+  getCurrentUserRole(): string | null {
+    return this.currentUser ? this.currentUser.role : null;
   }
 
   // Reset password by email
