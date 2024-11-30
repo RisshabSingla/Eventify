@@ -7,20 +7,17 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
   errorMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
-  login(): void {
-    console.log(this.username, this.password);
-    const isAuthenticated = this.authService.login(
-      this.username,
-      this.password
-    );
+  login() {
+    const isAuthenticated = this.authService.login(this.email, this.password);
+
     if (!isAuthenticated) {
-      this.errorMessage = 'Invalid username or password!';
+      this.errorMessage = 'Invalid email or password. Please try again.';
     }
   }
 }

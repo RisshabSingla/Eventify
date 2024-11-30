@@ -6,24 +6,39 @@
       Create Your Account
     </h2>
     <form (ngSubmit)="register()" class="space-y-6">
-      <!-- Username -->
+      <!-- Name -->
       <div>
-        <label for="username" class="block font-medium text-blue-700">
-          Username
+        <label for="name" class="block text-sm font-medium text-blue-700">
+          Full Name
         </label>
         <input
-          [(ngModel)]="username"
-          name="username"
-          id="username"
+          [(ngModel)]="name"
+          name="name"
+          id="name"
           type="text"
           class="mt-1 block w-full px-4 py-2 border border-blue-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder="Enter your username"
+          placeholder="Enter your full name"
+          required
+        />
+      </div>
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-blue-700">
+          Email
+        </label>
+        <input
+          [(ngModel)]="email"
+          name="email"
+          id="email"
+          type="email"
+          class="mt-1 block w-full px-4 py-2 border border-blue-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          placeholder="Enter your email"
           required
         />
       </div>
       <!-- Password -->
       <div>
-        <label for="password" class="block font-medium text-blue-700">
+        <label for="password" class="block text-sm font-medium text-blue-700">
           Password
         </label>
         <input
@@ -38,7 +53,9 @@
       </div>
       <!-- Role Selection -->
       <div>
-        <label for="role" class="block font-medium text-blue-700"> Role </label>
+        <label for="role" class="block text-sm font-medium text-blue-700">
+          Role
+        </label>
         <select
           [(ngModel)]="role"
           name="role"
@@ -59,13 +76,13 @@
         </button>
       </div>
     </form>
-
-    <div class="mt-6 text-center">
-      <p class="text-sm">
+    <!-- Footer Links -->
+    <div class="mt-4 text-center">
+      <p class="text-sm text-gray-700">
         Already have an account?
         <a
           routerLink="/auth/login"
-          class="font-medium text-blue-700 hover:text-blue-500"
+          class="text-blue-500 font-medium hover:text-blue-700"
         >
           Log in
         </a>

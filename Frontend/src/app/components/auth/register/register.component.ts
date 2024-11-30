@@ -7,26 +7,24 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  username: string = '';
+  name: string = '';
+  email: string = '';
   password: string = '';
   role: 'admin' | 'user' = 'user';
+  errorMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
   register() {
-    if (this.username && this.password) {
-      const success = this.authService.register(
-        this.username,
-        this.password,
-        this.role
-      );
-      if (success) {
-        alert('Registration successful!');
-      } else {
-        alert('Username already exists. Please try another.');
-      }
-    } else {
-      alert('Please fill in all the fields');
+    const isRegistered = this.authService.register(
+      this.name,
+      this.email,
+      this.password,
+      this.role
+    );
+
+    if (!isRegistered) {
+      this.errorMessage = 'User already exists with this email.';
     }
   }
 }
