@@ -8,7 +8,6 @@ import { AdminNavBarComponent } from './components/shared/navbar/admin-nav-bar/a
 import { UserNavBarComponent } from './components/shared/navbar/user-nav-bar/user-nav-bar.component';
 import { HomeNavBarComponent } from './components/shared/navbar/home-nav-bar/home-nav-bar.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,11 +16,8 @@ import { HomeNavBarComponent } from './components/shared/navbar/home-nav-bar/hom
     UserNavBarComponent,
     HomeNavBarComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

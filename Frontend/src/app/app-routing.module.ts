@@ -28,6 +28,11 @@ const routes: Routes = [
       import('./components/admin/admin.module').then((m) => m.AdminModule),
     canActivate: [adminGuard],
   },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('./components/user/user.module').then((m) => m.UserModule),
+  },
   { path: '**', redirectTo: '' },
 ];
 
