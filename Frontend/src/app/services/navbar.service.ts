@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NavbarService {
+  private role: 'admin' | 'user' | 'guest' = 'guest'; 
 
-  constructor() { }
+  setRole(role: 'admin' | 'user' | 'guest'): void {
+    this.role = role;
+  }
+
+  getRole(): 'admin' | 'user' | 'guest' {
+    return this.role;
+  }
 }

@@ -1,1 +1,20 @@
-<router-outlet />
+<div class="flex flex-col h-full justify-between">
+  <header class="text-center">
+    <app-admin-nav-bar
+      *ngIf="navbarService.getRole() === 'admin'"
+    ></app-admin-nav-bar>
+    <app-user-nav-bar
+      *ngIf="navbarService.getRole() === 'user'"
+    ></app-user-nav-bar>
+    <app-home-nav-bar
+      *ngIf="navbarService.getRole() === 'guest'"
+    ></app-home-nav-bar>
+  </header>
+  <main class="flex-1">
+    Hello from "/"
+    <router-outlet></router-outlet>
+  </main>
+  <footer class="text-center">
+    <app-footer *ngIf="navbarService.getRole() === 'guest'" />
+  </footer>
+</div>
