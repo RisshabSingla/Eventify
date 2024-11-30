@@ -7,15 +7,26 @@ import { NavbarService } from './navbar.service';
 })
 export class AuthService {
   private users = [
-    { username: 'admin', password: 'admin123', role: 'admin' },
-    { username: 'user', password: 'user123', role: 'user' },
+    {
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: 'admin123',
+      role: 'admin',
+    },
+    {
+      name: 'Normal User',
+      email: 'user@example.com',
+      password: 'user123',
+      role: 'user',
+    },
   ];
 
   constructor(private router: Router, private navbarService: NavbarService) {}
 
-  login(username: string, password: string): boolean {
+  // Login with email
+  login(email: string, password: string): boolean {
     const user = this.users.find(
-      (u) => u.username === username && u.password === password
+      (u) => u.email === email && u.password === password
     );
     if (user) {
       this.navbarService.setRole(user.role as 'admin' | 'user');
@@ -25,19 +36,21 @@ export class AuthService {
     return false;
   }
 
+  // Register with name, email, password, and role
   register(
-    username: string,
+    name: string,
+    email: string,
     password: string,
     role: 'admin' | 'user'
   ): boolean {
-    const userExists = this.users.some((u) => u.username === username);
+    const userExists = this.users.some((u) => u.email === email);
     if (userExists) {
-      console.log('User already exists');
+      console.log('User already exists with this email');
       return false;
     }
 
-    this.users.push({ username, password, role });
-    console.log('User registered successfully:', username);
+    this.users.push({ name, email, password, role });
+    console.log('User registered successfully:', name);
 
     this.navbarService.setRole(role);
     this.router.navigate([role === 'admin' ? '/admin' : '/user']);
@@ -45,8 +58,22 @@ export class AuthService {
     return true;
   }
 
+  // Logout
   logout(): void {
     this.navbarService.setRole('guest');
     this.router.navigate(['/login']);
+  }
+
+  // Reset password by email
+  resetPassword(email: string): boolean {
+    const user = this.users.find((u) => u.email === email);
+    if (user) {
+      // Simulate sending a reset link
+      console.log(`Reset link sent to ${email}`);
+      return true;
+    } else {
+      console.error('Email not found');
+      return false;
+    }
   }
 }
