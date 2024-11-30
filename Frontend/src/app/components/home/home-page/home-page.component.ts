@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   upcomingEvents = [
     {
       name: 'Tech Conference 2024',
@@ -19,4 +21,16 @@ export class HomePageComponent {
       location: 'San Francisco',
     },
   ];
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    const role = this.authService.getCurrentUserRole();
+    if (role === 'admin') {
+      this.router.navigate(['/admin']);
+    }
+    if (role === 'user') {
+      this.router.navigate(['/user']);
+    }
+  }
 }
