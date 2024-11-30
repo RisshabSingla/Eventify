@@ -18,6 +18,7 @@ const routes: Routes = [
       {
         path: ':id/qr-code',
         component: EventQrCodeComponent,
+        canActivate: [authGuard],
       },
       {
         path: ':id/attendees',
@@ -26,6 +27,7 @@ const routes: Routes = [
       {
         path: ':id/subscribe',
         component: EventSubscribeComponent,
+        canActivate: [authGuard],
       },
     ],
   },
