@@ -3,19 +3,27 @@ import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
-import { AdminEventsComponent } from './admin-events/admin-events.component';
 import { AdminNotificationsComponent } from './admin-notifications/admin-notifications.component';
-
+import { AdminDashboardItemsComponent } from './admin-dashboard-items/admin-dashboard-items.component';
+import { AdminDashboardFeedbackComponent } from './admin-dashboard-feedback/admin-dashboard-feedback.component';
+import { AdminDashboardReportsComponent } from './admin-dashboard-reports/admin-dashboard-reports.component';
+import { AdminDashboardEventManagementComponent } from './admin-dashboard-event-management/admin-dashboard-event-management.component';
+import { AdminDashboardEventAnalyticsComponent } from './admin-dashboard-event-analytics/admin-dashboard-event-analytics.component';
+import { AdminDashboardRegistrationsComponent } from './admin-dashboard-registrations/admin-dashboard-registrations.component';
+import { AdminDashboardAttendanceComponent } from './admin-dashboard-attendance/admin-dashboard-attendance.component';
 
 @NgModule({
   declarations: [
     AdminDashboardComponent,
-    AdminEventsComponent,
-    AdminNotificationsComponent
+    AdminNotificationsComponent,
+    AdminDashboardItemsComponent,
+    AdminDashboardFeedbackComponent,
+    AdminDashboardReportsComponent,
+    AdminDashboardEventManagementComponent,
+    AdminDashboardEventAnalyticsComponent,
+    AdminDashboardRegistrationsComponent,
+    AdminDashboardAttendanceComponent,
   ],
-  imports: [
-    CommonModule,
-    AdminRoutingModule
-  ]
+  imports: [CommonModule, AdminRoutingModule],
 })
-export class AdminModule { }
+export class AdminModule {}

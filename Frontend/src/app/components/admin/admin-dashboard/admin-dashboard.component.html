@@ -1,1 +1,109 @@
-<p>admin-dashboard works!</p>
+<div class="min-h-screen flex bg-gray-100">
+  <!-- Sidebar -->
+  <div
+    class="sidebar bg-blue-600 text-white p-4 w-64 flex-shrink-0 transition-transform duration-300 ease-in-out"
+    [class.hidden]="!isSidebarOpen && isSmallScreen"
+    [class.flex]="!isSmallScreen"
+    [class.hidden]="isSmallScreen && !isSidebarOpen"
+  >
+    <div class="flex flex-col space-y-4">
+      <!-- Admin Dashboard Links -->
+      <button
+        routerLink="/admin"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-home text-xl"></i>
+        <span class="text-lg">Dashboard</span>
+      </button>
+
+      <button
+        routerLink="/admin/event-management"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-calendar text-xl"></i>
+        <span class="text-lg">Event Management</span>
+      </button>
+
+      <button
+        routerLink="/admin/event-analytics"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-line-chart text-xl"></i>
+        <span class="text-lg">Event Analytics</span>
+      </button>
+
+      <button
+        routerLink="/admin/registrations"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-list text-xl"></i>
+        <span class="text-lg">Registrations</span>
+      </button>
+
+      <button
+        routerLink="/admin/attendance"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-check-circle text-xl"></i>
+        <span class="text-lg">Attendance</span>
+      </button>
+
+      <button
+        routerLink="/admin/notifications"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-bell text-xl"></i>
+        <span class="text-lg">Notifications</span>
+      </button>
+
+      <button
+        routerLink="/admin/feedback"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-comments text-xl"></i>
+        <span class="text-lg">Feedback</span>
+      </button>
+
+      <button
+        routerLink="/admin/reports"
+        routerLinkActive="active"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 w-full text-left"
+      >
+        <i class="fa fa-file text-xl"></i>
+        <span class="text-lg">Reports</span>
+      </button>
+
+      <!-- Logout -->
+      <button
+        (click)="logout()"
+        class="flex items-center space-x-4 py-2 px-4 rounded-md hover:bg-blue-700 transition-all duration-300 mt-4 w-full text-left"
+      >
+        <i class="fa fa-sign-out text-xl"></i>
+        <span class="text-lg">Logout</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow p-6 bg-gray-100 ml-0">
+    <!-- Dynamic Heading Section -->
+
+    <!-- Routed Content -->
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Mobile Sidebar Toggle Button -->
+  <button
+    class="md:hidden fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full"
+    (click)="toggleSidebar()"
+  >
+    <i class="fa" [ngClass]="isSidebarOpen ? 'fa-times' : 'fa-bars'"></i>
+  </button>
+</div>
