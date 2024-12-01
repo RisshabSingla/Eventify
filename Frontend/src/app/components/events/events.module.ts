@@ -10,6 +10,9 @@ import { EventSubscribeComponent } from './event-subscribe/event-subscribe.compo
 import { EventAttendanceComponent } from './event-attendance/event-attendance.component';
 import { EventQrCodeComponent } from './event-qr-code/event-qr-code.component';
 import { EventAttendeeListComponent } from './event-attendee-list/event-attendee-list.component';
+import { EventAnalyticsComponent } from './event-analytics/event-analytics.component';
+import { EventFeedbackComponent } from './event-feedback/event-feedback.component';
+import { EventReportComponent } from './event-report/event-report.component';
 
 
 @NgModule({
@@ -21,7 +24,10 @@ import { EventAttendeeListComponent } from './event-attendee-list/event-attendee
     EventSubscribeComponent,
     EventAttendanceComponent,
     EventQrCodeComponent,
-    EventAttendeeListComponent
+    EventAttendeeListComponent,
+    EventAnalyticsComponent,
+    EventFeedbackComponent,
+    EventReportComponent
   ],
   imports: [
     CommonModule,

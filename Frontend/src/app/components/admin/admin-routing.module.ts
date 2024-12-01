@@ -7,10 +7,14 @@ import { EventCreateComponent } from '../events/event-create/event-create.compon
 import { AdminDashboardItemsComponent } from './admin-dashboard-items/admin-dashboard-items.component';
 import { AdminDashboardEventManagementComponent } from './admin-dashboard-event-management/admin-dashboard-event-management.component';
 import { AdminDashboardEventAnalyticsComponent } from './admin-dashboard-event-analytics/admin-dashboard-event-analytics.component';
-import { AdminDashboardRegistrationsComponent } from './admin-dashboard-registrations/admin-dashboard-registrations.component';
 import { AdminDashboardAttendanceComponent } from './admin-dashboard-attendance/admin-dashboard-attendance.component';
 import { AdminDashboardFeedbackComponent } from './admin-dashboard-feedback/admin-dashboard-feedback.component';
 import { AdminDashboardReportsComponent } from './admin-dashboard-reports/admin-dashboard-reports.component';
+import { EventDetailComponent } from '../events/event-detail/event-detail.component';
+import { EventAnalyticsComponent } from '../events/event-analytics/event-analytics.component';
+import { FeedbackViewComponent } from '../feedback/feedback-view/feedback-view.component';
+import { EventFeedbackComponent } from '../events/event-feedback/event-feedback.component';
+import { EventReportComponent } from '../events/event-report/event-report.component';
 
 const routes: Routes = [
   {
@@ -26,42 +30,75 @@ const routes: Routes = [
           },
           {
             path: 'event-management',
-            component: AdminDashboardEventManagementComponent,
+            children: [
+              {
+                path: '',
+                component: AdminDashboardEventManagementComponent,
+              },
+              {
+                path: 'create',
+                component: EventCreateComponent,
+              },
+              {
+                path: ':id',
+                component: EventDetailComponent,
+              },
+            ],
           },
           {
             path: 'event-analytics',
-            component: AdminDashboardEventAnalyticsComponent,
-          },
-          {
-            path: 'registrations',
-            component: AdminDashboardRegistrationsComponent,
+            children: [
+              { path: '', component: AdminDashboardEventAnalyticsComponent },
+              {
+                path: ':id',
+                component: EventAnalyticsComponent,
+              },
+            ],
           },
           {
             path: 'attendance',
-            component: AdminDashboardAttendanceComponent,
+            children: [
+              { path: '', component: AdminDashboardAttendanceComponent },
+              {
+                path: ':id',
+                component: EventAttendanceComponent,
+              },
+            ],
           },
-          { path: 'notifications', component: AdminNotificationsComponent },
+          {
+            path: 'notifications',
+            component: AdminNotificationsComponent,
+          },
           {
             path: 'feedback',
-            component: AdminDashboardFeedbackComponent,
+
+            children: [
+              { path: '', component: AdminDashboardFeedbackComponent },
+              {
+                path: ':id',
+                children: [
+                  {
+                    path: '',
+                    component: EventFeedbackComponent,
+                  },
+                  { path: ':feedbackId', component: FeedbackViewComponent },
+                ],
+              },
+            ],
           },
           {
             path: 'reports',
-            component: AdminDashboardReportsComponent,
+            children: [
+              {
+                path: '',
+                component: AdminDashboardReportsComponent,
+              },
+              {
+                path: ':id',
+                component: EventReportComponent,
+              },
+            ],
           },
-          // {
-          //   path: 'event',
-          //   children: [
-          //     {
-          //       path: ':id/attendance',
-          //       component: EventAttendanceComponent,
-          //     },
-          //     {
-          //       path: 'create',
-          //       component: EventCreateComponent,
-          //     },
-          //   ],
-          // },
         ],
       },
     ],

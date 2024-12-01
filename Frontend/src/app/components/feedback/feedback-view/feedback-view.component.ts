@@ -7,9 +7,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './feedback-view.component.scss',
 })
 export class FeedbackViewComponent {
-  eventId = '';
+  feedbackId = '';
   constructor(private _ar: ActivatedRoute) {
-    this.eventId = _ar.snapshot.params['id'];
-    console.log(this.eventId);
+    this.feedbackId = _ar.snapshot.params['feedbackId'];
+    console.log(this.feedbackId);
   }
 }
