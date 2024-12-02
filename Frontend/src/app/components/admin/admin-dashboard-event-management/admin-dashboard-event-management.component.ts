@@ -1,5 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 @Component({
   selector: 'app-admin-dashboard-event-management',
@@ -8,6 +10,9 @@ import { Router } from '@angular/router';
 })
 export class AdminDashboardEventManagementComponent implements OnInit {
   isSmallScreen: boolean = false;
+  calendar: Calendar | undefined;
+  showAllEvents = true;
+  showAdminEvents = true;
 
   createdByAdminEvents = [
     { id: 1, name: 'Tech Conference 2024', date: '2024-12-10' },
@@ -40,5 +45,51 @@ export class AdminDashboardEventManagementComponent implements OnInit {
 
   createEvent() {
     this.router.navigate(['/admin/event-management/create']);
+  }
+
+  ngAfterViewInit() {
+    this.initializeCalendar();
+  }
+
+  initializeCalendar() {
+    this.calendar = new Calendar(document.getElementById('calendar')!, {
+      plugins: [dayGridPlugin],
+      initialView: 'dayGridMonth',
+      events: this.getVisibleEvents(),
+    });
+    this.calendar.render();
+  }
+
+  updateEventVisibility() {
+    if (this.calendar) {
+      this.calendar.removeAllEvents();
+      this.calendar.addEventSource(this.getVisibleEvents());
+    }
+  }
+
+  getVisibleEvents() {
+    let events = [];
+    if (this.showAllEvents) {
+      events.push(...this.mapEvents(this.allEvents, '#fbbf24'));
+    }
+    if (this.showAdminEvents) {
+      events.push(...this.mapEvents(this.createdByAdminEvents, '#38bdf8'));
+    }
+    return events;
+  }
+
+  // Utility function to map `name` to `title`
+  mapEvents(
+    events: { id: number; name: string; date: string }[],
+    color: string
+  ) {
+    return events.map((event) => ({
+      id: event.id.toString(),
+      title: event.name,
+      date: event.date,
+      backgroundColor: color,
+      borderColor: color,
+      textColor: '#000000',
+    }));
   }
 }

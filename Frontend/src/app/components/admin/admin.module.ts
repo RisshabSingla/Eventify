@@ -11,6 +11,7 @@ import { AdminDashboardEventManagementComponent } from './admin-dashboard-event-
 import { AdminDashboardEventAnalyticsComponent } from './admin-dashboard-event-analytics/admin-dashboard-event-analytics.component';
 import { AdminDashboardRegistrationsComponent } from './admin-dashboard-registrations/admin-dashboard-registrations.component';
 import { AdminDashboardAttendanceComponent } from './admin-dashboard-attendance/admin-dashboard-attendance.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,6 @@ import { AdminDashboardAttendanceComponent } from './admin-dashboard-attendance/
     AdminDashboardRegistrationsComponent,
     AdminDashboardAttendanceComponent,
   ],
-  imports: [CommonModule, AdminRoutingModule],
+  imports: [CommonModule, AdminRoutingModule, FormsModule],
 })
 export class AdminModule {}

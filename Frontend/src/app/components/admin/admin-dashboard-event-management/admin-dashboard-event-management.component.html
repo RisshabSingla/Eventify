@@ -55,4 +55,36 @@
       </div>
     </div>
   </div>
+
+  <!-- Calendar Section -->
+  <div class="flex justify-between items-center mt-8 mb-6">
+    <h1 class="text-3xl font-semibold text-gray-800">Event Calendar</h1>
+    <div class="flex items-center space-x-6">
+      <!-- Show All Events Toggle -->
+      <label class="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          [(ngModel)]="showAllEvents"
+          (change)="updateEventVisibility()"
+          class="form-checkbox h-5 w-5 text-blue-600"
+        />
+        <span class="text-gray-700">Show All Events</span>
+      </label>
+      <!-- Show Admin's Events Toggle -->
+      <label class="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          [(ngModel)]="showAdminEvents"
+          (change)="updateEventVisibility()"
+          class="form-checkbox h-5 w-5 text-green-600"
+        />
+        <span class="text-gray-700">Show Admin's Events</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <div id="calendar"></div>
+  </div>
 </div>
