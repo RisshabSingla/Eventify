@@ -1,1 +1,47 @@
-<p>event-attendee-list works! {{ eventId }}</p>
+<div class="container mx-auto p-4">
+  <!-- Event Details -->
+  <h1 class="text-2xl font-semibold">{{ eventName }}</h1>
+  <p class="mt-2 text-gray-600">{{ eventDetails }}</p>
+
+  <!-- Attendee List Status -->
+  <div *ngIf="!isListVisible" class="my-8 text-red-600 font-semibold">
+    <p *ngIf="eventPrivacySetting === 'Private'">
+      The attendee list is private and cannot be viewed.
+    </p>
+    <p *ngIf="eventPrivacySetting === 'Only to Registered Users'">
+      The attendee list is only available to registered users.
+    </p>
+  </div>
+
+  <!-- Attendee Table -->
+  <div *ngIf="isListVisible" class="mt-8">
+    <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Email</th>
+          <th class="px-4 py-2 text-left">Registration Date</th>
+          <th class="px-4 py-2 text-left">Ticket Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let attendee of attendees">
+          <td class="px-4 py-2">{{ attendee.name }}</td>
+          <td class="px-4 py-2">{{ attendee.email }}</td>
+          <td class="px-4 py-2">{{ attendee.registrationDate }}</td>
+          <td class="px-4 py-2">{{ attendee.ticketType }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Download Button -->
+    <div class="text-right mt-4">
+      <button
+        class="p-2 bg-teal-600 text-white rounded-lg"
+        (click)="downloadAttendeeList()"
+      >
+        Download Attendee List (Excel)
+      </button>
+    </div>
+  </div>
+</div>
