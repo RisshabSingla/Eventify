@@ -15,6 +15,7 @@ import { EventAnalyticsComponent } from '../events/event-analytics/event-analyti
 import { FeedbackViewComponent } from '../feedback/feedback-view/feedback-view.component';
 import { EventFeedbackComponent } from '../events/event-feedback/event-feedback.component';
 import { EventReportComponent } from '../events/event-report/event-report.component';
+import { EventAttendeeListComponent } from '../events/event-attendee-list/event-attendee-list.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
               {
                 path: ':id',
                 component: EventDetailComponent,
+              },
+              {
+                path: ':id/attendees',
+                component: EventAttendeeListComponent,
               },
             ],
           },

@@ -1,1 +1,119 @@
-<p>event-detail works! {{ eventId }}</p>
+<div class="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+  <!-- Hero Section -->
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800">{{ event.title }}</h1>
+    <p class="text-lg text-gray-600 mt-2">Date: {{ event.date }}</p>
+
+    <!-- Registration Info Section -->
+    <div class="mt-4">
+      <p class="text-sm text-gray-500">Location: {{ event.location }}</p>
+      <p class="text-sm text-gray-500">
+        Registration Limit: {{ event.registrationLimit }} | Filled Seats:
+        {{ event.filledSeats }}
+      </p>
+    </div>
+
+    <!-- Conditional Content Based on User Role and Registration Status -->
+    <div *ngIf="currentUserRole === 'guest'" class="mt-4">
+      <button
+        (click)="navigateToLogin()"
+        class="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none transition-all duration-300"
+      >
+        Register Now
+      </button>
+    </div>
+
+    <div *ngIf="currentUserRole === 'user'" class="mt-4">
+      <div *ngIf="isUserRegisteredForEvent">
+        <!-- User is registered, show cancel button -->
+        <button
+          (click)="cancelRegistration()"
+          class="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 focus:outline-none transition-all duration-300"
+        >
+          Cancel Registration
+        </button>
+      </div>
+      <div *ngIf="!isUserRegisteredForEvent">
+        <!-- User is not registered, show register button -->
+        <button
+          (click)="registerForEvent()"
+          class="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none transition-all duration-300"
+        >
+          Register for Event
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin-Specific Actions -->
+    <div *ngIf="currentUserRole === 'admin'" class="mt-4">
+      <button
+        class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 focus:outline-none transition-all duration-300"
+      >
+        Edit Event
+      </button>
+      <button
+        class="px-6 py-3 bg-gray-600 text-white rounded-full hover:bg-gray-700 focus:outline-none transition-all duration-300 ml-4"
+      >
+        Delete Event
+      </button>
+    </div>
+
+    <!-- View Attendees Button for All Users -->
+    <button
+      routerLink="attendees"
+      class="px-6 py-3 bg-purple-600 text-white rounded-full hover:bg-purple-700 focus:outline-none transition-all duration-300 mt-4"
+    >
+      View Attendees
+    </button>
+  </div>
+
+  <!-- Event Details Section -->
+  <div class="mt-6 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800">Event Description</h2>
+    <p class="text-gray-600 mt-4">{{ event.description }}</p>
+  </div>
+
+  <!-- Agenda Section -->
+  <div class="mt-6 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800">Agenda</h2>
+    <ul class="mt-4 space-y-2 text-gray-600">
+      <li *ngFor="let item of event.agenda" class="flex items-center">
+        <span class="mr-2 inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
+        {{ item }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Speakers Section -->
+  <div class="mt-6 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800">Speakers</h2>
+    <div class="mt-4 space-y-4">
+      <div *ngFor="let speaker of event.speakers">
+        <h3 class="text-xl font-semibold text-gray-800">{{ speaker.name }}</h3>
+        <p class="text-gray-600">{{ speaker.bio }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media Section -->
+  <div class="mt-6 bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800">Event Media</h2>
+    <div class="mt-4 space-y-4">
+      <div *ngFor="let mediaItem of event.media">
+        <div *ngIf="mediaItem.type === 'image'" class="w-full">
+          <img
+            [src]="mediaItem.src"
+            alt="Event Image"
+            class="w-full h-auto rounded-lg shadow-md"
+          />
+        </div>
+        <div *ngIf="mediaItem.type === 'video'" class="w-full">
+          <video controls class="w-full rounded-lg shadow-md">
+            <source [src]="mediaItem.src" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
