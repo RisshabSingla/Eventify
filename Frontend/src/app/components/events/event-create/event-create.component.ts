@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-event-create',
@@ -15,11 +22,11 @@ export class EventCreateComponent {
     this.eventForm = this.fb.group({
       eventTitle: ['', [Validators.required]],
       eventDescription: ['', [Validators.required]],
-      eventDate: ['', [Validators.required]],
+      eventDate: ['', [Validators.required, this.futureDateValidator]],
       eventTime: ['', [Validators.required]],
       eventLocation: ['', [Validators.required]],
       eventCategory: ['', [Validators.required]],
-      registrationLimit: ['', [Validators.required]],
+      registrationLimit: ['', [Validators.required, Validators.min(1)]],
       eventTags: [''],
       coverImage: [''],
       agenda: this.fb.array([]),
@@ -30,6 +37,15 @@ export class EventCreateComponent {
     // Adding initial agenda and speaker fields
     this.addAgenda();
     this.addSpeaker();
+  }
+
+  futureDateValidator(control: AbstractControl): ValidationErrors | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+    if (selectedDate <= currentDate) {
+      return { futureDate: true };
+    }
+    return null;
   }
 
   get agendaControls() {
@@ -62,6 +78,25 @@ export class EventCreateComponent {
 
   removeSpeaker(index: number): void {
     (this.eventForm.get('speakers') as FormArray).removeAt(index);
+  }
+
+  isAgendaInvalid(): boolean {
+    return this.agendaControls.some((agenda) => agenda.invalid);
+  }
+
+  // Function to check if any agenda item was touched
+  isAgendaTouched(): boolean {
+    return this.agendaControls.some((agenda) => agenda.touched);
+  }
+
+  // Function to check if speaker fields are invalid
+  isSpeakersInvalid(): boolean {
+    return this.speakerControls.some((speaker) => speaker.invalid);
+  }
+
+  // Function to check if any speaker field was touched
+  isSpeakersTouched(): boolean {
+    return this.speakerControls.some((speaker) => speaker.touched);
   }
 
   onSubmit() {
