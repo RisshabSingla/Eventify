@@ -13,7 +13,7 @@ import { EventAttendeeListComponent } from './event-attendee-list/event-attendee
 import { EventAnalyticsComponent } from './event-analytics/event-analytics.component';
 import { EventFeedbackComponent } from './event-feedback/event-feedback.component';
 import { EventReportComponent } from './event-report/event-report.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,11 +27,8 @@ import { EventReportComponent } from './event-report/event-report.component';
     EventAttendeeListComponent,
     EventAnalyticsComponent,
     EventFeedbackComponent,
-    EventReportComponent
+    EventReportComponent,
   ],
-  imports: [
-    CommonModule,
-    EventsRoutingModule
-  ]
+  imports: [CommonModule, EventsRoutingModule, ReactiveFormsModule],
 })
-export class EventsModule { }
+export class EventsModule {}

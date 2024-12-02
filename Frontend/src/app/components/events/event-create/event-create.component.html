@@ -1,1 +1,236 @@
-<p>event-create works!</p>
+<div class="min-h-screen bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-semibold mb-6 text-center">Create New Event</h1>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="eventForm">
+      <!-- Event Title -->
+      <div class="mb-4">
+        <label
+          for="eventTitle"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Title</label
+        >
+        <input
+          id="eventTitle"
+          formControlName="eventTitle"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter event title"
+          required
+        />
+      </div>
+
+      <!-- Event Description (Rich-text area) -->
+      <div class="mb-4">
+        <label
+          for="eventDescription"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Description</label
+        >
+        <textarea
+          id="eventDescription"
+          formControlName="eventDescription"
+          rows="4"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Describe your event"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Event Date and Time -->
+      <div class="mb-4 grid grid-cols-2 gap-4">
+        <div>
+          <label
+            for="eventDate"
+            class="block text-sm font-semibold text-gray-700"
+            >Event Date</label
+          >
+          <input
+            type="date"
+            id="eventDate"
+            formControlName="eventDate"
+            class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+            required
+          />
+        </div>
+        <div>
+          <label
+            for="eventTime"
+            class="block text-sm font-semibold text-gray-700"
+            >Event Time</label
+          >
+          <input
+            type="time"
+            id="eventTime"
+            formControlName="eventTime"
+            class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Event Location -->
+      <div class="mb-4">
+        <label
+          for="eventLocation"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Location</label
+        >
+        <input
+          type="text"
+          id="eventLocation"
+          formControlName="eventLocation"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter event location"
+          required
+        />
+      </div>
+
+      <!-- Event Category -->
+      <div class="mb-4">
+        <label
+          for="eventCategory"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Category</label
+        >
+        <select
+          id="eventCategory"
+          formControlName="eventCategory"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="conference">Conference</option>
+          <option value="workshop">Workshop</option>
+          <option value="webinar">Webinar</option>
+          <option value="social">Social</option>
+        </select>
+      </div>
+
+      <!-- Agenda -->
+      <div class="mb-4">
+        <label for="agenda" class="block text-sm font-semibold text-gray-700"
+          >Event Agenda</label
+        >
+        <div formArrayName="agenda" class="space-y-4">
+          <div
+            *ngFor="let agenda of agendaControls; let i = index"
+            [formGroupName]="i"
+            class="flex items-center space-x-4"
+          >
+            <input
+              type="text"
+              formControlName="agendaItem"
+              class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+              placeholder="Enter agenda item"
+            />
+            <input
+              type="time"
+              formControlName="startTime"
+              class="p-3 w-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+              placeholder="Start Time"
+            />
+            <button
+              type="button"
+              (click)="removeAgenda(i)"
+              class="text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="addAgenda()" class="mt-2 text-teal-600">
+          + Add Agenda Item
+        </button>
+      </div>
+
+      <!-- Speaker Details -->
+      <div class="mb-4">
+        <label for="speakers" class="block text-sm font-semibold text-gray-700"
+          >Speaker Details</label
+        >
+        <div formArrayName="speakers" class="space-y-4">
+          <div
+            *ngFor="let speaker of speakerControls; let i = index"
+            [formGroupName]="i"
+            class="flex items-center space-x-4"
+          >
+            <input
+              type="text"
+              formControlName="name"
+              class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+              placeholder="Speaker Name"
+            />
+            <input
+              type="text"
+              formControlName="bio"
+              class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+              placeholder="Speaker Bio"
+            />
+            <button
+              type="button"
+              (click)="removeSpeaker(i)"
+              class="text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="addSpeaker()" class="mt-2 text-teal-600">
+          + Add Speaker
+        </button>
+      </div>
+
+      <!-- Registration Limit -->
+      <div class="mb-4">
+        <label
+          for="registrationLimit"
+          class="block text-sm font-semibold text-gray-700"
+          >Registration Limit</label
+        >
+        <input
+          type="number"
+          id="registrationLimit"
+          formControlName="registrationLimit"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter registration limit"
+          required
+        />
+      </div>
+
+      <!-- Attendee List Privacy -->
+      <div class="mb-4">
+        <label
+          for="attendeeList"
+          class="block text-sm font-semibold text-gray-700"
+          >Attendee List Privacy</label
+        >
+        <select
+          id="attendeeList"
+          formControlName="attendeeList"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          required
+        >
+          <option value="public">Public</option>
+          <option value="public">Only to Registered Users</option>
+          <option value="private">Private</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mb-4 text-center">
+        <div
+          *ngIf="formSubmitted && eventForm.invalid"
+          class="text-red-600 mb-4"
+        >
+          <p>Please fill out all required fields correctly.</p>
+        </div>
+        <button
+          type="submit"
+          class="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+        >
+          Create Event
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
