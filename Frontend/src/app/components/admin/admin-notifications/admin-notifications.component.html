@@ -1,1 +1,79 @@
-<p>admin-notifications works!</p>
+<div class="min-h-screen p-6 bg-gray-100 w-full">
+  <!-- Page Heading -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-semibold">Admin Notifications</h1>
+    <button
+      (click)="pushNewNotification()"
+      class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      Push New Notification
+    </button>
+  </div>
+
+  <!-- Notifications Table -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+    <table class="min-w-full table-auto">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Notification Type
+          </th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Description
+          </th>
+          <!-- Date Column, Hidden on large screens and below -->
+          <th
+            class="px-6 py-3 text-left text-sm font-semibold text-gray-700 hidden lg:table-cell"
+          >
+            Date
+          </th>
+          <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+            Action
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loop through notifications and render rows -->
+        <tr *ngFor="let notification of notifications" class="border-t">
+          <td class="px-6 py-4 text-sm text-gray-700">
+            {{ notification.type }}
+          </td>
+          <td class="px-6 py-4 text-sm text-gray-600">
+            {{ notification.description }}
+          </td>
+          <!-- Date Column, Hidden on large screens and below -->
+          <td class="px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">
+            {{ notification.timestamp | date : "short" }}
+          </td>
+          <td class="px-6 py-4 text-sm">
+            <button
+              *ngIf="
+                notification.type === 'new event' ||
+                notification.type === 'event update' ||
+                notification.type === 'event registration'
+              "
+              [routerLink]="'/admin/event-management/' + notification.eventId"
+              class="text-blue-600 hover:text-blue-700"
+            >
+              View Event
+            </button>
+            <button
+              *ngIf="notification.type === 'user feedback'"
+              [routerLink]="'/admin/feedback/' + notification.eventId"
+              class="text-blue-600 hover:text-blue-700"
+            >
+              View Feedback
+            </button>
+            <button
+              *ngIf="notification.type === 'user registration'"
+              class="text-gray-500 cursor-not-allowed"
+              disabled
+            >
+              No Action
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
