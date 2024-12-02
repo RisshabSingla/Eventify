@@ -1,2 +1,58 @@
-<p>admin-dashboard-event-management works!</p>
-<router-outlet></router-outlet>
+<div class="min-h-screen p-4 bg-gray-100 w-full overflow-x-auto">
+  <!-- Events Created By Current Admin -->
+  <div>
+    <h2 class="text-2xl font-bold mb-4">Your Events</h2>
+
+    <!-- Grid View -->
+    <div
+      *ngIf="isSmallScreen || true"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto"
+    >
+      <!-- Create Event Card -->
+      <div
+        class="bg-green-100 border-2 border-green-600 rounded-lg p-4 text-center shadow-md hover:shadow-lg cursor-pointer"
+        (click)="createEvent()"
+      >
+        <div class="text-4xl text-green-600 mb-2">+</div>
+        <div class="font-semibold">Create New Event</div>
+      </div>
+
+      <!-- Event Cards -->
+      <div
+        *ngFor="let event of createdByAdminEvents"
+        class="bg-white border rounded-lg p-4 shadow-md hover:shadow-lg"
+      >
+        <h3 class="text-lg font-semibold">{{ event.name }}</h3>
+        <p class="text-sm text-gray-600">{{ event.date }}</p>
+        <button
+          [routerLink]="'/admin/event-management/' + event.id"
+          class="mt-2 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Events -->
+  <div class="mt-8">
+    <h2 class="text-2xl font-bold mb-4">All Events</h2>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto"
+    >
+      <div
+        *ngFor="let event of allEvents"
+        class="bg-white border rounded-lg p-4 shadow-md hover:shadow-lg"
+      >
+        <h3 class="text-lg font-semibold">{{ event.name }}</h3>
+        <p class="text-sm text-gray-600">{{ event.date }}</p>
+        <button
+          [routerLink]="'/admin/event-management/' + event.id"
+          class="mt-2 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
