@@ -56,8 +56,14 @@ export class AdminDashboardEventManagementComponent implements OnInit {
       plugins: [dayGridPlugin],
       initialView: 'dayGridMonth',
       events: this.getVisibleEvents(),
+      eventClick: this.handleEventClick.bind(this),
     });
     this.calendar.render();
+  }
+
+  handleEventClick(info: any) {
+    const eventId = info.event.id;
+    this.router.navigate(['/admin/event-management', eventId]);
   }
 
   updateEventVisibility() {
