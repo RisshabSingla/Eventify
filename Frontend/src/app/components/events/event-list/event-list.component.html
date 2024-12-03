@@ -14,7 +14,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Loop through events -->
       <div
-        *ngFor="let event of events"
+        *ngFor="let event of events$ | async"
         class="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer"
         (click)="navigateToEvent(event.id)"
       >
