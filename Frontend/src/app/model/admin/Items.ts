@@ -1,4 +1,4 @@
-export interface AdminDashboardItems {
+export interface Items {
   metrics: { title: string; value: number }[];
   upcomingEvents: { id: number; name: string; date: string; time: string }[];
   recentActivities: {

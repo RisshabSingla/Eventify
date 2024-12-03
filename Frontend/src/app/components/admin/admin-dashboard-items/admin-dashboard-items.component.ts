@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AdminDashboardItems } from '../../../model/adminDashBoardItems';
+import { Items } from '../../../model/admin/Items';
 import { AdminService } from '../../../services/admin.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { AdminService } from '../../../services/admin.service';
   styleUrl: './admin-dashboard-items.component.scss',
 })
 export class AdminDashboardItemsComponent {
-  dashboardData: AdminDashboardItems | null = null;
+  dashboardData: Items | null = null;
 
   constructor(private router: Router, private adminService: AdminService) {}
 

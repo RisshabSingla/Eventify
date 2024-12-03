@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { DUMMY_EVENTS_DATA } from './dummy_data';
-import { EventDetails } from '../model/EventDetails';
+import { EventDetails } from '../model/event/EventDetails';
 
 @Injectable({
   providedIn: 'root',

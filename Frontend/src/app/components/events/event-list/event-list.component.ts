@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { EventService } from '../../../services/event.service';
-import { EventDetails } from '../../../model/EventDetails';
+import { EventDetails } from '../../../model/event/EventDetails';
 
 @Component({
   selector: 'app-event-list',

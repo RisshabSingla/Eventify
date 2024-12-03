@@ -3,9 +3,9 @@ import {
   ADMIN_DASHBOARD_DATA,
   ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA,
 } from './dummy_data';
-import { AdminDashboardItems } from '../model/adminDashBoardItems';
+import { Items } from '../model/admin/Items';
 import { Observable, of } from 'rxjs';
-import { AdminDashboardEventManagement } from '../model/adminDashBoardEventManagement';
+import { EventManagement } from '../model/admin/Event_Management';
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +13,11 @@ import { AdminDashboardEventManagement } from '../model/adminDashBoardEventManag
 export class AdminService {
   constructor() {}
 
-  getAdminDashboardItems(): Observable<AdminDashboardItems> {
+  getAdminDashboardItems(): Observable<Items> {
     return of(ADMIN_DASHBOARD_DATA);
   }
 
-  getAdminDashboardEventManagementData(): Observable<AdminDashboardEventManagement> {
+  getAdminDashboardEventManagementData(): Observable<EventManagement> {
     return of(ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA);
   }
 }

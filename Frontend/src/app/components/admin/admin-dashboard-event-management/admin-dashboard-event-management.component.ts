@@ -2,10 +2,7 @@ import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import {
-  AdminDashboardEventManagement,
-  AdminDashboardEventManagement_Event,
-} from '../../../model/adminDashBoardEventManagement';
+import { EventManagement, Event } from '../../../model/admin/Event_Management';
 import { AdminService } from '../../../services/admin.service';
 
 @Component({
@@ -19,8 +16,8 @@ export class AdminDashboardEventManagementComponent implements OnInit {
   showAllEvents = true;
   showAdminEvents = true;
 
-  createdByAdminEvents: AdminDashboardEventManagement_Event[] = [];
-  allEvents: AdminDashboardEventManagement_Event[] = [];
+  createdByAdminEvents: Event[] = [];
+  allEvents: Event[] = [];
 
   constructor(private router: Router, private adminService: AdminService) {}
 
@@ -32,7 +29,7 @@ export class AdminDashboardEventManagementComponent implements OnInit {
   fetchAdminDashboardData() {
     this.adminService
       .getAdminDashboardEventManagementData()
-      .subscribe((data: AdminDashboardEventManagement) => {
+      .subscribe((data: EventManagement) => {
         this.createdByAdminEvents = data.createdByAdminEvents;
         this.allEvents = data.allEvents;
       });
