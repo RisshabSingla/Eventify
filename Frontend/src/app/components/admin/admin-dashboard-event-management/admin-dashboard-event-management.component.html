@@ -24,6 +24,8 @@
       >
         <h3 class="text-lg font-semibold">{{ event.name }}</h3>
         <p class="text-sm text-gray-600">{{ event.date }}</p>
+        <!-- Event Description -->
+        <p class="text-sm text-gray-800 mt-2">{{ event.description }}</p>
         <button
           [routerLink]="'/admin/event-management/' + event.id"
           class="mt-2 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
@@ -46,6 +48,8 @@
       >
         <h3 class="text-lg font-semibold">{{ event.name }}</h3>
         <p class="text-sm text-gray-600">{{ event.date }}</p>
+        <!-- Event Description -->
+        <p class="text-sm text-gray-800 mt-2">{{ event.description }}</p>
         <button
           [routerLink]="'/admin/event-management/' + event.id"
           class="mt-2 px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
