@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, computed, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { UserDashboardRegisteredComponent } from './user-dashboard-registered/user-dashboard-registered.component';
@@ -10,6 +10,7 @@ import { UserDashboardViewFeedbackComponent } from './user-dashboard-view-feedba
 import { UserDashboardItemsComponent } from './user-dashboard-items/user-dashboard-items.component';
 import { EventListComponent } from '../events/event-list/event-list.component';
 import { EventDetailComponent } from '../events/event-detail/event-detail.component';
+import { EventAttendeeListComponent } from '../events/event-attendee-list/event-attendee-list.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,16 @@ const routes: Routes = [
             path: '',
             component: EventListComponent,
           },
-          { path: ':id', component: EventDetailComponent },
+          {
+            path: ':id',
+            children: [
+              { path: '', component: EventDetailComponent },
+              {
+                path: 'attendees',
+                component: EventAttendeeListComponent,
+              },
+            ],
+          },
         ],
       },
       { path: 'registered', component: UserDashboardRegisteredComponent },
