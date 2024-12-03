@@ -66,4 +66,8 @@ export class EventDetailComponent implements OnInit {
     this.isUserRegisteredForEvent = false;
     alert('Registration canceled!');
   }
+
+  navigateToEditEvent() {
+    this.router.navigate(['/admin/event-management/', this.eventId, 'edit']);
+  }
 }

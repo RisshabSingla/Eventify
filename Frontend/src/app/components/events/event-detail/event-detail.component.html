@@ -48,6 +48,7 @@
     <div *ngIf="currentUserRole === 'admin'" class="mt-4">
       <button
         class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 focus:outline-none transition-all duration-300"
+        (click)="navigateToEditEvent()"
       >
         Edit Event
       </button>

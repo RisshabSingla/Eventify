@@ -1,1 +1,363 @@
-<p>event-edit works! {{ eventId }}</p>
+<div class="min-h-screen bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+    <h1 class="text-3xl font-semibold mb-6 text-center">Edit Event</h1>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="eventForm">
+      <!-- Event Title -->
+      <div class="mb-4">
+        <label
+          for="eventTitle"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Title</label
+        >
+        <input
+          id="eventTitle"
+          formControlName="eventTitle"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter event title"
+          required
+        />
+        <div
+          *ngIf="
+            eventForm.get('eventTitle')?.invalid &&
+            (eventForm.get('eventTitle')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <p *ngIf="eventForm.get('eventTitle')?.hasError('required')">
+            Event title is required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Event Description (Rich-text area) -->
+      <div class="mb-4">
+        <label
+          for="eventDescription"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Description</label
+        >
+        <textarea
+          id="eventDescription"
+          formControlName="eventDescription"
+          rows="4"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Describe your event"
+          required
+        ></textarea>
+        <div
+          *ngIf="
+            eventForm.get('eventDescription')?.invalid &&
+            (eventForm.get('eventDescription')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <p *ngIf="eventForm.get('eventDescription')?.hasError('required')">
+            Event description is required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Event Date and Time -->
+      <div class="mb-4 grid grid-cols-2 gap-4">
+        <!-- Event Date -->
+        <div>
+          <label
+            for="eventDate"
+            class="block text-sm font-semibold text-gray-700"
+            >Event Date</label
+          >
+          <input
+            type="date"
+            id="eventDate"
+            formControlName="eventDate"
+            class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+            required
+          />
+          <div
+            *ngIf="
+              eventForm.get('eventDate')?.invalid &&
+              (eventForm.get('eventDate')?.touched || formSubmitted)
+            "
+            class="text-red-600 text-sm"
+          >
+            <p *ngIf="eventForm.get('eventDate')?.hasError('required')">
+              Event date is required.
+            </p>
+            <p *ngIf="eventForm.get('eventDate')?.hasError('futureDate')">
+              The event date must be in the future.
+            </p>
+          </div>
+        </div>
+
+        <!-- Event Time -->
+        <div>
+          <label
+            for="eventTime"
+            class="block text-sm font-semibold text-gray-700"
+            >Event Time</label
+          >
+          <input
+            type="time"
+            id="eventTime"
+            formControlName="eventTime"
+            class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+            required
+          />
+          <div
+            *ngIf="
+              eventForm.get('eventTime')?.invalid &&
+              (eventForm.get('eventTime')?.touched || formSubmitted)
+            "
+            class="text-red-600 text-sm"
+          >
+            <p *ngIf="eventForm.get('eventTime')?.hasError('required')">
+              Event time is required.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Location -->
+      <div class="mb-4">
+        <label
+          for="eventLocation"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Location</label
+        >
+        <input
+          type="text"
+          id="eventLocation"
+          formControlName="eventLocation"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter event location"
+          required
+        />
+        <div
+          *ngIf="
+            eventForm.get('eventLocation')?.invalid &&
+            (eventForm.get('eventLocation')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <p *ngIf="eventForm.get('eventLocation')?.hasError('required')">
+            Event location is required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Event Category -->
+      <div class="mb-4">
+        <label
+          for="eventCategory"
+          class="block text-sm font-semibold text-gray-700"
+          >Event Category</label
+        >
+        <select
+          id="eventCategory"
+          formControlName="eventCategory"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="conference">Conference</option>
+          <option value="workshop">Workshop</option>
+          <option value="webinar">Webinar</option>
+          <option value="social">Social</option>
+        </select>
+        <div
+          *ngIf="
+            eventForm.get('eventCategory')?.invalid &&
+            (eventForm.get('eventCategory')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <p *ngIf="eventForm.get('eventCategory')?.hasError('required')">
+            Event category is required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Agenda -->
+      <div class="mb-4">
+        <label for="agenda" class="block text-sm font-semibold text-gray-700">
+          Event Agenda
+        </label>
+        <div formArrayName="agenda" class="space-y-4">
+          <div
+            *ngFor="let agenda of agendaControls; let i = index"
+            [formGroupName]="i"
+            class="flex items-center space-x-4"
+          >
+            <div class="flex-1">
+              <input
+                type="text"
+                formControlName="agendaItem"
+                class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Enter agenda item"
+              />
+            </div>
+            <div class="flex-1">
+              <input
+                type="time"
+                formControlName="startTime"
+                class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Start Time"
+              />
+            </div>
+            <button
+              type="button"
+              (click)="removeAgenda(i)"
+              class="text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="addAgenda()" class="mt-2 text-teal-600">
+          + Add Agenda Item
+        </button>
+
+        <!-- Show error message for invalid agenda -->
+        <div
+          *ngIf="isAgendaInvalid() && (formSubmitted || isAgendaTouched())"
+          class="text-red-600 text-sm mt-2"
+        >
+          <p>
+            Please ensure all agenda items and start times are filled out
+            correctly.
+          </p>
+        </div>
+      </div>
+
+      <!-- Speaker Details -->
+      <div class="mb-4">
+        <label for="speakers" class="block text-sm font-semibold text-gray-700">
+          Speaker Details
+        </label>
+        <div formArrayName="speakers" class="space-y-4">
+          <div
+            *ngFor="let speaker of speakerControls; let i = index"
+            [formGroupName]="i"
+            class="flex items-center space-x-4"
+          >
+            <div class="flex-1">
+              <input
+                type="text"
+                formControlName="name"
+                class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Speaker Name"
+              />
+            </div>
+            <div class="flex-1">
+              <input
+                type="text"
+                formControlName="bio"
+                class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Speaker Bio"
+              />
+            </div>
+            <button
+              type="button"
+              (click)="removeSpeaker(i)"
+              class="text-red-600"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+        <button type="button" (click)="addSpeaker()" class="mt-2 text-teal-600">
+          + Add Speaker
+        </button>
+
+        <!-- Show error message for invalid speakers -->
+        <div
+          *ngIf="isSpeakersInvalid() && (formSubmitted || isSpeakersTouched())"
+          class="text-red-600 text-sm mt-2"
+        >
+          <p>
+            Please ensure all speaker names and bios are filled out correctly.
+          </p>
+        </div>
+      </div>
+
+      <!-- Registration Limit -->
+      <div class="mb-4">
+        <label
+          for="registrationLimit"
+          class="block text-sm font-semibold text-gray-700"
+        >
+          Registration Limit
+        </label>
+        <input
+          type="number"
+          id="registrationLimit"
+          formControlName="registrationLimit"
+          class="p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          placeholder="Enter the registration limit"
+        />
+        <!-- Show warning if registration limit is not filled or negative -->
+        <div
+          *ngIf="
+            eventForm.get('registrationLimit')?.invalid &&
+            (eventForm.get('registrationLimit')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm mt-2"
+        >
+          <p *ngIf="eventForm.get('registrationLimit')?.hasError('required')">
+            Registration limit is required.
+          </p>
+          <p *ngIf="eventForm.get('registrationLimit')?.hasError('min')">
+            The registration limit must be a positive number.
+          </p>
+        </div>
+      </div>
+
+      <!-- Attendee List Privacy -->
+      <div class="mb-4">
+        <label
+          for="attendeeList"
+          class="block text-sm font-semibold text-gray-700"
+          >Attendee List Privacy</label
+        >
+        <select
+          id="attendeeList"
+          formControlName="attendeeList"
+          class="mt-1 p-3 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+          required
+        >
+          <option value="public">Public</option>
+          <option value="onlyRegistered">Only to Registered Users</option>
+          <option value="private">Private</option>
+        </select>
+        <div
+          *ngIf="
+            eventForm.get('attendeeList')?.invalid &&
+            (eventForm.get('attendeeList')?.touched || formSubmitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <p *ngIf="eventForm.get('attendeeList')?.hasError('required')">
+            Attendee list privacy is required.
+          </p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mb-4 text-center">
+        <div
+          *ngIf="formSubmitted && eventForm.invalid"
+          class="text-red-600 mb-4"
+        >
+          <p>Please fill out all required fields correctly.</p>
+        </div>
+        <button
+          type="submit"
+          class="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+        >
+          Edit Event
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
