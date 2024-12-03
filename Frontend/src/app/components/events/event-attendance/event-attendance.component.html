@@ -1,1 +1,134 @@
-<p>event-attendance works! {{ eventId }}</p>
+<div class="container mx-auto px-4 py-6 max-w-full overflow-hidden">
+  <!-- Header -->
+  <div class="bg-blue-50 shadow-lg rounded-xl p-6 mb-6">
+    <h1 class="text-4xl font-semibold text-blue-700 mb-4">Event Attendance</h1>
+    <div class="text-gray-700 space-y-2">
+      <p>
+        <strong class="text-blue-600">Event:</strong> {{ eventDetails.name }}
+      </p>
+      <p>
+        <strong class="text-blue-600">Description:</strong>
+        {{ eventDetails.description }}
+      </p>
+      <p>
+        <strong class="text-blue-600">Venue:</strong> {{ eventDetails.venue }}
+      </p>
+      <p>
+        <strong class="text-blue-600">Date:</strong>
+        {{ eventDetails.date | date : "fullDate" }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6"
+  >
+    <div class="bg-white shadow-lg rounded-lg p-4 text-center">
+      <h3 class="text-xl font-medium text-blue-700">Capacity</h3>
+      <p class="text-blue-500 text-3xl">{{ metrics.capacity }}</p>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-4 text-center">
+      <h3 class="text-xl font-medium text-blue-700">Filled</h3>
+      <p class="text-blue-500 text-3xl">{{ metrics.filled }}</p>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-4 text-center">
+      <h3 class="text-xl font-medium text-blue-700">Present</h3>
+      <p class="text-blue-500 text-3xl">{{ metrics.present }}</p>
+    </div>
+    <div class="bg-white shadow-lg rounded-lg p-4 text-center">
+      <h3 class="text-xl font-medium text-blue-700">Yet to Come</h3>
+      <p class="text-blue-500 text-3xl">{{ metrics.yetToCome }}</p>
+    </div>
+  </div>
+
+  <!-- User Table -->
+  <div class="bg-white shadow-lg rounded-lg p-6 overflow-x-auto">
+    <h3 class="text-2xl font-semibold text-blue-700 mb-6">Users</h3>
+    <!-- Table with scrollable content on small screens -->
+    <div class="overflow-x-auto">
+      <table class="table-auto w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-blue-100 text-blue-700">
+            <th class="border p-3 text-left">Name</th>
+            <th class="border p-3 text-left">Email</th>
+            <th class="border p-3 text-left">Registered Date</th>
+
+            <!-- Show current status only if the event is not today -->
+            <th *ngIf="!isEventToday()" class="border p-3 text-left">
+              Current Status
+            </th>
+
+            <!-- Show attending column only if the event is today -->
+            <th *ngIf="isEventToday()" class="border p-3 text-left">
+              Attending
+            </th>
+            <th *ngIf="isEventToday()" class="border p-3 text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let user of users"
+            class="hover:bg-blue-50 transition duration-200"
+          >
+            <td class="border p-3">{{ user.name }}</td>
+            <td class="border p-3">{{ user.email }}</td>
+            <td class="border p-3">
+              {{ user.registeredDate | date : "shortDate" }}
+            </td>
+
+            <!-- Show current status only if the event is not today -->
+            <td *ngIf="!isEventToday()" class="border p-3">
+              <span class="text-blue-600">{{ user.currentStatus }}</span>
+            </td>
+
+            <!-- Conditionally show Attending column -->
+            <td *ngIf="isEventToday()" class="border p-3">
+              <span
+                [ngClass]="{
+                  'text-blue-600': user.attending === 'Yet to Come',
+                  'text-indigo-500': user.attending === 'Present',
+                  'text-red-500': user.attending === 'Absent'
+                }"
+                class="font-semibold"
+              >
+                {{ user.attending }}
+              </span>
+            </td>
+
+            <!-- Conditionally show Actions column -->
+            <td
+              *ngIf="isEventToday()"
+              class="border p-3 lg:flex justify-around"
+            >
+              <!-- Show 'Mark Absent' if user is present -->
+              <button
+                *ngIf="user.attending === 'Present'"
+                class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 m-1"
+                (click)="markAbsent(user)"
+              >
+                Mark Absent
+              </button>
+
+              <!-- Show 'Mark Manually' and 'Scan QR' if user is not present -->
+              <button
+                *ngIf="user.attending !== 'Present'"
+                class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 m-1"
+                (click)="markAttendance(user, 'manual')"
+              >
+                Mark Manually
+              </button>
+              <button
+                *ngIf="user.attending !== 'Present'"
+                class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                (click)="markAttendance(user, 'scan')"
+              >
+                Scan QR
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
