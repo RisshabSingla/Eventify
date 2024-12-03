@@ -14,7 +14,7 @@ export class AdminDashboardItemsComponent {
   constructor(private router: Router, private adminService: AdminService) {}
 
   ngOnInit(): void {
-    this.adminService.getAdminDashboardItems().subscribe((data) => {
+    this.adminService.getDashboardItems().subscribe((data) => {
       this.dashboardData = data;
     });
   }

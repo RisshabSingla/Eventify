@@ -19,7 +19,7 @@ export class AdminDashboardEventAnalyticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.adminService
-      .getAdminDashboardEventAnalytics()
+      .getEventAnalyticsData()
       .subscribe((data: EventAnalytics) => {
         this.metrics = data.metrics;
         this.events = data.events;

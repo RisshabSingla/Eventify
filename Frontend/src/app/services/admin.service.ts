@@ -15,15 +15,15 @@ import { EventAnalytics } from '../model/admin/Event_Analytics';
 export class AdminService {
   constructor() {}
 
-  getAdminDashboardItems(): Observable<Items> {
+  getDashboardItems(): Observable<Items> {
     return of(ADMIN_DASHBOARD_DATA);
   }
 
-  getAdminDashboardEventManagementData(): Observable<EventManagement> {
+  getEventManagementData(): Observable<EventManagement> {
     return of(ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA);
   }
 
-  getAdminDashboardEventAnalytics(): Observable<EventAnalytics> {
+  getEventAnalyticsData(): Observable<EventAnalytics> {
     return of(ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA);
   }
 }

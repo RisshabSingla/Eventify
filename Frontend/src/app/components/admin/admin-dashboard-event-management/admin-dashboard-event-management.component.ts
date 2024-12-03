@@ -28,7 +28,7 @@ export class AdminDashboardEventManagementComponent implements OnInit {
 
   fetchAdminDashboardData() {
     this.adminService
-      .getAdminDashboardEventManagementData()
+      .getEventManagementData()
       .subscribe((data: EventManagement) => {
         this.createdByAdminEvents = data.createdByAdminEvents;
         this.allEvents = data.allEvents;
