@@ -1,4 +1,5 @@
 import { EventAnalytics } from '../model/admin/Event_Analytics';
+import { EventAttendance } from '../model/admin/Event_Attendance';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -214,6 +215,52 @@ export const ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA: EventAnalytics = {
       date: '2025-01-05',
       description:
         'A summit showcasing the future of cloud computing technologies.',
+    },
+  ],
+};
+
+export const ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA: EventAttendance = {
+  metrics: {
+    totalRegisteredUsers: 500,
+    totalAttendedUsers: 400,
+    attendanceRate: 80, // in percentage
+    totalNoShowUsers: 100,
+  },
+  events: [
+    {
+      id: 1,
+      name: 'Tech Conference 2024',
+      date: '2024-12-10',
+      description:
+        'An annual tech conference bringing together technology enthusiasts, industry leaders, and innovators to discuss the latest trends in the tech world.',
+    },
+    {
+      id: 2,
+      name: 'AI Workshop',
+      date: '2024-12-15',
+      description:
+        'A hands-on workshop on Artificial Intelligence, covering topics from foundational concepts to advanced techniques.',
+    },
+    {
+      id: 3,
+      name: 'Hackathon',
+      date: '2024-12-20',
+      description:
+        'A 24-hour coding marathon for developers, designers, and innovators to build and showcase innovative projects.',
+    },
+    {
+      id: 4,
+      name: 'Angular Masterclass',
+      date: '2024-12-22',
+      description:
+        'A comprehensive masterclass on Angular framework, focusing on building dynamic, single-page applications.',
+    },
+    {
+      id: 5,
+      name: 'Cloud Summit',
+      date: '2025-01-05',
+      description:
+        'A summit exploring the future of cloud computing, featuring industry experts and interactive sessions.',
     },
   ],
 };
