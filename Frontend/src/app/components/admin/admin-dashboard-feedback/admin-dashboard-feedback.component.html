@@ -54,6 +54,7 @@
           class="bg-gray-50 hover:bg-gray-100 p-4 rounded-lg shadow-md transition"
         >
           <h4 class="text-lg font-semibold text-gray-700">{{ event.name }}</h4>
+          <p class="text-md text-gray-700 mt-2">{{ event.description }}</p>
           <p class="text-sm text-gray-500">{{ event.date }}</p>
           <button
             [routerLink]="'/admin/feedback/' + event.id"

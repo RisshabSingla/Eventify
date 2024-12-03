@@ -4,6 +4,7 @@ import {
   ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA,
   ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA,
   ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA,
+  ADMIN_DASHBOARD_FEEDBACK_DATA,
   ADMIN_DASHBOARD_NOTIFICATIONS_DATA,
 } from './dummy_data';
 import { Items } from '../model/admin/Items';
@@ -12,6 +13,7 @@ import { EventManagement } from '../model/admin/Event_Management';
 import { EventAnalytics } from '../model/admin/Event_Analytics';
 import { EventAttendance } from '../model/admin/Event_Attendance';
 import { AdminNotification } from '../model/admin/Notifications';
+import { EventFeedback } from '../model/admin/Event_Feedback';
 
 @Injectable({
   providedIn: 'root',
@@ -37,5 +39,9 @@ export class AdminService {
 
   getNotifications(): Observable<AdminNotification[]> {
     return of(ADMIN_DASHBOARD_NOTIFICATIONS_DATA);
+  }
+
+  getFeedbackData(): Observable<EventFeedback> {
+    return of(ADMIN_DASHBOARD_FEEDBACK_DATA);
   }
 }
