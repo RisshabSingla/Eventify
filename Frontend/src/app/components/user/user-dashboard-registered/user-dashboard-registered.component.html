@@ -1,1 +1,157 @@
-<p>user-dashboard-registered works!</p>
+<div class="container mx-auto p-6">
+  <!-- Header Section -->
+  <h1 class="text-3xl font-semibold text-center mb-10">
+    Your Registered Events
+  </h1>
+
+  <!-- Registered Events -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">Registered Events</h2>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let event of events.registered"
+        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+      >
+        <img
+          [src]="event.image"
+          alt="Event Image"
+          class="w-full h-48 object-cover"
+        />
+        <div class="p-5">
+          <h3
+            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+          >
+            {{ event.name }}
+          </h3>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
+          >
+            {{ event.date }} | {{ event.time }}
+          </p>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
+          >
+            {{ event.location }}
+          </p>
+          <p
+            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+          >
+            {{ event.status }}
+          </p>
+          <button
+            class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            (click)="viewEventDetails(event)"
+          >
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past Attended Events -->
+  <div class="mb-10">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">
+      Past Attended Events
+    </h2>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let event of events.attended"
+        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+      >
+        <img
+          [src]="event.image"
+          alt="Event Image"
+          class="w-full h-48 object-cover"
+        />
+        <div class="p-5">
+          <h3
+            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+          >
+            {{ event.name }}
+          </h3>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
+          >
+            {{ event.date }} | {{ event.time }}
+          </p>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
+          >
+            {{ event.location }}
+          </p>
+          <p
+            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+          >
+            {{ event.status }}
+          </p>
+          <button
+            class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            (click)="viewEventDetails(event)"
+          >
+            View Details
+          </button>
+          <button
+            class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200"
+            (click)="giveFeedback(event)"
+          >
+            Give Feedback
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not Attended Events -->
+  <div>
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800">
+      Not Attended Events
+    </h2>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6"
+    >
+      <div
+        *ngFor="let event of events.absent"
+        class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+      >
+        <img
+          [src]="event.image"
+          alt="Event Image"
+          class="w-full h-48 object-cover"
+        />
+        <div class="p-5">
+          <h3
+            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+          >
+            {{ event.name }}
+          </h3>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
+          >
+            {{ event.date }} | {{ event.time }}
+          </p>
+          <p
+            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
+          >
+            {{ event.location }}
+          </p>
+          <p
+            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+          >
+            {{ event.status }}
+          </p>
+          <button
+            class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            (click)="viewEventDetails(event)"
+          >
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
