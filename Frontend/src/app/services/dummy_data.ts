@@ -1,5 +1,6 @@
 import { EventAnalytics } from '../model/admin/Event_Analytics';
 import { EventAttendance } from '../model/admin/Event_Attendance';
+import { AdminNotification } from '../model/admin/Notifications';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -264,3 +265,36 @@ export const ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA: EventAttendance = {
     },
   ],
 };
+
+export const ADMIN_DASHBOARD_NOTIFICATIONS_DATA: AdminNotification[] = [
+  {
+    type: 'new event',
+    description: 'A new event has been created: Tech Conference 2024.',
+    timestamp: new Date(),
+    eventId: 1,
+  },
+  {
+    type: 'user registration',
+    description: 'A new user has registered: John Doe.',
+    timestamp: new Date(),
+    eventId: null,
+  },
+  {
+    type: 'event update',
+    description: 'Event details have been updated for: AI Workshop.',
+    timestamp: new Date(),
+    eventId: 2,
+  },
+  {
+    type: 'user feedback',
+    description: 'User feedback has been submitted for: React Summit.',
+    timestamp: new Date(),
+    eventId: 3,
+  },
+  {
+    type: 'event registration',
+    description: 'New user has registered for: Cloud Summit.',
+    timestamp: new Date(),
+    eventId: 4,
+  },
+];

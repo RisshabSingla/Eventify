@@ -1,46 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AdminNotification } from '../../../model/admin/Notifications';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-notifications',
   templateUrl: './admin-notifications.component.html',
   styleUrl: './admin-notifications.component.scss',
 })
-export class AdminNotificationsComponent {
-  notifications = [
-    {
-      type: 'new event',
-      description: 'A new event has been created: Tech Conference 2024.',
-      timestamp: new Date(),
-      eventId: 1,
-    },
-    {
-      type: 'user registration',
-      description: 'A new user has registered: John Doe.',
-      timestamp: new Date(),
-      eventId: null,
-    },
-    {
-      type: 'event update',
-      description: 'Event details have been updated for: AI Workshop.',
-      timestamp: new Date(),
-      eventId: 2,
-    },
-    {
-      type: 'user feedback',
-      description: 'User feedback has been submitted for: React Summit.',
-      timestamp: new Date(),
-      eventId: 3,
-    },
-    {
-      type: 'event registration',
-      description: 'New user has registered for: Cloud Summit.',
-      timestamp: new Date(),
-      eventId: 4,
-    },
-  ];
+export class AdminNotificationsComponent implements OnInit {
+  notifications: AdminNotification[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private adminService: AdminService) {}
+
+  ngOnInit(): void {
+    this.loadNotifications();
+  }
+
+  loadNotifications(): void {
+    this.adminService.getNotifications().subscribe((data) => {
+      this.notifications = data;
+    });
+  }
 
   pushNewNotification() {
     console.log('New Notification button clicked');
