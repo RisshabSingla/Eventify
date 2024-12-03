@@ -114,14 +114,14 @@
               <button
                 *ngIf="user.attending !== 'Present'"
                 class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 m-1"
-                (click)="markAttendance(user, 'manual')"
+                (click)="openManualModal(user)"
               >
                 Mark Manually
               </button>
               <button
                 *ngIf="user.attending !== 'Present'"
                 class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                (click)="markAttendance(user, 'scan')"
+                (click)="openScanModal(user)"
               >
                 Scan QR
               </button>
@@ -129,6 +129,73 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Marking Attendance Manually -->
+<div
+  *ngIf="isManualModalOpen"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+>
+  <div class="bg-white rounded-lg p-6 w-96">
+    <h3 class="text-xl font-semibold text-blue-700 mb-4">
+      Mark Attendance Manually
+    </h3>
+    <div class="mb-4">
+      <label class="block text-sm text-gray-700 mb-2">Enter Unique Code</label>
+      <input
+        type="text"
+        [(ngModel)]="manualCode"
+        class="border border-gray-300 rounded p-2 w-full"
+        placeholder="Enter code"
+      />
+    </div>
+    <div class="flex justify-end">
+      <button
+        class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600"
+        (click)="markAttendanceManual()"
+      >
+        Done
+      </button>
+      <button
+        class="bg-red-500 text-white py-2 px-4 rounded-lg ml-2 hover:bg-red-600"
+        (click)="closeManualModal()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Scanning QR -->
+<div
+  *ngIf="isScanModalOpen"
+  class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50"
+>
+  <div class="bg-white rounded-lg p-6 w-96">
+    <h3 class="text-xl font-semibold text-blue-700 mb-4">Scan QR Code</h3>
+    <div class="mb-4">
+      <zxing-scanner
+        #scanner
+        [formats]="formats"
+        [device]="currentDevice"
+        (scanSuccess)="onScanSuccess($event)"
+      ></zxing-scanner>
+    </div>
+    <div class="flex justify-end">
+      <button
+        class="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600"
+        (click)="markAttendanceScan(scanner)"
+      >
+        Done
+      </button>
+      <button
+        class="bg-red-500 text-white py-2 px-4 rounded-lg ml-2 hover:bg-red-600"
+        (click)="closeQRModal(scanner)"
+      >
+        Cancel
+      </button>
     </div>
   </div>
 </div>

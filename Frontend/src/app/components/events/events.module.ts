@@ -13,7 +13,8 @@ import { EventAttendeeListComponent } from './event-attendee-list/event-attendee
 import { EventAnalyticsComponent } from './event-analytics/event-analytics.component';
 import { EventFeedbackComponent } from './event-feedback/event-feedback.component';
 import { EventReportComponent } from './event-report/event-report.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,12 @@ import { ReactiveFormsModule } from '@angular/forms';
     EventFeedbackComponent,
     EventReportComponent,
   ],
-  imports: [CommonModule, EventsRoutingModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    EventsRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ZXingScannerModule,
+  ],
 })
 export class EventsModule {}

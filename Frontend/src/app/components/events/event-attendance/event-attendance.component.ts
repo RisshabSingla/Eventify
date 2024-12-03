@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ZXingScannerComponent, ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
 
 interface User {
   [key: string]: string;
@@ -15,9 +17,15 @@ interface User {
   templateUrl: './event-attendance.component.html',
   styleUrl: './event-attendance.component.scss',
 })
-export class EventAttendanceComponent {
+export class EventAttendanceComponent implements OnInit {
   eventId = '';
   currentDate = new Date();
+  isManualModalOpen = false;
+  isScanModalOpen = false;
+  manualCode = '';
+  currentDevice: MediaDeviceInfo | undefined;
+  formats: BarcodeFormat[] = [BarcodeFormat.QR_CODE];
+  @ViewChild('scanner') scanner: ZXingScannerComponent | undefined;
 
   metrics = {
     capacity: 200,
@@ -183,6 +191,18 @@ export class EventAttendanceComponent {
     console.log(this.eventId);
     this.updateUserStatuses();
   }
+
+  ngOnInit() {
+    // Select the first device or set to undefined if no devices are available
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      const videoDevices = devices.filter(
+        (device) => device.kind === 'videoinput'
+      );
+      this.currentDevice =
+        videoDevices.length > 0 ? videoDevices[0] : undefined;
+    });
+  }
+
   get tableHeaders(): string[] {
     return this.users.length ? Object.keys(this.users[0]) : [];
   }
@@ -234,5 +254,54 @@ export class EventAttendanceComponent {
 
   markAbsent(user: User) {
     user.attending = 'Absent';
+  }
+
+  openManualModal(user: any) {
+    this.isManualModalOpen = true;
+  }
+
+  // Open modal for QR scanning
+  openScanModal(user: any) {
+    this.isScanModalOpen = true;
+  }
+
+  closeManualModal() {
+    this.isManualModalOpen = false;
+  }
+
+  // Close both modals
+  closeQRModal(scanner: ZXingScannerComponent) {
+    if (scanner) {
+      // Stop the camera
+      scanner.scanStop();
+    }
+    this.isScanModalOpen = false;
+  }
+
+  // Handle manual attendance marking
+  markAttendanceManual() {
+    console.log('Manual Code Submitted: ', this.manualCode);
+    this.updateUserStatus('Present', this.manualCode);
+    this.closeManualModal();
+  }
+
+  // Handle QR code attendance marking (Placeholder)
+  onScanSuccess(result: string) {
+    console.log('QR Code Scanned: ', result);
+    this.updateUserStatus('Present', result);
+    this.isScanModalOpen = false;
+  }
+
+  markAttendanceScan(scanner: ZXingScannerComponent) {
+    console.log('QR Code Scanned');
+    this.closeQRModal(scanner);
+  }
+
+  updateUserStatus(status: string, code: string) {
+    const user = this.users.find((u) => u.name === 'John Doe');
+    if (user) {
+      user.attending = status;
+      user.currentStatus = `Attended (Code: ${code})`;
+    }
   }
 }
