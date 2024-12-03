@@ -16,6 +16,7 @@ import { FeedbackViewComponent } from '../feedback/feedback-view/feedback-view.c
 import { EventFeedbackComponent } from '../events/event-feedback/event-feedback.component';
 import { EventReportComponent } from '../events/event-report/event-report.component';
 import { EventAttendeeListComponent } from '../events/event-attendee-list/event-attendee-list.component';
+import { EventEditComponent } from '../events/event-edit/event-edit.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,10 @@ const routes: Routes = [
               {
                 path: ':id/attendees',
                 component: EventAttendeeListComponent,
+              },
+              {
+                path: ':id/edit',
+                component: EventEditComponent,
               },
             ],
           },
