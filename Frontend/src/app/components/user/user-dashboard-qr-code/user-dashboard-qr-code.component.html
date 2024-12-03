@@ -1,1 +1,111 @@
-<p>user-dashboard-qr-code works!</p>
+<div class="container mx-auto p-6">
+  <!-- Header Section -->
+  <header class="mb-6 text-center">
+    <h1 class="text-3xl font-semibold text-gray-800">Your Event QR Codes</h1>
+    <p class="text-gray-600 mt-2">
+      Use these QR codes to check in to your registered events or to verify your
+      attendance.
+    </p>
+    <p class="text-blue-600 mt-4 font-medium">
+      Your today's event QR codes will be shown here.<br />
+      For future events, check on that particular day.
+    </p>
+  </header>
+
+  <!-- Events Table -->
+  <div class="overflow-x-auto">
+    <table class="table-auto w-full border-collapse border border-gray-200">
+      <thead>
+        <tr class="bg-gray-100 text-gray-800">
+          <th class="px-4 py-2 border border-gray-200">Event Name</th>
+          <th class="px-4 py-2 border border-gray-200">Date</th>
+          <th class="px-4 py-2 border border-gray-200">Time</th>
+          <th class="px-4 py-2 border border-gray-200">Venue</th>
+          <th class="px-4 py-2 border border-gray-200">Status</th>
+          <th class="px-4 py-2 border border-gray-200">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let event of todaysEvents"
+          class="hover:bg-gray-50 transition ease-in-out duration-150"
+        >
+          <td class="px-4 py-2 border border-gray-200 text-sm md:text-base">
+            {{ event.name }}
+          </td>
+          <td class="px-4 py-2 border border-gray-200 text-sm md:text-base">
+            {{ event.date }}
+          </td>
+          <td class="px-4 py-2 border border-gray-200 text-sm md:text-base">
+            {{ event.time }}
+          </td>
+          <td class="px-4 py-2 border border-gray-200 text-sm md:text-base">
+            {{ event.venue }}
+          </td>
+          <td
+            class="px-4 py-2 border border-gray-200 text-center text-sm md:text-base"
+            [ngClass]="{
+              'text-green-600 font-bold': event.status === 'Present',
+              'text-yellow-600 font-bold': event.status === 'Not Marked'
+            }"
+          >
+            {{ event.status }}
+          </td>
+          <td
+            class="px-4 py-2 border border-gray-200 text-center text-sm md:text-base"
+          >
+            <div *ngIf="event.status !== 'Present'; else attendanceMarked">
+              <button
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 mr-2"
+                (click)="showQRCode(event)"
+              >
+                Show QR Code
+              </button>
+              <button
+                class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200"
+                (click)="showManualCode(event)"
+              >
+                Show Manual Code
+              </button>
+            </div>
+            <ng-template #attendanceMarked>
+              <span class="text-green-600 font-medium">Attendance Marked</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Overlay for QR Code -->
+  <div
+    *ngIf="overlayData.visible"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div
+      class="bg-white p-6 rounded-lg shadow-lg w-11/12 sm:w-9/12 md:w-8/12 lg:w-6/12 xl:w-5/12 max-w-lg"
+    >
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        {{ overlayData.title }}
+      </h3>
+      <img
+        *ngIf="overlayData.type === 'qr'"
+        [src]="overlayData.qrCode"
+        alt="QR Code"
+        class="w-96 h-96 mx-auto"
+      />
+      <p
+        *ngIf="overlayData.type === 'manual'"
+        class="text-center text-gray-600"
+      >
+        {{ overlayData.code }}
+      </p>
+      <button
+        class="mt-6 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 w-full"
+        (click)="closeOverlay()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
