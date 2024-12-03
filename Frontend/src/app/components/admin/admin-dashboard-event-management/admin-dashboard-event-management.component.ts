@@ -2,7 +2,8 @@ import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { EventManagement, Event } from '../../../model/admin/Event_Management';
+import { EventManagement } from '../../../model/admin/Event_Management';
+import { Event } from '../../../model/admin/Event';
 import { AdminService } from '../../../services/admin.service';
 
 @Component({

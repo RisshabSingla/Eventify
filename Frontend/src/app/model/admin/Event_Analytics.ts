@@ -1,4 +1,4 @@
-import { Event } from './Event_Management';
+import { Event } from './Event';
 
 export interface AnalyticMetrics {
   totalCreatedEvents: number;

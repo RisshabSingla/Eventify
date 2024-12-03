@@ -1,9 +1,4 @@
-export interface Event {
-  id: number;
-  name: string;
-  date: string;
-  description: string;
-}
+import { Event } from './Event';
 
 export interface EventManagement {
   createdByAdminEvents: Event[];

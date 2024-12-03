@@ -4,7 +4,7 @@ import {
   EventAnalytics,
   AnalyticMetrics,
 } from '../../../model/admin/Event_Analytics';
-import { Event } from '../../../model/admin/Event_Management';
+import { Event } from '../../../model/admin/Event';
 
 @Component({
   selector: 'app-admin-dashboard-event-analytics',

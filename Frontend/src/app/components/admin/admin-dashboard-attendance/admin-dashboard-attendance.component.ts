@@ -3,7 +3,7 @@ import {
   attendanceMetrics,
   EventAttendance,
 } from '../../../model/admin/Event_Attendance';
-import { Event } from '../../../model/admin/Event_Management';
+import { Event } from '../../../model/admin/Event';
 import { AdminService } from '../../../services/admin.service';
 
 @Component({
