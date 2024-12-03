@@ -1,18 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-
-interface Event {
-  id: number;
-  name: string;
-  date: string;
-  time: string;
-}
-
-interface Activity {
-  description: string;
-  detail: string;
-  timestamp: string;
-}
+import { AdminDashboardItems } from '../../../model/adminDashBoardItems';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-dashboard-items',
@@ -20,54 +9,15 @@ interface Activity {
   styleUrl: './admin-dashboard-items.component.scss',
 })
 export class AdminDashboardItemsComponent {
-  metrics = [
-    { title: 'Total Users', value: 1234 },
-    { title: 'Total Events', value: 87 },
-    { title: 'Registrations Today', value: 45 },
-  ];
+  dashboardData: AdminDashboardItems | null = null;
 
-  upcomingEvents: Event[] = [
-    {
-      id: 1,
-      name: 'Tech Conference 2024',
-      date: '2024-05-01',
-      time: '10:00 AM',
-    },
-    {
-      id: 2,
-      name: 'Web Development Workshop',
-      date: '2024-06-15',
-      time: '2:00 PM',
-    },
+  constructor(private router: Router, private adminService: AdminService) {}
 
-    {
-      id: 3,
-      name: 'AI & Machine Learning Seminar',
-      date: '2024-07-20',
-      time: '9:00 AM',
-    },
-  ];
-
-  recentActivities: Activity[] = [
-    {
-      description: 'New Event Created',
-      detail: 'React Workshop',
-      timestamp: 'Dec 1, 2024 · 1:00 PM',
-    },
-    {
-      description: 'User Registration',
-      detail: 'John Doe',
-      timestamp: 'Dec 1, 2024 · 11:30 AM',
-    },
-    {
-      description: 'Feedback Submitted',
-      detail: 'Great Event!',
-      timestamp: 'Dec 1, 2024 · 10:00 AM',
-    },
-  ];
-
-  constructor(private router: Router) {}
-
+  ngOnInit(): void {
+    this.adminService.getAdminDashboardItems().subscribe((data) => {
+      this.dashboardData = data;
+    });
+  }
   navigateToEventDetail(eventId: number): void {
     this.router.navigate([`/admin/event-management/${eventId}`]);
   }
