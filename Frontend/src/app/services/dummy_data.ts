@@ -1,3 +1,5 @@
+import { EventAnalytics } from '../model/admin/Event_Analytics';
+
 export const DUMMY_EVENTS_DATA = [
   {
     id: 1,
@@ -167,6 +169,51 @@ export const ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA = {
       date: '2025-01-15',
       description:
         'A workshop where data scientists discuss data trends and techniques.',
+    },
+  ],
+};
+
+export const ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA: EventAnalytics = {
+  metrics: {
+    totalCreatedEvents: 5,
+    totalRegisteredUsers: 150,
+    totalAttendedUsers: 120,
+    averageFeedbackRating: 4.3,
+  },
+  events: [
+    {
+      id: 1,
+      name: 'Tech Conference 2024',
+      date: '2024-12-10',
+      description:
+        'A premier conference exploring the latest in technology advancements.',
+    },
+    {
+      id: 2,
+      name: 'AI Workshop',
+      date: '2024-12-15',
+      description:
+        'Hands-on workshop focusing on AI and machine learning techniques.',
+    },
+    {
+      id: 3,
+      name: 'Hackathon',
+      date: '2024-12-20',
+      description:
+        'Collaborative coding competition to solve innovative challenges.',
+    },
+    {
+      id: 4,
+      name: 'Angular Masterclass',
+      date: '2024-12-22',
+      description: 'Deep dive into Angular framework with expert instructors.',
+    },
+    {
+      id: 5,
+      name: 'Cloud Summit',
+      date: '2025-01-05',
+      description:
+        'A summit showcasing the future of cloud computing technologies.',
     },
   ],
 };
