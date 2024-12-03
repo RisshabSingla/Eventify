@@ -3,15 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { Observable } from 'rxjs';
 import { EventService } from '../../../services/event.service';
-
-interface Event {
-  id: number;
-  title: string;
-  description: string;
-  date: string;
-  location: string;
-  image: string;
-}
+import { EventDetails } from '../../../model/EventDetails';
 
 @Component({
   selector: 'app-event-list',
@@ -20,7 +12,7 @@ interface Event {
 })
 export class EventListComponent implements OnInit {
   user: 'guest' | 'user' | 'admin' = 'guest';
-  events$!: Observable<Event[]>;
+  events: EventDetails[] = [];
 
   constructor(
     private router: Router,
@@ -30,7 +22,18 @@ export class EventListComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.getCurrentUserRole();
-    this.events$ = this.eventService.getAllEvents();
+    this.fetchEvents();
+  }
+
+  fetchEvents(): void {
+    this.eventService.getAllEvents().subscribe(
+      (events: EventDetails[]) => {
+        this.events = events;
+      },
+      (error) => {
+        console.error('Error fetching events:', error);
+      }
+    );
   }
 
   navigateToEvent(eventId: number): void {

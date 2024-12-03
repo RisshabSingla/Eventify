@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DUMMY_EVENTS_DATA } from './dummy_data';
+import { EventDetails } from '../model/EventDetails';
+
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
   constructor() {}
 
-  getAllEvents() {
+  getAllEvents(): Observable<EventDetails[]> {
     return of(DUMMY_EVENTS_DATA);
   }
 }
