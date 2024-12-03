@@ -1,1 +1,127 @@
-<p>event-analytics works! {{ eventId }}</p>
+<div class="p-6 bg-gray-100 min-h-screen">
+  <!-- Header -->
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center md:text-left">
+    Event Analytics
+  </h1>
+
+  <!-- Event Details -->
+  <div class="bg-white shadow-lg rounded-lg p-8 mb-8">
+    <h2 class="text-3xl font-bold text-teal-600 mb-6 text-center">
+      Event Details
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <!-- Total Registrations -->
+      <div
+        class="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50"
+      >
+        <div class="text-teal-600 text-3xl">
+          <i class="fa fa-user-plus"></i>
+        </div>
+        <div>
+          <p class="text-gray-500 text-sm">Total Registrations</p>
+          <p class="text-xl font-semibold text-gray-800">
+            {{ event.totalRegistrations }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Actual Attendance -->
+      <div
+        class="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50"
+      >
+        <div class="text-teal-600 text-3xl">
+          <i class="fa-solid fa-user-check"></i>
+        </div>
+        <div>
+          <p class="text-gray-500 text-sm">Actual Attendance</p>
+          <p class="text-xl font-semibold text-gray-800">
+            {{ event.actualAttendance }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Feedback Rating -->
+      <div
+        class="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50"
+      >
+        <div class="text-teal-600 text-3xl">
+          <i class="fa fa-star" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="text-gray-500 text-sm">Feedback Rating</p>
+          <p class="text-xl font-semibold text-gray-800">
+            {{ event.feedbackRating.toFixed(1) }} / 5
+          </p>
+        </div>
+      </div>
+
+      <!-- Total Feedback Count -->
+      <div
+        class="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50"
+      >
+        <div class="text-teal-600 text-3xl">
+          <i class="fas fa-comment-alt"></i>
+        </div>
+        <div>
+          <p class="text-gray-500 text-sm">Total Feedback Count</p>
+          <p class="text-xl font-semibold text-gray-800">
+            {{ event.totalFeedbackCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Feedback -->
+  <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Top Feedback</h3>
+    <ul class="list-disc list-inside text-gray-600">
+      <li *ngFor="let feedback of event.topFeedbacks">{{ feedback }}</li>
+    </ul>
+  </div>
+
+  <!-- Graphs Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <!-- Registration Graph -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">
+        Registrations Overview
+      </h3>
+      <div class="relative h-96">
+        <canvas
+          id="registrationGraph"
+          class="absolute inset-0 w-full h-full"
+        ></canvas>
+      </div>
+    </div>
+
+    <!-- Feedback Graph -->
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">
+        Feedback Breakdown
+      </h3>
+      <div class="relative h-96">
+        <canvas
+          id="feedbackGraph"
+          class="absolute inset-0 w-full h-full"
+        ></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="flex flex-wrap justify-center md:justify-end space-x-4">
+    <button
+      class="px-4 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow hover:bg-teal-700 mb-2 md:mb-0"
+      (click)="goToAttendancePage()"
+    >
+      Check Attendance
+    </button>
+    <button
+      class="px-4 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow hover:bg-teal-700"
+      (click)="goToFeedbackPage()"
+    >
+      Check Feedbacks
+    </button>
+  </div>
+</div>
