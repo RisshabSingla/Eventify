@@ -1,1 +1,123 @@
-<p>event-report works! {{ eventId }}</p>
+<div class="container mx-auto p-6 space-y-6">
+  <!-- Header Section -->
+  <div class="bg-blue-100 shadow-lg rounded-lg p-6">
+    <h1 class="text-3xl font-bold text-blue-800 mb-4">Event Overview</h1>
+    <div class="text-gray-700">
+      <p><strong>Event Title:</strong> {{ eventDetails.title }}</p>
+      <p><strong>Event Date & Time:</strong> {{ eventDetails.dateTime }}</p>
+      <p><strong>Event Venue:</strong> {{ eventDetails.venue }}</p>
+      <p><strong>Event Description:</strong> {{ eventDetails.description }}</p>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex space-x-4">
+    <button
+      class="bg-blue-500 text-white px-6 py-2 rounded-md shadow-lg hover:bg-blue-700"
+      (click)="downloadReport()"
+    >
+      Download Report
+    </button>
+    <button
+      class="bg-green-500 text-white px-6 py-2 rounded-md shadow-lg hover:bg-green-700"
+      (click)="goToEventPage()"
+    >
+      View Event Page
+    </button>
+  </div>
+
+  <!-- Event Statistics Section -->
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Event Statistics</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Number of Attendees -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Total Number of Attendees:</span>
+        <span>{{ eventStats.totalAttendees }}</span>
+      </div>
+
+      <!-- Total Number of Registrations -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-indigo-500 to-indigo-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Total Number of Registrations:</span>
+        <span>{{ eventStats.totalRegistrations }}</span>
+      </div>
+
+      <!-- Event Capacity -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Event Capacity:</span>
+        <span>{{ eventStats.eventCapacity }}</span>
+      </div>
+
+      <!-- Attendance Rate -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-orange-500 to-orange-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Attendance Rate:</span>
+        <span>{{ eventStats.attendanceRate }}%</span>
+      </div>
+
+      <!-- Total Feedbacks -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-purple-500 to-purple-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Total Feedbacks Received:</span>
+        <span>{{ eventStats.totalFeedbacks }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Overview Section -->
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Feedback Overview</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Average Rating -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Average Rating:</span>
+        <span>{{ feedbackStats.averageRating }} ⭐</span>
+      </div>
+
+      <!-- Positive Feedback -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Positive Feedback:</span>
+        <span class="text-green-300"
+          >{{ feedbackStats.positiveFeedback }}%</span
+        >
+      </div>
+
+      <!-- Negative Feedback -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-lg shadow-lg"
+      >
+        <span>Negative Feedback:</span>
+        <span class="text-red-300">{{ feedbackStats.negativeFeedback }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Charts Section -->
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Event Charts</h3>
+
+    <div class="lg:flex w-full">
+      <div class="chart-container lg:w-1/2 m-1 h-96">
+        <canvas id="attendanceChart"></canvas>
+      </div>
+
+      <!-- Feedback Pie Chart -->
+      <div class="chart-container lg:w-1/2 m-1">
+        <canvas id="feedbackChart"></canvas>
+      </div>
+    </div>
+    <!-- Attendance Bar Chart -->
+  </div>
+</div>
