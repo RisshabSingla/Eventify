@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-event-list',
   templateUrl: './event-list.component.html',
   styleUrl: './event-list.component.scss',
 })
-export class EventListComponent {
+export class EventListComponent implements OnInit {
+  user: 'guest' | 'user' | 'admin' = 'guest';
+
   events = [
     {
       id: 1,
@@ -51,9 +54,17 @@ export class EventListComponent {
     },
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.user = this.authService.getCurrentUserRole();
+  }
 
   navigateToEvent(eventId: number): void {
-    this.router.navigate(['/events', eventId]);
+    if (this.user === 'guest') {
+      this.router.navigate(['/events', eventId]);
+    } else {
+      this.router.navigate(['/user/explore/', eventId]);
+    }
   }
 }

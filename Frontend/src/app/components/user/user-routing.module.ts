@@ -9,6 +9,7 @@ import { UserDashboardGiveFeedbackComponent } from './user-dashboard-give-feedba
 import { UserDashboardViewFeedbackComponent } from './user-dashboard-view-feedback/user-dashboard-view-feedback.component';
 import { UserDashboardItemsComponent } from './user-dashboard-items/user-dashboard-items.component';
 import { EventListComponent } from '../events/event-list/event-list.component';
+import { EventDetailComponent } from '../events/event-detail/event-detail.component';
 
 const routes: Routes = [
   {
@@ -18,8 +19,13 @@ const routes: Routes = [
       { path: '', component: UserDashboardItemsComponent },
       {
         path: 'explore',
-        component: UserDashboardExploreComponent,
-        children: [{ path: '', component: EventListComponent }],
+        children: [
+          {
+            path: '',
+            component: EventListComponent,
+          },
+          { path: ':id', component: EventDetailComponent },
+        ],
       },
       { path: 'registered', component: UserDashboardRegisteredComponent },
       { path: 'upcoming', component: UserDashboardUpcomingComponent },
