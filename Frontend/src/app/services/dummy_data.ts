@@ -1,6 +1,7 @@
 import { EventAnalytics } from '../model/admin/Event_Analytics';
 import { EventAttendance } from '../model/admin/Event_Attendance';
 import { EventFeedback } from '../model/admin/Event_Feedback';
+import { EventReports } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
 
 export const DUMMY_EVENTS_DATA = [
@@ -546,6 +547,154 @@ export const ADMIN_DASHBOARD_FEEDBACK_DATA: EventFeedback = {
       user: 'Peter Parker',
       rating: 5,
       comment: 'Exceeded my expectations! Wonderful experience.',
+    },
+  ],
+};
+
+export const ADMIN_DASHBOARD_REPORTS_DATA: EventReports = {
+  metrics: {
+    totalEvents: 25,
+    totalFeedback: 120,
+    totalRegistrations: 1500,
+  },
+  events: [
+    {
+      id: 1,
+      name: 'Tech Conference 2024',
+      date: '2024-12-01',
+      description:
+        'Explore the latest trends in technology with industry leaders.',
+    },
+    {
+      id: 2,
+      name: 'AI Workshop',
+      date: '2024-11-20',
+      description:
+        'An intensive workshop diving deep into artificial intelligence concepts and applications.',
+    },
+    {
+      id: 3,
+      name: 'Hackathon',
+      date: '2024-10-15',
+      description:
+        'Collaborate, innovate, and code to solve real-world problems.',
+    },
+    {
+      id: 4,
+      name: 'Product Launch',
+      date: '2024-12-10',
+      description:
+        'Witness the unveiling of the latest groundbreaking products.',
+    },
+    {
+      id: 5,
+      name: 'Startup Meetup',
+      date: '2024-09-25',
+      description: 'Network and exchange ideas with budding entrepreneurs.',
+    },
+    {
+      id: 6,
+      name: 'Data Science Bootcamp',
+      date: '2024-11-01',
+      description:
+        'Master the art of data analysis and visualization in this hands-on bootcamp.',
+    },
+    {
+      id: 7,
+      name: 'Blockchain Summit',
+      date: '2024-10-30',
+      description:
+        'Discover the potential of blockchain technology and its future applications.',
+    },
+    {
+      id: 8,
+      name: 'IoT Expo',
+      date: '2024-11-15',
+      description:
+        'Explore the Internet of Things ecosystem and its groundbreaking innovations.',
+    },
+    {
+      id: 9,
+      name: 'Cloud Computing Forum',
+      date: '2024-09-10',
+      description:
+        'Delve into the world of cloud computing and its transformative impact.',
+    },
+    {
+      id: 10,
+      name: 'Cybersecurity Webinar',
+      date: '2024-12-05',
+      description:
+        'Stay ahead of cyber threats with insights from top security experts.',
+    },
+    {
+      id: 11,
+      name: 'Design Thinking Workshop',
+      date: '2024-08-20',
+      description:
+        'Learn the principles of design thinking to innovate effectively.',
+    },
+    {
+      id: 12,
+      name: 'DevOps Conference',
+      date: '2024-10-05',
+      description:
+        'Bridge the gap between development and operations for seamless integration.',
+    },
+    {
+      id: 13,
+      name: 'Gaming Hackathon',
+      date: '2024-07-15',
+      description:
+        'A creative space for developers to design and build exciting games.',
+    },
+    {
+      id: 14,
+      name: 'Fintech Innovations',
+      date: '2024-09-18',
+      description:
+        'Explore disruptive technologies shaping the future of financial services.',
+    },
+    {
+      id: 15,
+      name: 'HealthTech Symposium',
+      date: '2024-11-10',
+      description:
+        'Discover technological advancements revolutionizing healthcare.',
+    },
+    {
+      id: 16,
+      name: 'Machine Learning Seminar',
+      date: '2024-10-12',
+      description:
+        'Gain in-depth knowledge of machine learning algorithms and use cases.',
+    },
+    {
+      id: 17,
+      name: 'Big Data Analytics',
+      date: '2024-09-08',
+      description:
+        'Harness the power of big data to drive informed decision-making.',
+    },
+    {
+      id: 18,
+      name: 'AR/VR Immersion',
+      date: '2024-10-20',
+      description:
+        'Dive into the world of augmented and virtual reality experiences.',
+    },
+    {
+      id: 19,
+      name: 'Social Media Masterclass',
+      date: '2024-08-12',
+      description: 'Learn to craft impactful social media strategies.',
+    },
+    {
+      id: 20,
+      name: 'Quantum Computing Talk',
+      date: '2024-07-10',
+      description:
+        'Understand the basics and breakthroughs in quantum computing.',
     },
   ],
 };

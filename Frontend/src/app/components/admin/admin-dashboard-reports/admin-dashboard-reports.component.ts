@@ -1,26 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {
+  EventReports,
+  reportsMetrics,
+} from '../../../model/admin/Event_Reports';
+import { Event } from '../../../model/admin/Event';
+import { AdminService } from '../../../services/admin.service';
 
 @Component({
   selector: 'app-admin-dashboard-reports',
   templateUrl: './admin-dashboard-reports.component.html',
   styleUrl: './admin-dashboard-reports.component.scss',
 })
-export class AdminDashboardReportsComponent {
-  metrics = {
-    totalEvents: 25,
-    totalFeedback: 120,
-    totalRegistrations: 1500,
-  };
+export class AdminDashboardReportsComponent implements OnInit {
+  metrics!: reportsMetrics;
+  events: Event[] = [];
 
-  events = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    name: `Event ${i + 1}`,
-    date: new Date(
-      2024,
-      Math.floor(Math.random() * 12),
-      Math.floor(Math.random() * 28) + 1
-    ).toDateString(),
-  }));
+  constructor(private adminService: AdminService) {}
+
+  ngOnInit(): void {
+    this.adminService.getReportsData().subscribe((data: EventReports) => {
+      this.metrics = data.metrics;
+      this.events = data.events;
+    });
+  }
 
   downloadReport(type: string) {
     switch (type) {

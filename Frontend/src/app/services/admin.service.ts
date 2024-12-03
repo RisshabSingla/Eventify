@@ -6,6 +6,7 @@ import {
   ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA,
   ADMIN_DASHBOARD_FEEDBACK_DATA,
   ADMIN_DASHBOARD_NOTIFICATIONS_DATA,
+  ADMIN_DASHBOARD_REPORTS_DATA,
 } from './dummy_data';
 import { Items } from '../model/admin/Items';
 import { Observable, of } from 'rxjs';
@@ -43,5 +44,9 @@ export class AdminService {
 
   getFeedbackData(): Observable<EventFeedback> {
     return of(ADMIN_DASHBOARD_FEEDBACK_DATA);
+  }
+
+  getReportsData() {
+    return of(ADMIN_DASHBOARD_REPORTS_DATA);
   }
 }
