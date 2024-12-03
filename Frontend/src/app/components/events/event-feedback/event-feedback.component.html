@@ -1,2 +1,114 @@
-<p>event-feedback works! {{ eventId }}</p>
-<router-outlet></router-outlet>
+<div class="container mx-auto p-8 space-y-8">
+  <!-- Header Section: Event Details -->
+  <div
+    class="bg-gradient-to-r from-blue-400 to-blue-600 shadow-xl rounded-lg p-8 text-white"
+  >
+    <h1 class="text-4xl font-bold mb-4">Event Details</h1>
+    <div class="space-y-2">
+      <p>
+        <strong class="font-semibold">Title:</strong> {{ eventDetails.title }}
+      </p>
+      <p>
+        <strong class="font-semibold">Description:</strong>
+        {{ eventDetails.description }}
+      </p>
+      <p>
+        <strong class="font-semibold">Date:</strong> {{ eventDetails.date }}
+      </p>
+      <p>
+        <strong class="font-semibold">Venue:</strong> {{ eventDetails.venue }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Feedback Stats Section -->
+  <div class="bg-white shadow-xl rounded-lg p-6">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6">
+      Feedback Summary Stats
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Total Feedback -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-indigo-500 to-indigo-700 text-white rounded-lg shadow-lg"
+      >
+        <span class="text-xl">Total Feedback:</span>
+        <span class="text-3xl font-semibold">{{ metrics.totalFeedbacks }}</span>
+      </div>
+
+      <!-- Average Rating -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-lg"
+      >
+        <span class="text-xl">Average Rating:</span>
+        <span class="text-3xl font-semibold">{{ metrics.averageRating }}</span>
+      </div>
+
+      <!-- Positive Feedback -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-lg shadow-lg"
+      >
+        <span class="text-xl">Positive Feedback:</span>
+        <span class="text-3xl font-semibold text-green-200">{{
+          metrics.positiveFeedback
+        }}</span>
+      </div>
+
+      <!-- Negative Feedback -->
+      <div
+        class="flex justify-between items-center p-6 bg-gradient-to-r from-red-500 to-red-700 text-white rounded-lg shadow-lg"
+      >
+        <span class="text-xl">Negative Feedback:</span>
+        <span class="text-3xl font-semibold text-red-200">{{
+          metrics.negativeFeedback
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Navigation and Pie Chart Section -->
+  <div
+    class="lg:flex lg:space-x-8 bg-white shadow-xl rounded-lg p-6 space-y-6 lg:space-y-0"
+  >
+    <!-- Left Box: All Feedbacks -->
+    <div
+      class="w-full lg:w-1/2 h-96 overflow-y-auto bg-white shadow-lg rounded-lg p-6"
+    >
+      <h3 class="text-2xl font-bold text-gray-800 mb-4">All Feedbacks</h3>
+      <ul class="space-y-4">
+        <!-- Loop through feedbacks array to render feedback items -->
+        <li
+          *ngFor="let feedback of feedbacks"
+          class="flex justify-between items-start p-4 border-b border-gray-300 hover:bg-gray-100 transition cursor-pointer"
+          [routerLink]="[feedback.id]"
+        >
+          <div class="space-y-2 w-3/4">
+            <p class="font-semibold text-lg text-gray-800">
+              {{ feedback.name }}
+            </p>
+            <p class="text-sm text-gray-600">{{ feedback.feedback }}</p>
+          </div>
+          <div class="w-1/4 flex items-center justify-end space-x-2">
+            <span class="text-yellow-500 text-xl">
+              <!-- Display star emoji based on the feedback rating -->
+              <span
+                *ngFor="
+                  let star of [].constructor(feedback.rating);
+                  let i = index
+                "
+                class="text-2xl"
+                >⭐</span
+              >
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Box: Pie Chart -->
+    <div class="w-full lg:w-1/2 flex justify-center items-center">
+      <div class="w-full h-80 md:h-96 bg-blue-200 rounded-lg p-4 shadow-lg">
+        <canvas id="pie-chart" class="w-full h-full"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
