@@ -5,11 +5,11 @@
     <div class="text-gray-700 space-y-2">
       <p>
         <strong class="font-medium">Event Title:</strong>
-        {{ eventDetails.title }}
+        {{ feedbackDetails.eventName }}
       </p>
       <p>
         <strong class="font-medium">Feedback ID:</strong>
-        {{ feedbackDetails.id }}
+        {{ feedbackDetails.feedBackId }}
       </p>
       <p>
         <strong class="font-medium">Submission Date:</strong>
@@ -27,12 +27,42 @@
         {{ feedbackDetails.userName }}
       </p>
       <p>
-        <strong class="font-medium">Rating:</strong>
+        <strong class="font-medium">Overall Rating:</strong>
         <!-- Displaying Stars as emojis for rating -->
         <span class="text-yellow-500">
           <ng-container
             *ngFor="
               let star of [].constructor(feedbackDetails.rating);
+              let i = index
+            "
+          >
+            ⭐
+          </ng-container>
+        </span>
+      </p>
+
+      <p>
+        <strong class="font-medium">Speaker Rating:</strong>
+        <!-- Displaying Stars as emojis for rating -->
+        <span class="text-yellow-500">
+          <ng-container
+            *ngFor="
+              let star of [].constructor(feedbackDetails.speakerRating);
+              let i = index
+            "
+          >
+            ⭐
+          </ng-container>
+        </span>
+      </p>
+
+      <p>
+        <strong class="font-medium">Venue Rating:</strong>
+        <!-- Displaying Stars as emojis for rating -->
+        <span class="text-yellow-500">
+          <ng-container
+            *ngFor="
+              let star of [].constructor(feedbackDetails.venueRating);
               let i = index
             "
           >
@@ -47,7 +77,15 @@
   <div class="bg-white shadow-lg rounded-lg p-8">
     <h3 class="text-2xl font-semibold text-gray-800 mb-6">Feedback Details</h3>
     <div class="text-gray-700">
-      <p class="text-lg">{{ feedbackDetails.feedbackText }}</p>
+      <p class="text-lg">{{ feedbackDetails.comments }}</p>
+    </div>
+  </div>
+  <div class="bg-white shadow-lg rounded-lg p-8">
+    <h3 class="text-2xl font-semibold text-gray-800 mb-6">
+      Feedback Suggestions
+    </h3>
+    <div class="text-gray-700">
+      <p class="text-lg">{{ feedbackDetails.suggestions }}</p>
     </div>
   </div>
 </div>

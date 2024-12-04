@@ -14,6 +14,7 @@ import { UserEvents } from '../model/user/registeredEvents';
 import { EventFeedbackData } from '../model/event/EventFeedback';
 
 import { EventReports } from '../model/event/EventReport';
+import { adminFeedbackView } from '../model/feedback/adminFeedbackView';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -1755,4 +1756,17 @@ export const EVENT_REPORT_DATA: EventReports = {
     positiveFeedback: 85,
     negativeFeedback: 15,
   },
+};
+
+export const USER_FEEDBACK: adminFeedbackView = {
+  feedBackId: 'FB101',
+  eventId: 'EV2024-01',
+  eventName: 'Tech Conference 2024',
+  userName: 'John Doe',
+  rating: 5,
+  submissionDate: '2024-12-13',
+  speakerRating: 5,
+  venueRating: 4,
+  comments: 'Amazing event with great speakers and insightful content!',
+  suggestions: 'More networking sessions would be great.',
 };
