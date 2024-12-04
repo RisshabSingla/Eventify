@@ -41,4 +41,8 @@ export class EventService {
   ): Observable<EventAttendee> {
     return of(EVENT_ATTENDEE_DATA);
   }
+
+  createEvent(eventData: any) {
+    console.log(eventData);
+  }
 }

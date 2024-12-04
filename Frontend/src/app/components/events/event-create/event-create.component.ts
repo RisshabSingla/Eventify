@@ -7,6 +7,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { EventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-event-create',
@@ -16,7 +17,7 @@ import {
 export class EventCreateComponent {
   eventForm!: FormGroup;
   formSubmitted = false;
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private eventService: EventService) {}
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
@@ -33,10 +34,6 @@ export class EventCreateComponent {
       speakers: this.fb.array([]),
       attendeeList: ['public', [Validators.required]],
     });
-
-    // Adding initial agenda and speaker fields
-    this.addAgenda();
-    this.addSpeaker();
   }
 
   futureDateValidator(control: AbstractControl): ValidationErrors | null {
@@ -105,6 +102,8 @@ export class EventCreateComponent {
     if (this.eventForm.invalid) {
       return;
     }
+
+    this.eventService.createEvent(this.eventForm.value);
     console.log(this.eventForm.value);
   }
 }
