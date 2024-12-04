@@ -1558,6 +1558,7 @@ export const EVENT_DETAIL_PAGE_DATA: EventDetailPage = {
 };
 
 export const EVENT_EDIT_DATA: EventEdit = {
+  eventId: 'adjbfnsdf',
   eventTitle: 'Sample Tech Conference 2024',
   eventDescription:
     'Join us for an exciting conference about the latest in tech innovations.',

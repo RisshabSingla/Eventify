@@ -9,6 +9,7 @@ export interface Speaker {
 }
 
 export interface EventEdit {
+  eventId: string;
   eventTitle: string;
   eventDescription: string;
   eventDate: string;
