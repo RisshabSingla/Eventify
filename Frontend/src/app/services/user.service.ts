@@ -5,9 +5,11 @@ import {
   USER_DASHBOARD_DATA,
   USER_DASHBOARD_EVENTS,
   USER_DASHBOARD_EVENTS_QR,
+  USER_DASHBOARD_GIVE_FEEDBACK_EVENTS,
 } from './dummy_data';
 import { UserEvents } from '../model/user/registeredEvents';
 import { EventQRCode } from '../model/user/QRCode';
+import { EventGiveFeedback } from '../model/user/giveFeedback';
 
 @Injectable({
   providedIn: 'root',
@@ -25,5 +27,9 @@ export class UserService {
 
   getUserQREvents(): Observable<EventQRCode[]> {
     return of(USER_DASHBOARD_EVENTS_QR);
+  }
+
+  getUserGiveFeedback(): Observable<EventGiveFeedback[]> {
+    return of(USER_DASHBOARD_GIVE_FEEDBACK_EVENTS);
   }
 }

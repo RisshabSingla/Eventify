@@ -14,12 +14,11 @@
   >
     <ng-container *ngFor="let event of attendedEvents">
       <div
-        *ngIf="event.status === 'Present'"
         class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
       >
         <h3 class="text-xl font-semibold text-gray-800">{{ event.name }}</h3>
         <p class="text-gray-600 mt-1">{{ event.date }} | {{ event.time }}</p>
-        <p class="text-gray-600">{{ event.venue }}</p>
+        <p class="text-gray-600">{{ event.location }}</p>
         <button
           class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 w-full"
           (click)="navigateToFeedbackForm(event.id)"
