@@ -4,6 +4,7 @@ import { EventFeedback } from '../model/admin/Event_Feedback';
 import { EventReports } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
 import { UserDashboardItems, UserEventSummary } from '../model/user/Items';
+import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
 
 export const DUMMY_EVENTS_DATA = [
@@ -866,3 +867,87 @@ export const USER_DASHBOARD_EVENTS: UserEvents = {
     },
   ],
 };
+
+export const USER_DASHBOARD_EVENTS_QR: EventQRCode[] = [
+  {
+    id: 1,
+    name: 'Tech Conference 2024',
+    date: '2024-12-03',
+    time: '10:00 AM',
+    location: 'Main Auditorium',
+    status: 'Not Marked',
+    attendanceCode: 'a8f9sdf7ds9f8gdf72gdf8fsd3afkl9',
+  },
+  {
+    id: 2,
+    name: 'Art Workshop',
+    date: '2024-12-03',
+    time: '2:00 PM',
+    location: 'Art Room 1',
+    status: 'Present',
+    attendanceCode: 'f3a7d9g0e3k8b2g5d7a0c9fd4b7ea5',
+  },
+  {
+    id: 3,
+    name: 'Yoga Class',
+    date: '2024-12-03',
+    time: '6:00 PM',
+    location: 'Gym Hall',
+    status: 'Not Marked',
+    attendanceCode: 'b7e5f2g0d8f3c7a6k9a4df0a2f3g8b',
+  },
+  {
+    id: 4,
+    name: 'Business Seminar',
+    date: '2024-12-03',
+    time: '9:00 AM',
+    location: 'Conference Room B',
+    status: 'Present',
+    attendanceCode: 'e9f0b3a8c7d6k5g2a4f9b3d8g0a5cf',
+  },
+  {
+    id: 5,
+    name: 'Cooking Class',
+    date: '2024-12-03',
+    time: '11:30 AM',
+    location: 'Kitchen Area',
+    status: 'Not Marked',
+    attendanceCode: 'c8d7f5g0e3a9k2b4f9a3d6g7a0b5fc',
+  },
+  {
+    id: 7,
+    name: 'Tech Meetup',
+    date: '2024-12-03',
+    time: '3:00 PM',
+    location: 'Innovation Hub',
+    status: 'Not Marked',
+    attendanceCode: 'a9f8c3d7g0e5k6b2a4f9b3d8g7a0cf',
+  },
+  {
+    id: 8,
+    name: 'Dance Workshop',
+    date: '2024-12-03',
+    time: '4:30 PM',
+    location: 'Dance Hall',
+    status: 'Present',
+    attendanceCode: 'k5f3a8d9b7g2e0c6a4f9b3d8g7a0cf',
+  },
+  {
+    id: 9,
+    name: 'Music Practice',
+    date: '2024-12-03',
+    time: '7:00 PM',
+    location: 'Music Room 2',
+    status: 'Not Marked',
+    attendanceCode: 'g2d7a8f9k0c3b5e6a4f9b3d8g7a0cf',
+  },
+  {
+    id: 10,
+    name: 'Science Fair',
+    date: '2024-12-03',
+    time: '8:00 PM',
+    location: 'Exhibition Hall',
+    status: 'Present',
+    attendanceCode: 'f8a9c3g7d5k6b2a4f9b3d8g7a0ec5f',
+  },
+];

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import QRCode from 'qrcode';
+import { EventQRCode } from '../../../model/user/QRCode';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user-dashboard-qr-code',
@@ -7,52 +9,36 @@ import QRCode from 'qrcode';
   styleUrl: './user-dashboard-qr-code.component.scss',
 })
 export class UserDashboardQrCodeComponent implements OnInit {
-  todaysEvents = [
-    {
-      name: 'Tech Conference 2024',
-      date: '2024-12-03',
-      time: '10:00 AM',
-      venue: 'Main Auditorium',
-      status: 'Not Marked',
-    },
-    {
-      name: 'Art Workshop',
-      date: '2024-12-03',
-      time: '2:00 PM',
-      venue: 'Art Room 1',
-      status: 'Present',
-    },
-    {
-      name: 'Yoga Class',
-      date: '2024-12-03',
-      time: '6:00 PM',
-      venue: 'Gym Hall',
-      status: 'Not Marked',
-    },
-  ];
+  todaysEvents!: EventQRCode[];
 
-  // Overlay data
   overlayData = {
     visible: false,
     title: '',
-    type: '', // 'qr' or 'manual'
+    type: '',
     qrCode: '',
     code: '',
   };
 
-  ngOnInit(): void {}
+  constructor(private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.userService.getUserQREvents().subscribe((events: EventQRCode[]) => {
+      console.log(events);
+      this.todaysEvents = events;
+    });
+  }
 
   // Show QR code overlay
-  async showQRCode(event: any) {
+  async showQRCode(event: EventQRCode) {
     try {
-      const qrData = `${event.name} - ${event.date} - ${event.time}`;
+      const qrData = event.attendanceCode;
       const qrCodeUrl = await QRCode.toDataURL(qrData);
       this.overlayData = {
         visible: true,
         title: `QR Code for ${event.name}`,
         type: 'qr',
         qrCode: qrCodeUrl,
-        code: '',
+        code: event.attendanceCode,
       };
     } catch (error) {
       console.error('Error generating QR code:', error);
@@ -60,13 +46,13 @@ export class UserDashboardQrCodeComponent implements OnInit {
   }
 
   // Show manual code overlay
-  showManualCode(event: any) {
+  showManualCode(event: EventQRCode) {
     this.overlayData = {
       visible: true,
       title: `Manual Code for ${event.name}`,
       type: 'manual',
       qrCode: '',
-      code: 'ABC123XYZ',
+      code: event.attendanceCode,
     };
   }
 
