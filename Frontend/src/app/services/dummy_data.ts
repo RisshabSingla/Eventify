@@ -6,6 +6,7 @@ import { AdminNotification } from '../model/admin/Notifications';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
 import { EventAttendee } from '../model/event/EventAttendee';
+import { EventDetailPage } from '../model/event/EventDetail';
 import { UserDashboardItems } from '../model/user/Items';
 import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
@@ -1525,4 +1526,32 @@ export const EVENT_ATTENDEE_DATA: EventAttendee = {
       registrationDate: '2024-12-14',
     },
   ],
+};
+
+export const EVENT_DETAIL_PAGE_DATA: EventDetailPage = {
+  eventDetails: {
+    id: 1,
+    title: 'Tech Conference 2024',
+    date: '2024-12-12',
+    location: 'Grand Convention Center, New York',
+    description:
+      'Join us for an exciting conference about the latest in tech innovations.',
+    agenda: [
+      '10:00 AM - Opening Remarks',
+      '11:00 AM - Keynote by John Doe',
+      '01:00 PM - Networking Lunch',
+      '02:00 PM - Breakout Sessions',
+    ],
+    speakers: [
+      { name: 'John Doe', bio: 'Tech Expert' },
+      { name: 'Jane Smith', bio: 'AI Specialist' },
+    ],
+    media: [
+      { type: 'image', src: 'https://via.placeholder.com/800x400' },
+      { type: 'video', src: 'https://www.w3schools.com/html/movie.mp4' },
+    ],
+    registrationLimit: 200,
+    filledSeats: 150,
+  },
+  isUserRegisteredForEvent: true,
 };
