@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Chart from 'chart.js/auto';
+import { EventAnalytic } from '../../../model/event/EventAnalytic';
+import { EventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-event-analytics',
@@ -9,25 +11,22 @@ import Chart from 'chart.js/auto';
 })
 export class EventAnalyticsComponent implements OnInit {
   eventId = '';
-  event = {
-    name: 'Tech Conference 2024',
-    totalRegistrations: 120,
-    actualAttendance: 95,
-    feedbackRating: 4.3,
-    totalFeedbackCount: 60,
-    topFeedbacks: [
-      'The speakers were amazing!',
-      'Great organization and timing.',
-      'Loved the interactive Q&A sessions.',
-    ],
-  };
+  event!: EventAnalytic;
 
-  constructor(private _ar: ActivatedRoute, private router: Router) {
+  constructor(
+    private _ar: ActivatedRoute,
+    private router: Router,
+    private eventService: EventService
+  ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
   }
 
   ngOnInit(): void {
+    this.eventService
+      .getEventAnalyticsData(this.eventId)
+      .subscribe((event: EventAnalytic) => (this.event = event));
+
     this.createRegistrationGraph();
     this.createFeedbackGraph();
   }
@@ -68,7 +67,13 @@ export class EventAnalyticsComponent implements OnInit {
         datasets: [
           {
             label: 'Feedback Breakdown',
-            data: [2, 5, 8, 25, 20],
+            data: [
+              this.event.feedbackCounts['1 star'],
+              this.event.feedbackCounts['2 star'],
+              this.event.feedbackCounts['3 star'],
+              this.event.feedbackCounts['4 star'],
+              this.event.feedbackCounts['5 star'],
+            ],
             backgroundColor: [
               '#E74C3C',
               '#F39C12',

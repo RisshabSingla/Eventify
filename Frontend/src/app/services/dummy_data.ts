@@ -3,7 +3,8 @@ import { EventAttendance } from '../model/admin/Event_Attendance';
 import { EventFeedback } from '../model/admin/Event_Feedback';
 import { EventReports } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
-import { UserDashboardItems, UserEventSummary } from '../model/user/Items';
+import { EventAnalytic } from '../model/event/EventAnalytic';
+import { UserDashboardItems } from '../model/user/Items';
 import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
 
@@ -1217,3 +1218,24 @@ export const USER_DASHBOARD_VIEW_FEEDBACK_EVENTS = [
     suggestions: 'Provide more real-world examples during the sessions.',
   },
 ];
+
+export const EVENT_ANALYTIC_DATA: EventAnalytic = {
+  id: '1',
+  name: 'Tech Conference 2024',
+  totalRegistrations: 120,
+  actualAttendance: 95,
+  feedbackRating: 4.3,
+  totalFeedbackCount: 60,
+  feedbackCounts: {
+    '1 star': 10,
+    '2 star': 20,
+    '3 star': 30,
+    '4 star': 20,
+    '5 star': 10,
+  },
+  topFeedbacks: [
+    'The speakers were amazing!',
+    'Great organization and timing.',
+    'Loved the interactive Q&A sessions.',
+  ],
+};
