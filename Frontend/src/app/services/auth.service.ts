@@ -7,12 +7,14 @@ import { Router } from '@angular/router';
 export class AuthService {
   private users = [
     {
+      id: 1,
       name: 'Admin User',
       email: 'admin@example.com',
       password: 'admin123',
       role: 'admin',
     },
     {
+      id: 2,
       name: 'Normal User',
       email: 'user@example.com',
       password: 'user123',
@@ -20,7 +22,7 @@ export class AuthService {
     },
   ];
 
-  private currentUser: { email: string; role: string } | null = null;
+  private currentUser!: { id: number; email: string; role: string } | null;
 
   constructor(private router: Router) {
     const storedUser = localStorage.getItem('currentUser');
@@ -35,7 +37,7 @@ export class AuthService {
       (u) => u.email === email && u.password === password
     );
     if (user) {
-      this.currentUser = { email: user.email, role: user.role };
+      this.currentUser = { id: user.id, email: user.email, role: user.role };
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       this.router.navigate([user.role === 'admin' ? '/admin' : '/user']);
       return true;
@@ -55,8 +57,8 @@ export class AuthService {
       return 'User already exists with this email';
     }
 
-    this.users.push({ name, email, password, role });
-    this.currentUser = { email, role };
+    this.users.push({ id: 7, name, email, password, role });
+    this.currentUser = { id: 7, email, role };
     console.log('User registered successfully:', name);
 
     // Store the user data in local storage
@@ -91,5 +93,9 @@ export class AuthService {
       console.error('Email not found');
       return false;
     }
+  }
+
+  getCurrentUser() {
+    return this.currentUser || { id: 0, email: '', role: 'guest' };
   }
 }

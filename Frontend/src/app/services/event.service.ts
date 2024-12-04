@@ -4,10 +4,12 @@ import {
   DUMMY_EVENTS_DATA,
   EVENT_ANALYTIC_DATA,
   EVENT_ATTENDANCE_DATA,
+  EVENT_ATTENDEE_DATA,
 } from './dummy_data';
 import { EventDetails } from '../model/event/EventDetails';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
+import { EventAttendee } from '../model/event/EventAttendee';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +33,12 @@ export class EventService {
 
   markAttendanceforUser(eventId: string, userId: number, status: string): void {
     console.log(eventId, userId, status);
+  }
+
+  getEventAttendeeData(
+    eventId: String,
+    userId: number
+  ): Observable<EventAttendee> {
+    return of(EVENT_ATTENDEE_DATA);
   }
 }

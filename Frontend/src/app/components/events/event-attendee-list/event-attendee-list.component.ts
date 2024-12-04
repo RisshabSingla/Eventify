@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Attendee,
+  EventAttendee,
+  eventDetails,
+  UserDetail,
+} from '../../../model/event/EventAttendee';
+import { EventService } from '../../../services/event.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-event-attendee-list',
@@ -8,66 +16,50 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class EventAttendeeListComponent implements OnInit {
   eventId = '';
-  eventName: string = 'Tech Conference 2024';
-  eventDetails: string =
-    'A great event for tech enthusiasts and professionals.';
-  eventPrivacySetting: string = 'Only to Registered Users';
-  isListVisible: boolean = false;
-  userHasRegistered: boolean = false;
-  isAdmin: boolean = true;
-  attendees = [
-    {
-      name: 'John Doe',
-      email: 'john@example.com',
-      registrationDate: '2024-12-01',
-      ticketType: 'VIP',
-    },
-    {
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      registrationDate: '2024-12-02',
-      ticketType: 'Regular',
-    },
-    {
-      name: 'Alice Brown',
-      email: 'alice@example.com',
-      registrationDate: '2024-12-03',
-      ticketType: 'VIP',
-    },
-  ];
+  eventDetails!: eventDetails;
+  userDetail!: UserDetail;
+  attendees!: Attendee[];
+  isListVisible = false;
 
-  constructor(private _ar: ActivatedRoute, private router: Router) {
+  constructor(
+    private _ar: ActivatedRoute,
+    private router: Router,
+    private eventService: EventService,
+    private authService: AuthService
+  ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
   }
 
   ngOnInit(): void {
+    const currentUser = this.authService.getCurrentUser();
+    const id = currentUser.id;
+    this.eventService
+      .getEventAttendeeData(this.eventId, id)
+      .subscribe((data) => {
+        this.eventDetails = data.eventDetails;
+        this.userDetail = data.userDetail;
+        this.attendees = data.attendees;
+      });
+    console.log(this.userDetail);
     this.checkListVisibility();
   }
   checkListVisibility(): void {
-    if (this.isAdmin) {
+    if (this.userDetail.isAdmin) {
       this.isListVisible = true;
       return;
     }
 
-    if (this.eventPrivacySetting === 'Private') {
+    if (this.eventDetails.eventPrivacySetting === 'Private') {
       this.isListVisible = false;
-    } else if (this.eventPrivacySetting === 'Only to Registered Users') {
-      if (this.userHasRegistered) {
+    } else if (
+      this.eventDetails.eventPrivacySetting === 'Only to Registered Users'
+    ) {
+      if (this.userDetail.userHasRegistered) {
         this.isListVisible = true;
       }
     } else {
       this.isListVisible = true;
-    }
-  }
-
-  getDisplayStatus() {
-    if (this.eventPrivacySetting === 'Public') {
-      return 'The attendee list is public.';
-    } else if (this.eventPrivacySetting === 'Only to Registered Users') {
-      return 'The attendee list is available to registered users only.';
-    } else {
-      return 'The attendee list is private.';
     }
   }
 

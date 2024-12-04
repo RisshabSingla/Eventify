@@ -5,6 +5,7 @@ import { EventReports } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
+import { EventAttendee } from '../model/event/EventAttendee';
 import { UserDashboardItems } from '../model/user/Items';
 import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
@@ -1438,4 +1439,90 @@ export const EVENT_ATTENDANCE_DATA: EventAttendanceData = {
     location: 'Grand Tech Hall, NYC',
     date: new Date('2024-12-04'),
   },
+};
+
+export const EVENT_ATTENDEE_DATA: EventAttendee = {
+  eventDetails: {
+    eventId: 1,
+    eventName: 'Tech Conference 2024',
+    eventDetails:
+      'A great event for tech enthusiasts and professionals. The event will feature workshops, keynotes, and networking opportunities with industry leaders.',
+    eventPrivacySetting: 'Only to Registered Users',
+  },
+  userDetail: {
+    userHasRegistered: false,
+    isAdmin: true,
+  },
+  attendees: [
+    {
+      name: 'John Doe',
+      email: 'john@example.com',
+      registrationDate: '2024-12-01',
+    },
+    {
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      registrationDate: '2024-12-02',
+    },
+    {
+      name: 'Alice Brown',
+      email: 'alice@example.com',
+      registrationDate: '2024-12-03',
+    },
+    {
+      name: 'Mike Davis',
+      email: 'mike@example.com',
+      registrationDate: '2024-12-04',
+    },
+    {
+      name: 'Sophia Lee',
+      email: 'sophia@example.com',
+      registrationDate: '2024-12-05',
+    },
+    {
+      name: 'David Clark',
+      email: 'david@example.com',
+      registrationDate: '2024-12-06',
+    },
+    {
+      name: 'Emma Miller',
+      email: 'emma@example.com',
+      registrationDate: '2024-12-07',
+    },
+    {
+      name: 'Olivia Harris',
+      email: 'olivia@example.com',
+      registrationDate: '2024-12-08',
+    },
+    {
+      name: 'Lucas King',
+      email: 'lucas@example.com',
+      registrationDate: '2024-12-09',
+    },
+    {
+      name: 'Chris Taylor',
+      email: 'chris@example.com',
+      registrationDate: '2024-12-10',
+    },
+    {
+      name: 'Isabella Walker',
+      email: 'isabella@example.com',
+      registrationDate: '2024-12-11',
+    },
+    {
+      name: 'Mason White',
+      email: 'mason@example.com',
+      registrationDate: '2024-12-12',
+    },
+    {
+      name: 'Ethan Hall',
+      email: 'ethan@example.com',
+      registrationDate: '2024-12-13',
+    },
+    {
+      name: 'Charlotte Adams',
+      email: 'charlotte@example.com',
+      registrationDate: '2024-12-14',
+    },
+  ],
 };
