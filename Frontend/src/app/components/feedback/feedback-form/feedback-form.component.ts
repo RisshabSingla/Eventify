@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { EventGiveFeedbackData } from '../../../model/event/EventGiveFeedback';
+import { FeedbackService } from '../../../services/feedback.service';
 
 @Component({
   selector: 'app-feedback-form',
@@ -10,19 +12,24 @@ import { ActivatedRoute } from '@angular/router';
 export class FeedbackFormComponent implements OnInit {
   eventId = '';
   feedbackForm!: FormGroup;
+  event!: EventGiveFeedbackData;
 
-  event = {
-    name: 'Tech Conference 2024',
-    date: '2024-12-03',
-    time: '10:00 AM',
-    venue: 'Main Auditorium',
-  };
-  constructor(private _ar: ActivatedRoute, private fb: FormBuilder) {
+  constructor(
+    private _ar: ActivatedRoute,
+    private fb: FormBuilder,
+    private feedbackService: FeedbackService
+  ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
   }
 
   ngOnInit(): void {
+    this.feedbackService
+      .getFeedbackEventData(this.eventId)
+      .subscribe((data: EventGiveFeedbackData) => {
+        this.event = data;
+      });
+
     this.feedbackForm = this.fb.group({
       overallRating: [
         '',
@@ -46,12 +53,12 @@ export class FeedbackFormComponent implements OnInit {
     console.log('hello');
     console.log(this.feedbackForm.value);
     if (this.feedbackForm.invalid) {
-      // Mark all controls as touched to trigger validation messages
       this.feedbackForm.markAllAsTouched();
-      return; // Prevent form submission if invalid
+      return;
     }
 
     // Handle the form submission logic here if the form is valid
+    this.feedbackService.submitFeedback(this.feedbackForm.value);
     console.log(this.feedbackForm.value);
   }
 

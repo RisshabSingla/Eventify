@@ -15,6 +15,7 @@ import { EventFeedbackData } from '../model/event/EventFeedback';
 
 import { EventReports } from '../model/event/EventReport';
 import { adminFeedbackView } from '../model/feedback/adminFeedbackView';
+import { EventGiveFeedbackData } from '../model/event/EventGiveFeedback';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -1769,4 +1770,12 @@ export const USER_FEEDBACK: adminFeedbackView = {
   venueRating: 4,
   comments: 'Amazing event with great speakers and insightful content!',
   suggestions: 'More networking sessions would be great.',
+};
+
+export const EVENT_GIVE_FEEDBACK: EventGiveFeedbackData = {
+  eventId: 'EV2024-03',
+  name: 'Cloud Computing Expo 2024',
+  location: 'International Tech Arena, TX',
+  date: '2024-12-25',
+  time: '11:00 AM',
 };
