@@ -1,16 +1,29 @@
 package com.example.Eventify.model;
 
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.List;
 
 @Document(collection = "users")
-public class User {
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Getter
+@Setter
+@Accessors(chain = true)
+public class User implements UserDetails {
 
     @Id
     private String id;
-
+    @Indexed(unique = true)
     private String email;
     private String password;
     private String name;
@@ -27,18 +40,46 @@ public class User {
 
     // Getters and Setters
 
-    public User(String email, String password, String name, String role, String profileImage,
-                String phoneNumber, String lastLogin, List<Event> registeredEvents, List<Feedback> feedbacksGiven) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.role = role;
-        this.profileImage = profileImage;
-        this.phoneNumber = phoneNumber;
-        this.lastLogin = lastLogin;
-        this.registeredEvents = registeredEvents;
-        this.feedbacksGiven = feedbacksGiven;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+//        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+//        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+//        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+          return true;
+//        return UserDetails.super.isEnabled();
+    }
+
+
 
     // Default constructor and other methods
 }
