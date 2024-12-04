@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  EventReports,
+  EventReport,
   reportsMetrics,
 } from '../../../model/admin/Event_Reports';
 import { Event } from '../../../model/admin/Event';
@@ -18,7 +18,7 @@ export class AdminDashboardReportsComponent implements OnInit {
   constructor(private adminService: AdminService) {}
 
   ngOnInit(): void {
-    this.adminService.getReportsData().subscribe((data: EventReports) => {
+    this.adminService.getReportsData().subscribe((data: EventReport) => {
       this.metrics = data.metrics;
       this.events = data.events;
     });

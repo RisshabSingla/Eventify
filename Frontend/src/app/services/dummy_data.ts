@@ -1,7 +1,7 @@
 import { EventAnalytics } from '../model/admin/Event_Analytics';
 import { EventAttendance } from '../model/admin/Event_Attendance';
 import { EventFeedback } from '../model/admin/Event_Feedback';
-import { EventReports } from '../model/admin/Event_Reports';
+import { EventReport } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
@@ -12,6 +12,8 @@ import { UserDashboardItems } from '../model/user/Items';
 import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
 import { EventFeedbackData } from '../model/event/EventFeedback';
+
+import { EventReports } from '../model/event/EventReport';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -560,7 +562,7 @@ export const ADMIN_DASHBOARD_FEEDBACK_DATA: EventFeedback = {
   ],
 };
 
-export const ADMIN_DASHBOARD_REPORTS_DATA: EventReports = {
+export const ADMIN_DASHBOARD_REPORTS_DATA: EventReport = {
   metrics: {
     totalEvents: 25,
     totalFeedback: 120,
@@ -1730,4 +1732,27 @@ export const EVENT_FEEDBACK_DATA: EventFeedbackData = {
       rating: 5,
     },
   ],
+};
+
+export const EVENT_REPORT_DATA: EventReports = {
+  eventDetails: {
+    id: '248992',
+    title: 'Tech Conference 2024',
+    dateTime: '15th Dec 2024, 10:00 AM',
+    venue: 'Grand Convention Center, NYC',
+    description:
+      'A gathering of tech enthusiasts for talks, workshops, and networking opportunities.',
+  },
+  eventStats: {
+    totalAttendees: 500,
+    totalRegistrations: 600,
+    eventCapacity: 800,
+    attendanceRate: 83.3,
+  },
+  feedbackStats: {
+    totalFeedbacks: 300,
+    averageRating: 4.5,
+    positiveFeedback: 85,
+    negativeFeedback: 15,
+  },
 };

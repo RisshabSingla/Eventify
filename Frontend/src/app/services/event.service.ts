@@ -8,6 +8,7 @@ import {
   EVENT_DETAIL_PAGE_DATA,
   EVENT_EDIT_DATA,
   EVENT_FEEDBACK_DATA,
+  EVENT_REPORT_DATA,
 } from './dummy_data';
 import { EventDetails } from '../model/event/EventDetails';
 import { EventAnalytic } from '../model/event/EventAnalytic';
@@ -17,6 +18,7 @@ import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { EventDetailPage } from '../model/event/EventDetail';
 import { EventEdit } from '../model/event/EventEdit';
 import { EventFeedbackData } from '../model/event/EventFeedback';
+import { EventReports } from '../model/event/EventReport';
 
 @Injectable({
   providedIn: 'root',
@@ -67,5 +69,9 @@ export class EventService {
 
   getEventFeedbackData(eventId: string): Observable<EventFeedbackData> {
     return of(EVENT_FEEDBACK_DATA);
+  }
+
+  getEventReports(eventId: string): Observable<EventReports> {
+    return of(EVENT_REPORT_DATA);
   }
 }

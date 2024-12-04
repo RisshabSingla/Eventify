@@ -6,7 +6,7 @@ export interface reportsMetrics {
   totalRegistrations: number;
 }
 
-export interface EventReports {
+export interface EventReport {
   metrics: reportsMetrics;
   events: Event[];
 }

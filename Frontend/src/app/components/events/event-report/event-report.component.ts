@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Chart } from 'chart.js';
+import { EventService } from '../../../services/event.service';
+import {
+  EventDetails,
+  EventStats,
+  FeedbackStats,
+} from '../../../model/event/EventReport';
 
 @Component({
   selector: 'app-event-report',
@@ -9,73 +15,26 @@ import { Chart } from 'chart.js';
 })
 export class EventReportComponent implements OnInit {
   eventId = '';
+  eventDetails!: EventDetails;
+  eventStats!: EventStats;
+  feedbackStats!: FeedbackStats;
 
-  eventDetails = {
-    title: 'Tech Conference 2024',
-    dateTime: '15th Dec 2024, 10:00 AM',
-    venue: 'Grand Convention Center, NYC',
-    description:
-      'A gathering of tech enthusiasts for talks, workshops, and networking opportunities.',
-  };
-
-  // Dummy Data for Event Statistics
-  eventStats = {
-    totalAttendees: 500,
-    totalRegistrations: 600,
-    eventCapacity: 800,
-    attendanceRate: 83.3,
-    totalFeedbacks: 300,
-  };
-
-  // Dummy Data for Feedback Overview
-  feedbackStats = {
-    averageRating: 4.5,
-    positiveFeedback: 85,
-    negativeFeedback: 15,
-    topSuggestions: 'Great event, would love more interactive sessions!',
-  };
-
-  // Dummy data for feedbacks list
-  feedbacks = [
-    {
-      id: 1,
-      name: 'John Doe',
-      feedback: 'Amazing event! Great speakers and workshops.',
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      feedback: 'Very informative but could use more interactive sessions.',
-      rating: 4,
-    },
-    {
-      id: 3,
-      name: 'Robert Brown',
-      feedback: 'Not bad, but the venue was too small.',
-      rating: 3,
-    },
-    {
-      id: 4,
-      name: 'Emily Clark',
-      feedback: 'Fantastic event, learned a lot!',
-      rating: 5,
-    },
-    {
-      id: 5,
-      name: 'Mike Davis',
-      feedback: 'The event could have been organized better.',
-      rating: 2,
-    },
-    // More feedback entries...
-  ];
-
-  constructor(private _ar: ActivatedRoute, private router: Router) {
+  constructor(
+    private _ar: ActivatedRoute,
+    private router: Router,
+    private eventService: EventService
+  ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
   }
 
   ngOnInit() {
+    this.eventService.getEventReports(this.eventId).subscribe((data) => {
+      this.eventDetails = data.eventDetails;
+      this.eventStats = data.eventStats;
+      this.feedbackStats = data.feedbackStats;
+    });
+
     this.createAttendanceChart();
     this.createFeedbackChart();
   }
