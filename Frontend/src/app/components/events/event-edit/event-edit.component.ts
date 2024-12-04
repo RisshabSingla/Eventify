@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EventService } from '../../../services/event.service';
+import { EventEdit } from '../../../model/event/EventEdit';
 
 @Component({
   selector: 'app-event-edit',
@@ -18,33 +20,14 @@ export class EventEditComponent implements OnInit {
   eventForm!: FormGroup;
   formSubmitted = false;
   eventId = '';
-
+  formData!: EventEdit;
   // Dummy event data to populate the form
-  dummyEvent = {
-    eventTitle: 'Sample Event',
-    eventDescription: 'This is a sample event description.',
-    eventDate: '2024-12-10',
-    eventTime: '10:30',
-    eventLocation: 'Event Hall 1',
-    eventCategory: 'workshop',
-    registrationLimit: 100,
-    eventTags: 'Technology, Workshop',
-    coverImage: 'path/to/sample-image.jpg',
-    agenda: [
-      { agendaItem: 'Opening Remarks', startTime: '10:30' },
-      { agendaItem: 'Keynote Speech', startTime: '11:00' },
-    ],
-    speakers: [
-      { name: 'John Doe', bio: 'CEO of Example Corp' },
-      { name: 'Jane Smith', bio: 'Expert in Technology' },
-    ],
-    attendeeList: 'public',
-  };
 
   constructor(
     private fb: FormBuilder,
     private _ar: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private eventService: EventService
   ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
@@ -66,7 +49,11 @@ export class EventEditComponent implements OnInit {
       attendeeList: ['public', [Validators.required]],
     });
 
-    this.populateForm(this.dummyEvent);
+    this.eventService.getEventEditDetails(this.eventId).subscribe((data) => {
+      this.formData = data;
+    });
+
+    this.populateForm(this.formData);
   }
 
   futureDateValidator(control: AbstractControl): ValidationErrors | null {

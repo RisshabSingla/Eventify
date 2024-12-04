@@ -7,6 +7,7 @@ import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
 import { EventAttendee } from '../model/event/EventAttendee';
 import { EventDetailPage } from '../model/event/EventDetail';
+import { EventEdit } from '../model/event/EventEdit';
 import { UserDashboardItems } from '../model/user/Items';
 import { EventQRCode } from '../model/user/QRCode';
 import { UserEvents } from '../model/user/registeredEvents';
@@ -1554,4 +1555,31 @@ export const EVENT_DETAIL_PAGE_DATA: EventDetailPage = {
     filledSeats: 150,
   },
   isUserRegisteredForEvent: true,
+};
+
+export const EVENT_EDIT_DATA: EventEdit = {
+  eventTitle: 'Sample Tech Conference 2024',
+  eventDescription:
+    'Join us for an exciting conference about the latest in tech innovations.',
+  eventDate: '2024-12-15',
+  eventTime: '09:00',
+  eventLocation: 'Tech Convention Center, Silicon Valley',
+  eventCategory: 'Conference',
+  registrationLimit: 500,
+  eventTags: 'Technology, Conference, Innovation, Networking',
+  coverImage: 'https://via.placeholder.com/800x400',
+  agenda: [
+    { agendaItem: 'Opening Remarks', startTime: '09:00' },
+    { agendaItem: 'Keynote by John Doe', startTime: '09:30' },
+    { agendaItem: 'Panel Discussion: Future of AI', startTime: '11:00' },
+    { agendaItem: 'Lunch Break', startTime: '12:30' },
+    { agendaItem: 'Networking Session', startTime: '14:00' },
+    { agendaItem: 'Closing Remarks', startTime: '16:00' },
+  ],
+  speakers: [
+    { name: 'John Doe', bio: 'CEO of Example Corp and Tech Innovator' },
+    { name: 'Jane Smith', bio: 'AI Specialist and Researcher' },
+    { name: 'Alex Brown', bio: 'Tech Entrepreneur and Investor' },
+  ],
+  attendeeList: 'public',
 };

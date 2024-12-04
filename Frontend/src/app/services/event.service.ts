@@ -6,6 +6,7 @@ import {
   EVENT_ATTENDANCE_DATA,
   EVENT_ATTENDEE_DATA,
   EVENT_DETAIL_PAGE_DATA,
+  EVENT_EDIT_DATA,
 } from './dummy_data';
 import { EventDetails } from '../model/event/EventDetails';
 import { EventAnalytic } from '../model/event/EventAnalytic';
@@ -13,6 +14,7 @@ import { EventAttendanceData } from '../model/event/EventAttendance';
 import { EventAttendee } from '../model/event/EventAttendee';
 import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { EventDetailPage } from '../model/event/EventDetail';
+import { EventEdit } from '../model/event/EventEdit';
 
 @Injectable({
   providedIn: 'root',
@@ -55,5 +57,9 @@ export class EventService {
   ): Observable<EventDetailPage> {
     console.log(eventId, userId);
     return of(EVENT_DETAIL_PAGE_DATA);
+  }
+
+  getEventEditDetails(eventId: string): Observable<EventEdit> {
+    return of(EVENT_EDIT_DATA);
   }
 }
