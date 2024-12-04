@@ -3,6 +3,7 @@ import { EventAttendance } from '../model/admin/Event_Attendance';
 import { EventFeedback } from '../model/admin/Event_Feedback';
 import { EventReports } from '../model/admin/Event_Reports';
 import { AdminNotification } from '../model/admin/Notifications';
+import { UserDashboardItems } from '../model/user/Items';
 
 export const DUMMY_EVENTS_DATA = [
   {
@@ -697,4 +698,26 @@ export const ADMIN_DASHBOARD_REPORTS_DATA: EventReports = {
         'Understand the basics and breakthroughs in quantum computing.',
     },
   ],
+};
+
+export const USER_DASHBOARD_DATA: UserDashboardItems = {
+  userDetails: {
+    userImageUrl: 'https://via.placeholder.com/150',
+    userName: 'John Doe',
+    userEmail: 'john.doe@example.com',
+  },
+  userEventSummary: {
+    registeredEvents: 5,
+    upcomingEvents: 2,
+    eventsAttended: 3,
+  },
+  userNotifications: [
+    'Upcoming Event: Tech Conference on Dec 15th',
+    'Reminder: Event registration closes soon',
+    'Your feedback for the last event has been recorded',
+  ],
+  userStats: {
+    totalEventsRegistered: 10,
+    feedbackGiven: 4,
+  },
 };

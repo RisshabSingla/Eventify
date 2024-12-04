@@ -7,12 +7,14 @@
   >
     <img
       class="w-20 h-20 rounded-full object-cover"
-      [src]="userImageUrl"
+      [src]="userDetails.userImageUrl"
       alt="User Image"
     />
     <div class="truncate">
-      <h3 class="text-3xl font-semibold text-black truncate">{{ userName }}</h3>
-      <p class="text-base text-black truncate">{{ userEmail }}</p>
+      <h3 class="text-3xl font-semibold text-black truncate">
+        {{ userDetails.userName }}
+      </h3>
+      <p class="text-base text-black truncate">{{ userDetails.userEmail }}</p>
     </div>
   </div>
 
@@ -22,9 +24,16 @@
       Event Participation Summary
     </h4>
     <div class="space-y-2 text-base text-black">
-      <p><strong>Registered Events:</strong> {{ registeredEvents }}</p>
-      <p><strong>Upcoming Events:</strong> {{ upcomingEvents }}</p>
-      <p><strong>Events Attended:</strong> {{ eventsAttended }}</p>
+      <p>
+        <strong>Registered Events:</strong>
+        {{ userEventSummary.registeredEvents }}
+      </p>
+      <p>
+        <strong>Upcoming Events:</strong> {{ userEventSummary.upcomingEvents }}
+      </p>
+      <p>
+        <strong>Events Attended:</strong> {{ userEventSummary.eventsAttended }}
+      </p>
     </div>
   </div>
 
@@ -32,7 +41,7 @@
   <div class="bg-white p-5 rounded-md shadow-md border border-gray-200">
     <h4 class="text-xl font-semibold text-black">Notifications</h4>
     <ul class="space-y-2 text-base text-black">
-      <li *ngFor="let notification of notifications" class="py-1">
+      <li *ngFor="let notification of userNotifications" class="py-1">
         {{ notification }}
       </li>
     </ul>
@@ -43,9 +52,10 @@
     <h4 class="text-xl font-semibold text-black">User Stats</h4>
     <div class="space-y-2 text-base text-black">
       <p>
-        <strong>Total Events Registered:</strong> {{ totalEventsRegistered }}
+        <strong>Total Events Registered:</strong>
+        {{ userStats.totalEventsRegistered }}
       </p>
-      <p><strong>Feedback Given:</strong> {{ feedbackGiven }}</p>
+      <p><strong>Feedback Given:</strong> {{ userStats.feedbackGiven }}</p>
     </div>
   </div>
 </div>

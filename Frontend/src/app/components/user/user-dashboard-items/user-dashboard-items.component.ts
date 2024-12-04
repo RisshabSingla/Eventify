@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import {
+  UserDetail,
+  UserEventSummary,
+  UserStats,
+} from '../../../model/user/Items';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-user-dashboard-items',
@@ -6,37 +12,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './user-dashboard-items.component.scss',
 })
 export class UserDashboardItemsComponent implements OnInit {
-  // Example user data
-  userImageUrl: string = 'https://via.placeholder.com/150'; // Placeholder image URL
-  userName: string = 'John Doe';
-  userEmail: string = 'john.doe@example.com';
+  userDetails!: UserDetail;
+  userEventSummary!: UserEventSummary;
+  userNotifications!: string[];
+  userStats!: UserStats;
 
-  // Event participation summary
-  registeredEvents: number = 5;
-  upcomingEvents: number = 2;
-  eventsAttended: number = 3;
-
-  // Notifications (Can be dynamic)
-  notifications: string[] = [
-    'Upcoming Event: Tech Conference on Dec 15th',
-    'Reminder: Event registration closes soon',
-    'Your feedback for the last event has been recorded',
-  ];
-
-  // User stats
-  totalEventsRegistered: number = 10;
-  feedbackGiven: number = 4;
-
-  // Upcoming event (most recent)
-  upcomingEvent = {
-    name: 'Tech Conference 2024',
-    date: new Date('2024-12-15'),
-    location: 'Online',
-  };
-
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    // Here you can load real user data from a service
+    this.userService.getDashBoardItems().subscribe((data) => {
+      this.userDetails = data.userDetails;
+      this.userEventSummary = data.userEventSummary;
+      this.userNotifications = data.userNotifications;
+      this.userStats = data.userStats;
+    });
   }
 }
