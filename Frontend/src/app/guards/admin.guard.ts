@@ -19,7 +19,7 @@ export class adminGuard implements CanActivate {
   ): boolean {
     const userRole = this.authService.getCurrentUserRole();
 
-    if (userRole === 'admin') {
+    if (userRole === 'Admin') {
       return true;
     } else {
       this.router.navigate(['/auth/register']);

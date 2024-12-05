@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class UserNavBarComponent {
   isMenuOpen = false;
-  currentRole: 'admin' | 'user' | 'guest' = 'guest';
+  currentRole: 'Admin' | 'User' | 'Guest' = 'Guest';
 
   constructor(private authService: AuthService, private router: Router) {}
 

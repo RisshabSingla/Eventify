@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class AdminDashboardComponent implements OnInit {
   isSidebarOpen = false;
   selectedSection: string = 'dashboard';
-  currentRole: 'admin' | 'user' | 'guest' = 'guest';
+  currentRole: 'Admin' | 'User' | 'Guest' = 'Guest';
 
   isSmallScreen: boolean = false;
 

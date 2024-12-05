@@ -33,9 +33,9 @@ export class EventAttendeeListComponent implements OnInit {
 
   ngOnInit(): void {
     const currentUser = this.authService.getCurrentUser();
-    const id = currentUser.id;
+    // const id = currentUser.id;
     this.eventService
-      .getEventAttendeeData(this.eventId, id)
+      .getEventAttendeeData(this.eventId, 123)
       .subscribe((data) => {
         this.eventDetails = data.eventDetails;
         this.userDetail = data.userDetail;

@@ -1,19 +1,19 @@
 <div class="flex flex-col h-full justify-between">
   <header class="text-center">
     <app-admin-nav-bar
-      *ngIf="authService.getCurrentUserRole() === 'admin'"
+      *ngIf="authService.getCurrentUserRole() === 'Admin'"
     ></app-admin-nav-bar>
     <app-user-nav-bar
-      *ngIf="authService.getCurrentUserRole() === 'user'"
+      *ngIf="authService.getCurrentUserRole() === 'User'"
     ></app-user-nav-bar>
     <app-home-nav-bar
-      *ngIf="authService.getCurrentUserRole() === 'guest'"
+      *ngIf="authService.getCurrentUserRole() === 'Guest'"
     ></app-home-nav-bar>
   </header>
   <main class="flex-1">
     <router-outlet></router-outlet>
   </main>
   <footer class="text-center">
-    <app-footer *ngIf="authService.getCurrentUserRole() === 'guest'" />
+    <app-footer *ngIf="authService.getCurrentUserRole() === 'Guest'" />
   </footer>
 </div>

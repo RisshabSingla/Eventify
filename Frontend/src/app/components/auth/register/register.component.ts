@@ -11,7 +11,7 @@ export class RegisterComponent implements OnInit {
   name: string = '';
   email: string = '';
   password: string = '';
-  role: 'admin' | 'user' = 'user';
+  role: 'Admin' | 'User' = 'User';
   errorMessage: string = '';
   successMessage: string = '';
 
@@ -19,28 +19,26 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     const currentRole = this.authService.getCurrentUserRole();
-    if (currentRole !== 'guest') {
-      this.router.navigate([currentRole === 'admin' ? '/admin' : '/user']);
+    if (currentRole !== 'Guest') {
+      this.router.navigate([currentRole === 'Admin' ? '/admin' : '/user']);
     }
   }
 
   register() {
-    const result = this.authService.register(
-      this.name,
-      this.email,
-      this.password,
-      this.role
-    );
-
-    if (result === 'User already exists with this email') {
-      this.errorMessage = result;
-      this.successMessage = '';
-    } else if (result === 'Registration successful') {
-      this.successMessage = result;
-      this.errorMessage = '';
-    } else {
-      this.errorMessage = 'Registration failed, please try again.';
-      this.successMessage = '';
-    }
+    this.authService
+      .register(this.name, this.email, this.password, this.role)
+      .subscribe((result) => {
+        console.log(result);
+        if (result === 'User already exists with this email') {
+          this.errorMessage = result;
+          this.successMessage = '';
+        } else if (result === 'Registration successful') {
+          this.successMessage = result;
+          this.errorMessage = '';
+        } else {
+          this.errorMessage = 'Registration failed, please try again.';
+          this.successMessage = '';
+        }
+      });
   }
 }

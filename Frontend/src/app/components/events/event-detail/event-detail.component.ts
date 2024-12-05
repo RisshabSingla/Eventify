@@ -11,7 +11,7 @@ import { EventService } from '../../../services/event.service';
 })
 export class EventDetailComponent implements OnInit {
   eventId = '';
-  currentUserRole: 'admin' | 'user' | 'guest' = 'guest';
+  currentUserRole: 'Admin' | 'User' | 'Guest' = 'Guest';
   event!: EventDetail;
   isUserRegisteredForEvent: boolean = false;
 
@@ -29,8 +29,8 @@ export class EventDetailComponent implements OnInit {
     this.currentUserRole = this.authService.getCurrentUserRole();
 
     const currentUser = this.authService.getCurrentUser();
-    const id = currentUser.id;
-    this.eventService.getEventDetails(this.eventId, id).subscribe((data) => {
+    // const id = currentUser.id;
+    this.eventService.getEventDetails(this.eventId, 123).subscribe((data) => {
       this.event = data.eventDetails;
       this.isUserRegisteredForEvent = data.isUserRegisteredForEvent;
     });

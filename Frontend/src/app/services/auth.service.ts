@@ -1,5 +1,7 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +23,15 @@ export class AuthService {
       role: 'user',
     },
   ];
+  private apiUrl = 'http://localhost:8080/';
 
-  private currentUser!: { id: number; email: string; role: string } | null;
+  private currentUser!: {
+    role: String;
+    token: String;
+    expiresIn: number;
+  } | null;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUser = JSON.parse(storedUser);
@@ -32,17 +39,21 @@ export class AuthService {
   }
 
   // Login with email
-  login(email: string, password: string): boolean {
-    const user = this.users.find(
-      (u) => u.email === email && u.password === password
+  login(email: string, password: string): Observable<boolean> {
+    const payload = { email, password };
+    console.log(payload);
+    return this.http.post<any>(`${this.apiUrl}auth/login`, payload).pipe(
+      tap((user) => {
+        console.log(user);
+        this.currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.router.navigate([user.role === 'User' ? '/user' : '/admin']);
+      }),
+      catchError((error) => {
+        console.error('Login failed:', error);
+        return of(false);
+      })
     );
-    if (user) {
-      this.currentUser = { id: user.id, email: user.email, role: user.role };
-      localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-      this.router.navigate([user.role === 'admin' ? '/admin' : '/user']);
-      return true;
-    }
-    return false;
   }
 
   // Register with name, email, password, and role
@@ -50,21 +61,27 @@ export class AuthService {
     name: string,
     email: string,
     password: string,
-    role: 'admin' | 'user'
-  ): string {
-    const userExists = this.users.some((u) => u.email === email);
-    if (userExists) {
-      return 'User already exists with this email';
-    }
+    role: 'Admin' | 'User'
+  ): Observable<string> {
+    const payload = { name, email, password, role };
 
-    this.users.push({ id: 7, name, email, password, role });
-    this.currentUser = { id: 7, email, role };
-    console.log('User registered successfully:', name);
-
-    // Store the user data in local storage
-    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-    this.router.navigate([role === 'admin' ? '/admin' : '/user']);
-    return 'Registration successful';
+    return this.http.post<any>(`${this.apiUrl}/register`, payload).pipe(
+      tap((response) => {
+        console.log('User registered successfully:', response);
+        this.currentUser = {
+          token: response.token,
+          expiresIn: response.expiresIn,
+          role: response.role,
+        };
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.router.navigate([role === 'Admin' ? '/admin' : '/user']);
+      }),
+      map(() => 'Registration successful'),
+      catchError((error) => {
+        console.error('Registration failed:', error);
+        return of('Registration failed. Please try again.');
+      })
+    );
   }
 
   // Logout
@@ -76,10 +93,10 @@ export class AuthService {
   }
 
   // Get the current logged-in user's role
-  getCurrentUserRole(): 'admin' | 'user' | 'guest' {
+  getCurrentUserRole(): 'Admin' | 'User' | 'Guest' {
     return this.currentUser
-      ? (this.currentUser.role as 'admin' | 'user' | 'guest')
-      : 'guest';
+      ? (this.currentUser.role as 'Admin' | 'User' | 'Guest')
+      : 'Guest';
   }
 
   // Reset password by email

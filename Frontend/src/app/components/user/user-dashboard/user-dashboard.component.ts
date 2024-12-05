@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class UserDashboardComponent implements OnInit {
   isSidebarOpen = false; // Sidebar visibility state
   selectedSection: string = 'dashboard'; // Default section
-  currentRole: 'admin' | 'user' | 'guest' = 'guest'; // Default role
+  currentRole: 'Admin' | 'User' | 'Guest' = 'Guest'; // Default role
 
   // Boolean to check if the screen is small
   isSmallScreen: boolean = false;

@@ -10,7 +10,7 @@ import { EventDetails } from '../../../model/event/EventDetails';
   styleUrl: './event-list.component.scss',
 })
 export class EventListComponent implements OnInit {
-  user: 'guest' | 'user' | 'admin' = 'guest';
+  user: 'Admin' | 'User' | 'Guest' = 'Guest';
   events: EventDetails[] = [];
 
   constructor(
@@ -36,7 +36,7 @@ export class EventListComponent implements OnInit {
   }
 
   navigateToEvent(eventId: number): void {
-    if (this.user === 'guest') {
+    if (this.user === 'Guest') {
       this.router.navigate(['/events', eventId]);
     } else {
       this.router.navigate(['/user/explore/', eventId]);

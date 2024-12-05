@@ -16,16 +16,21 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     const currentRole = this.authService.getCurrentUserRole();
-    if (currentRole !== 'guest') {
-      this.router.navigate([currentRole === 'admin' ? '/admin' : '/user']);
+    if (currentRole !== 'Guest') {
+      this.router.navigate([currentRole === 'Admin' ? '/admin' : '/user']);
     }
   }
 
   login() {
-    const isAuthenticated = this.authService.login(this.email, this.password);
-
-    if (!isAuthenticated) {
-      this.errorMessage = 'Invalid email or password. Please try again.';
-    }
+    this.authService.login(this.email, this.password).subscribe(
+      (isAuthenticated) => {
+        if (!isAuthenticated) {
+          this.errorMessage = 'Invalid email or password. Please try again.';
+        }
+      },
+      (error) => {
+        this.errorMessage = 'Something went wrong. Please try again later.';
+      }
+    );
   }
 }
