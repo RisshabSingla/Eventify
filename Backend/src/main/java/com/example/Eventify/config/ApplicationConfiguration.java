@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Base64;
 
 
 @Configuration
@@ -27,9 +30,27 @@ public class ApplicationConfiguration {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+
     @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new Base64BCryptPasswordEncoder();
+    }
+
+    public static class Base64BCryptPasswordEncoder implements PasswordEncoder {
+
+        private final BCryptPasswordEncoder bcryptEncoder = new BCryptPasswordEncoder();
+
+        @Override
+        public String encode(CharSequence rawPassword) {
+            String base64Encoded = Base64.getEncoder().encodeToString(rawPassword.toString().getBytes());
+            return bcryptEncoder.encode(base64Encoded);
+        }
+
+        @Override
+        public boolean matches(CharSequence rawPassword, String encodedPassword) {
+            String base64Encoded = Base64.getEncoder().encodeToString(rawPassword.toString().getBytes());
+            return bcryptEncoder.matches(base64Encoded, encodedPassword);
+        }
     }
 
     @Bean
