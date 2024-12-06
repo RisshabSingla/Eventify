@@ -2,6 +2,7 @@ package com.example.Eventify.controller;
 
 import com.example.Eventify.model.User;
 import com.example.Eventify.request.CreateEventRequest;
+import com.example.Eventify.response.AdminEventAnalyticsResponse;
 import com.example.Eventify.response.AdminEventListResponse;
 import com.example.Eventify.response.EventCreateResponse;
 import com.example.Eventify.service.EventService;
@@ -53,5 +54,13 @@ public class EventController {
                 .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/getOverallEventAnalytics")
+    public ResponseEntity<AdminEventAnalyticsResponse> getOverallEventAnalytics() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(eventService.getOverallEventAnalytics(currentUser));
     }
 }
