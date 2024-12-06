@@ -45,7 +45,6 @@ public class EventService {
         }
 
         currentUser.getCreatedEvents().add(savedEvent);
-//        System.out.println(currentUser.getCreatedEvents());
         userRepository.save(currentUser);
 
         return new EventCreateResponse()
@@ -60,5 +59,10 @@ public class EventService {
                 .setSpeakers(savedEvent.getSpeakers())
                 .setAgenda(savedEvent.getAgenda())
                 .setAttendeeListPrivacy(savedEvent.getAttendeeListPrivacy());
+    }
+
+
+    public ArrayList<Event> getAllAdminEvents() {
+        return (ArrayList<Event>) eventRepository.findAll();
     }
 }
