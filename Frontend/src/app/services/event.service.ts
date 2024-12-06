@@ -14,17 +14,19 @@ import { EventDetails } from '../model/event/EventDetails';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
 import { EventAttendee } from '../model/event/EventAttendee';
-import { observableToBeFn } from 'rxjs/internal/testing/TestScheduler';
 import { EventDetailPage } from '../model/event/EventDetail';
 import { EventEdit } from '../model/event/EventEdit';
 import { EventFeedbackData } from '../model/event/EventFeedback';
 import { EventReports } from '../model/event/EventReport';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  constructor() {}
+  private apiUrl = 'http://localhost:8080/events';
+
+  constructor(private http: HttpClient) {}
 
   getAllEvents(): Observable<EventDetails[]> {
     return of(DUMMY_EVENTS_DATA);
@@ -51,8 +53,17 @@ export class EventService {
     return of(EVENT_ATTENDEE_DATA);
   }
 
-  createEvent(eventData: any) {
+  createEvent(eventData: any): Observable<any> {
     console.log(eventData);
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const token = currentUser.token;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.post(this.apiUrl + '/create', eventData, { headers });
   }
 
   getEventDetails(

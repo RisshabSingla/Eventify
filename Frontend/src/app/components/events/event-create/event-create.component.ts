@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { EventService } from '../../../services/event.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event-create',
@@ -17,7 +18,11 @@ import { EventService } from '../../../services/event.service';
 export class EventCreateComponent {
   eventForm!: FormGroup;
   formSubmitted = false;
-  constructor(private fb: FormBuilder, private eventService: EventService) {}
+  constructor(
+    private fb: FormBuilder,
+    private eventService: EventService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
@@ -103,7 +108,17 @@ export class EventCreateComponent {
       return;
     }
 
-    this.eventService.createEvent(this.eventForm.value);
+    this.eventService.createEvent(this.eventForm.value).subscribe(
+      (response) => {
+        console.log('Event created successfully', response);
+        this.eventForm.reset();
+        alert('Event created successfully');
+        this.router.navigate(['admin/event-management']);
+      },
+      (error) => {
+        console.error('Error creating event', error);
+      }
+    );
     console.log(this.eventForm.value);
   }
 }
