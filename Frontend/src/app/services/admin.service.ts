@@ -15,7 +15,10 @@ import {
   AnalyticMetrics,
   EventAnalytics,
 } from '../model/admin/Event_Analytics';
-import { EventAttendance } from '../model/admin/Event_Attendance';
+import {
+  attendanceMetrics,
+  EventAttendance,
+} from '../model/admin/Event_Attendance';
 import { AdminNotification } from '../model/admin/Notifications';
 import { EventFeedback } from '../model/admin/Event_Feedback';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -26,7 +29,8 @@ import { Event } from '../model/admin/Event';
 })
 export class AdminService {
   apiEndpoint = `http://localhost:8080/`;
-
+  currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  token = this.currentUser.token;
   constructor(private http: HttpClient) {}
 
   getDashboardItems(): Observable<Items> {
@@ -34,12 +38,9 @@ export class AdminService {
   }
 
   getEventManagementData(): Observable<EventManagement> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const token = currentUser.token;
-
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     const allEvents = this.http.get<Event[]>(
@@ -61,12 +62,9 @@ export class AdminService {
   }
 
   getEventAnalyticsData(): Observable<EventAnalytics> {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const token = currentUser.token;
-
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
     const createdByAdminEvents = this.http.get<Event[]>(
@@ -90,6 +88,27 @@ export class AdminService {
   }
 
   getEventAttendanceData(): Observable<EventAttendance> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const createdByAdminEvents = this.http.get<Event[]>(
+      `${this.apiEndpoint}events/getMyCreatedEvents`,
+      { headers }
+    );
+
+    const eventAttendanceMetrics = this.http.get<attendanceMetrics>(
+      `${this.apiEndpoint}events/getOverallAttendanceAnalytics`,
+      { headers }
+    );
+
+    return forkJoin([createdByAdminEvents, eventAttendanceMetrics]).pipe(
+      map(([createdByAdminEvents, eventAttendanceMetrics]) => ({
+        metrics: eventAttendanceMetrics,
+        events: createdByAdminEvents,
+      }))
+    );
     return of(ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA);
   }
 
