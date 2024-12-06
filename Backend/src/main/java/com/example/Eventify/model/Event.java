@@ -1,11 +1,18 @@
 package com.example.Eventify.model;
 
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 @Document(collection = "events")
 public class Event {
 
@@ -42,51 +49,18 @@ public class Event {
 
     // Getters and Setters
 
-    public Event(String name, String description, String location, String date, String time, int maxCapacity,
-                 int numberRegistered, String category, String coverImage, User createdBy,
-                 List<User> registeredUsers, List<Feedback> feedbacks, List<UserStatus> userStatuses,
-                 List<Speaker> speakers, List<AgendaItem> agenda, String attendeeListPrivacy) {
-        this.name = name;
-        this.description = description;
-        this.location = location;
-        this.date = date;
-        this.time = time;
-        this.maxCapacity = maxCapacity;
-        this.numberRegistered = numberRegistered;
-        this.category = category;
-        this.coverImage = coverImage;
-        this.createdBy = createdBy;
-        this.registeredUsers = registeredUsers;
-        this.feedbacks = feedbacks;
-        this.userStatuses = userStatuses;
-        this.speakers = speakers;
-        this.agenda = agenda;
-        this.attendeeListPrivacy = attendeeListPrivacy;
-    }
-
-    // Default constructor and other methods
-
+    @Data
+    @Accessors(chain = true)
     public static class Speaker {
         private String name;
         private String bio;
 
-        public Speaker(String name, String bio) {
-            this.name = name;
-            this.bio = bio;
-        }
-
-        // Getters and Setters
     }
 
+    @Data
+    @Accessors(chain = true)
     public static class AgendaItem {
         private String description;
-        private String date;
-
-        public AgendaItem(String description, String date) {
-            this.description = description;
-            this.date = date;
-        }
-
-        // Getters and Setters
+        private String time;
     }
 }
