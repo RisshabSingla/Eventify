@@ -9,6 +9,7 @@ import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.response.AdminEventAnalyticsResponse;
+import com.example.Eventify.response.AdminEventAttendanceResponse;
 import com.example.Eventify.response.EventCreateResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -135,5 +136,16 @@ public class EventService {
                 .mapToInt(Feedback::getOverallRating)
                 .average()
                 .orElse(0);
+    }
+
+
+    public AdminEventAttendanceResponse getOverallAttendanceAnalytics(User currentUser){
+        int attendedUsers = getTotalAttendedUsers(currentUser);
+        int registeredUsers = getTotalRegisteredUsers(currentUser);
+        return new AdminEventAttendanceResponse()
+                .setTotalRegisteredUsers(registeredUsers)
+                .setTotalAttendedUsers(attendedUsers)
+                .setAttendanceRate(registeredUsers == 0 ? 0 : (attendedUsers * 100) / registeredUsers)
+                .setTotalNoShowUsers(registeredUsers - attendedUsers);
     }
 }

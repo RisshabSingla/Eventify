@@ -9,9 +9,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class AdminEventAnalyticsResponse {
-    private int totalCreatedEvents;
-    private int totalRegisteredUsers;
+public class AdminEventAttendanceResponse {
+    private  int totalRegisteredUsers;
     private int totalAttendedUsers;
-    private double averageFeedbackRating;
+    private int attendanceRate;
+    private int totalNoShowUsers;
 }
