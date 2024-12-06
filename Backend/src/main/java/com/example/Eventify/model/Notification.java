@@ -1,9 +1,18 @@
 package com.example.Eventify.model;
 
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Getter
+@Setter
+@Accessors(chain = true)
 @Document(collection = "notifications")
 public class Notification {
 
@@ -17,15 +26,5 @@ public class Notification {
     @DBRef
     private Event eventId;  // Reference to Event class
 
-    // Getters and Setters
-
-    public Notification(String type, String description, String timeStamp, Event eventId) {
-        this.type = type;
-        this.description = description;
-        this.timeStamp = timeStamp;
-        this.eventId = eventId;
-    }
-
-    // Default constructor and other methods
 }
 

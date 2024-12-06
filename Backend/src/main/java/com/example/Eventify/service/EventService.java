@@ -1,8 +1,10 @@
 package com.example.Eventify.service;
 
 import com.example.Eventify.model.Event;
+import com.example.Eventify.model.Notification;
 import com.example.Eventify.model.User;
 import com.example.Eventify.repository.EventRepository;
+import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.response.EventCreateResponse;
@@ -21,6 +23,9 @@ public class EventService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public EventCreateResponse createEvent(CreateEventRequest request, User currentUser) {
 
@@ -46,6 +51,13 @@ public class EventService {
 
         currentUser.getCreatedEvents().add(savedEvent);
         userRepository.save(currentUser);
+
+        Notification notification = new Notification().
+                setType("Event Created").setEventId(savedEvent)
+                .setDescription("Event Created " + event.getName())
+                .setTimeStamp(String.valueOf(System.currentTimeMillis()));
+
+        notificationRepository.save(notification);
 
         return new EventCreateResponse()
                 .setName(savedEvent.getName())
