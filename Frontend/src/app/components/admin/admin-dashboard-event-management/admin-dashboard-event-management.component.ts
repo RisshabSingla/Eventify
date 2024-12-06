@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, AfterViewInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -33,6 +33,8 @@ export class AdminDashboardEventManagementComponent implements OnInit {
       .subscribe((data: EventManagement) => {
         this.createdByAdminEvents = data.createdByAdminEvents;
         this.allEvents = data.allEvents;
+
+        this.initializeCalendar();
       });
   }
 
@@ -43,10 +45,6 @@ export class AdminDashboardEventManagementComponent implements OnInit {
 
   createEvent() {
     this.router.navigate(['/admin/event-management/create']);
-  }
-
-  ngAfterViewInit() {
-    this.initializeCalendar();
   }
 
   initializeCalendar() {
