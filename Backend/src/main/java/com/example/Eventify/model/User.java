@@ -36,6 +36,9 @@ public class User implements UserDetails {
     private List<Event> registeredEvents;  // Reference to Event class
 
     @DBRef
+    private List<Event> createdEvents;
+
+    @DBRef
     private List<Feedback> feedbacksGiven;  // Reference to Feedback class
 
     // Getters and Setters
@@ -79,6 +82,22 @@ public class User implements UserDetails {
 //        return UserDetails.super.isEnabled();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", lastLogin='" + lastLogin + '\'' +
+                ", registeredEvents=" + registeredEvents +
+                ", createdEvents=" + createdEvents +
+                ", feedbacksGiven=" + feedbacksGiven +
+                '}';
+    }
 
 
     // Default constructor and other methods

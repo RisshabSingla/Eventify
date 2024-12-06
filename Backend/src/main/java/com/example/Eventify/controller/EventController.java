@@ -25,12 +25,13 @@ public class EventController {
         System.out.println(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        System.out.println(currentUser);
+//        System.out.println(currentUser.toString());
         if(!Objects.equals(currentUser.getRole(), "Admin")) {
             return ResponseEntity.badRequest().body("Only admins can create events");
         }
 
         EventCreateResponse response = eventService.createEvent(request, currentUser);
+//        System.out.println(response);
         return ResponseEntity.ok(response);
     }
 

@@ -14,15 +14,18 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 public class CreateEventRequest {
-    private String name;
-    private String description;
-    private String location;
-    private String date;
-    private String time;
-    private int maxCapacity;
-    private String category;
+
+    private String eventTitle;
+    private String eventDescription;
+    private String eventDate;
+    private String eventTime;
+    private String eventLocation;
+    private String eventCategory;
+    private int registrationLimit;
+    private String eventTags;
     private String coverImage;
-    private List<Event.Speaker> speakers;
     private List<Event.AgendaItem> agenda;
-    private String attendeeListPrivacy;
+    private List<Event.Speaker> speakers;
+    private String attendeeList;
+
 }
