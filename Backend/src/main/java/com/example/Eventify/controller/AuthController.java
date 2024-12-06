@@ -6,6 +6,7 @@ import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.LoginRequest;
 import com.example.Eventify.request.RegisterRequest;
 import com.example.Eventify.response.LoginResponse;
+import com.example.Eventify.response.RegisterResponse;
 import com.example.Eventify.service.AuthService;
 import com.example.Eventify.service.JWTService;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,12 @@ public class AuthController {
         }
 
         User registeredUser = authenticationService.signup(registerUserDto);
-
-        return ResponseEntity.ok(registeredUser);
+        RegisterResponse registerResponse = new RegisterResponse()
+                .setId(registeredUser.getId())
+                .setEmail(registeredUser.getEmail())
+                .setName(registeredUser.getName())
+                .setRole(registeredUser.getRole());
+        return ResponseEntity.ok(registerResponse);
     }
 
     @PostMapping("/login")
