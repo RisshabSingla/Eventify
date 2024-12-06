@@ -48,9 +48,9 @@
           <td class="px-6 py-4 text-sm">
             <button
               *ngIf="
-                notification.type === 'new event' ||
-                notification.type === 'event update' ||
-                notification.type === 'event registration'
+                notification.type === 'Event Created' ||
+                notification.type === 'Event Update' ||
+                notification.type === 'Event Registration'
               "
               [routerLink]="'/admin/event-management/' + notification.eventId"
               class="text-blue-600 hover:text-blue-700"
@@ -58,14 +58,14 @@
               View Event
             </button>
             <button
-              *ngIf="notification.type === 'user feedback'"
+              *ngIf="notification.type === 'User Feedback'"
               [routerLink]="'/admin/feedback/' + notification.eventId"
               class="text-blue-600 hover:text-blue-700"
             >
               View Feedback
             </button>
             <button
-              *ngIf="notification.type === 'user registration'"
+              *ngIf="notification.type === 'User Registration'"
               class="text-gray-500 cursor-not-allowed"
               disabled
             >

@@ -113,7 +113,17 @@ export class AdminService {
   }
 
   getNotifications(): Observable<AdminNotification[]> {
-    return of(ADMIN_DASHBOARD_NOTIFICATIONS_DATA);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<AdminNotification[]>(
+      `${this.apiEndpoint}notifications/getAdminNotifications`,
+      { headers }
+    );
+
+    // return of(ADMIN_DASHBOARD_NOTIFICATIONS_DATA);
   }
 
   getFeedbackData(): Observable<EventFeedback> {
