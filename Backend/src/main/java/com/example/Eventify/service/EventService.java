@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -59,7 +60,7 @@ public class EventService {
         Notification notification = new Notification().
                 setType("Event Created").setEventId(savedEvent)
                 .setDescription("Event Created " + event.getName())
-                .setTimeStamp(String.valueOf(System.currentTimeMillis()));
+                .setTimeStamp(new Date());
 
         notificationRepository.save(notification);
 

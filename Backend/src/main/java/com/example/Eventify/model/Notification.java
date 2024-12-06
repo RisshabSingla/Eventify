@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,10 +20,9 @@ public class Notification {
 
     @Id
     private String id;
-
     private String type;
     private String description;
-    private String timeStamp;
+    private Date timeStamp;
 
     @DBRef
     private Event eventId;  // Reference to Event class

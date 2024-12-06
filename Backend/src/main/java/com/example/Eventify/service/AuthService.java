@@ -6,13 +6,12 @@ import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.LoginRequest;
 import com.example.Eventify.request.RegisterRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
+import java.util.Date;
 
 @Service
 public class AuthService {
@@ -38,10 +37,6 @@ public class AuthService {
     }
 
     public User signup(RegisterRequest input) {
-//        if (userRepository.findByEmail(input.getEmail()).isPresent()) {
-//            throw new RuntimeException("Email is already in use");
-//        }
-
 
         User user = new User()
                 .setName(input.getName())
@@ -52,7 +47,7 @@ public class AuthService {
         Notification notification = new Notification()
                 .setDescription("Account Created: " + user.getName())
                 .setType("User Registration")
-                .setTimeStamp(String.valueOf(System.currentTimeMillis()));
+                .setTimeStamp(new Date());
 
         notificationRepository.save(notification);
 
