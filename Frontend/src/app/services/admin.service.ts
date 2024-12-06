@@ -11,7 +11,10 @@ import {
 import { Items } from '../model/admin/Items';
 import { forkJoin, map, Observable, of } from 'rxjs';
 import { EventManagement } from '../model/admin/Event_Management';
-import { EventAnalytics } from '../model/admin/Event_Analytics';
+import {
+  AnalyticMetrics,
+  EventAnalytics,
+} from '../model/admin/Event_Analytics';
 import { EventAttendance } from '../model/admin/Event_Attendance';
 import { AdminNotification } from '../model/admin/Notifications';
 import { EventFeedback } from '../model/admin/Event_Feedback';
@@ -58,6 +61,31 @@ export class AdminService {
   }
 
   getEventAnalyticsData(): Observable<EventAnalytics> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const token = currentUser.token;
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    });
+
+    const createdByAdminEvents = this.http.get<Event[]>(
+      `${this.apiEndpoint}events/getMyCreatedEvents`,
+      { headers }
+    );
+
+    const eventAnalytics = this.http.get<AnalyticMetrics>(
+      `${this.apiEndpoint}events/getOverallEventAnalytics`,
+      { headers }
+    );
+
+    return forkJoin([createdByAdminEvents, eventAnalytics]).pipe(
+      map(([createdByAdminEvents, eventAnalytics]) => ({
+        metrics: eventAnalytics,
+        events: createdByAdminEvents,
+      }))
+    );
+
     return of(ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA);
   }
 
