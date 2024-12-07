@@ -78,6 +78,21 @@ public class EventService {
                 .setId(savedEvent.getId());
     }
 
+    public List<ExploreEventsResponse> exploreEvents(){
+
+        List<Event> events = eventRepository.findAll();
+        return events.stream()
+                .map(event -> new ExploreEventsResponse()
+                        .setId(event.getId())
+                        .setTitle(event.getName())
+                        .setDescription(event.getDescription())
+                        .setDate(event.getDate())
+                        .setLocation(event.getLocation())
+                        .setImage("https://picsum.photos/400/200"))
+                .collect(Collectors.toList());
+    }
+
+
     public ArrayList<Event> getAllAdminEvents() {
         return (ArrayList<Event>) eventRepository.findAll();
     }

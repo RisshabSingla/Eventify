@@ -35,6 +35,17 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/exploreEvents")
+    public ResponseEntity<List<ExploreEventsResponse>> exploreEvents() {
+        try{
+            return ResponseEntity.ok(eventService.exploreEvents());
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     @GetMapping("/getMyCreatedEvents")
     public ResponseEntity<List<AdminEventListResponse>> getMyEvents() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -31,6 +31,18 @@ export class EventService {
   constructor(private http: HttpClient) {}
 
   getAllEvents(): Observable<EventDetails[]> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventDetails[]>(
+      `${this.apiEndpoint}events/exploreEvents`,
+      {
+        headers,
+      }
+    );
+
     return of(DUMMY_EVENTS_DATA);
   }
 

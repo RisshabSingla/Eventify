@@ -29,7 +29,17 @@ export class UserService {
   }
 
   getUserEvents(): Observable<UserEvents> {
-    return of(USER_DASHBOARD_EVENTS);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<UserEvents>(
+      `${this.apiEndpoint}events/getRegisteredEvents`,
+      { headers }
+    );
+
+    // return of(USER_DASHBOARD_EVENTS);
   }
 
   getUserQREvents(): Observable<EventQRCode[]> {
