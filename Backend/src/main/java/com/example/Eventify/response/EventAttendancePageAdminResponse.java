@@ -80,7 +80,7 @@ public class EventAttendancePageAdminResponse {
                 try {
                     this.date = formatter.parse(formattedDate); // Parse back to Date
 
-                    System.out.println("new date is: " + this.date);
+//                    System.out.println("new date is: " + this.date);
                 } catch (ParseException e) {
                     throw new RuntimeException("Date parsing failed: " + e.getMessage(), e);
                 }

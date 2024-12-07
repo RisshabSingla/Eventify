@@ -24,7 +24,7 @@ public class EventController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createEvent(@RequestBody CreateEventRequest request) {
-        System.out.println(request);
+//        System.out.println(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         if(!Objects.equals(currentUser.getRole(), "Admin")) {

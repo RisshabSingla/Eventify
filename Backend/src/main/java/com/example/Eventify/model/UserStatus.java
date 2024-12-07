@@ -7,9 +7,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.UUID;
 
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Getter
@@ -32,6 +32,16 @@ public class UserStatus {
     private String attendanceCode;
 
     private Date registeredDate;
+
+
+    public UserStatus() {
+        this.attendanceCode = generateRandomAttendanceCode();
+    }
+
+    // Method to generate random 25-character attendance code
+    private String generateRandomAttendanceCode() {
+        return UUID.randomUUID().toString().replace("-", "").substring(0, 25);
+    }
 
 }
 

@@ -74,7 +74,8 @@ public class EventService {
                 .setCoverImage(savedEvent.getCoverImage())
                 .setSpeakers(savedEvent.getSpeakers())
                 .setAgenda(savedEvent.getAgenda())
-                .setAttendeeListPrivacy(savedEvent.getAttendeeListPrivacy());
+                .setAttendeeListPrivacy(savedEvent.getAttendeeListPrivacy())
+                .setId(savedEvent.getId());
     }
 
     public ArrayList<Event> getAllAdminEvents() {
@@ -361,10 +362,7 @@ public class EventService {
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        System.out.println("Event date is : "+ event.getDate());
-
         Date eventDate = formatter.parse(event.getDate());
-        System.out.println("After is: "+ eventDate);
         Date todayDate = formatter.parse(formatter.format(new Date()));
 
         EventAttendancePageAdminResponse.EventDetails eventDetails = new EventAttendancePageAdminResponse.EventDetails()

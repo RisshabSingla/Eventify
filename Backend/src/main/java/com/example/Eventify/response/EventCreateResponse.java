@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 public class EventCreateResponse {
+    private String id;
     private String name;
     private String description;
     private String location;
