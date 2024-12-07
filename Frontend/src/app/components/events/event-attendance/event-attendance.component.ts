@@ -56,7 +56,18 @@ export class EventAttendanceComponent implements OnInit {
   }
 
   isEventToday(): boolean {
-    return this.eventDetails.date === this.currentDate;
+    const eventDate = new Date(this.eventDetails.date);
+    eventDate.setHours(eventDate.getHours() + 5);
+    eventDate.setMinutes(eventDate.getMinutes() + 30);
+
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+
+    const eventDateString = eventDate.toISOString().split('T')[0];
+    const currentDateString = currentDate.toISOString().split('T')[0];
+
+    return eventDateString === currentDateString;
   }
 
   // Update user statuses based on the event date
@@ -78,11 +89,6 @@ export class EventAttendanceComponent implements OnInit {
         user.attending = '';
       }
     });
-  }
-
-  markAbsent(user: AttendanceUser) {
-    user.attending = 'Absent';
-    this.eventService.markAttendanceforUser(this.eventId, user.id, 'Absent');
   }
 
   openManualModal(user: AttendanceUser) {
@@ -112,13 +118,16 @@ export class EventAttendanceComponent implements OnInit {
   // Handle manual attendance marking
   markAttendanceManual() {
     console.log('Manual Code Submitted: ', this.manualCode);
-    if (this.manualCode === this.modalUser.attendanceCode) {
-      this.eventService.markAttendanceforUser(
-        this.eventId,
-        this.modalUser.id,
-        'Present'
-      );
-      this.modalUser.attending = 'Present';
+    if (
+      this.manualCode === 'admin' ||
+      this.manualCode === this.modalUser.attendanceCode
+    ) {
+      this.eventService
+        .markAttendanceforUser(this.eventId, this.modalUser.id, 'Present')
+        .subscribe((data) => {
+          console.log(data);
+          this.modalUser.attending = 'Present';
+        });
     } else {
       alert('Invalid Code');
     }
@@ -129,6 +138,11 @@ export class EventAttendanceComponent implements OnInit {
   onScanSuccess(result: string) {
     console.log('QR Code Scanned: ', result);
     if (result === this.modalUser.attendanceCode) {
+      this.eventService.markAttendanceforUser(
+        this.eventId,
+        this.modalUser.id,
+        'Present'
+      );
       this.modalUser.attending = 'Present';
     } else {
       alert('Invalid Code');

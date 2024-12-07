@@ -52,11 +52,25 @@ export class EventService {
       { headers }
     );
 
-    return of(EVENT_ATTENDANCE_DATA);
+    // return of(EVENT_ATTENDANCE_DATA);
   }
 
-  markAttendanceforUser(eventId: string, userId: number, status: string): void {
+  markAttendanceforUser(
+    eventId: string,
+    userId: string,
+    status: string
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
     console.log(eventId, userId, status);
+    return this.http.post(
+      `${this.apiEndpoint}events/markAttendance/` + eventId + '/' + userId,
+      {
+        headers,
+      }
+    );
   }
 
   getEventAttendeeData(

@@ -103,13 +103,12 @@
               class="border p-3 lg:flex justify-around"
             >
               <!-- Show 'Mark Absent' if user is present -->
-              <button
+              <div
                 *ngIf="user.attending === 'Present'"
-                class="bg-indigo-500 hover:bg-indigo-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 m-1"
-                (click)="markAbsent(user)"
+                class="bg-green-500 hover:bg-green-700 text-white py-1 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 m-1"
               >
-                Mark Absent
-              </button>
+                User Present
+              </div>
 
               <!-- Show 'Mark Manually' and 'Scan QR' if user is not present -->
               <button

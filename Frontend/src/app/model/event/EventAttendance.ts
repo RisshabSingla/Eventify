@@ -7,7 +7,7 @@ export interface EventAttendanceMetrics {
 }
 
 export interface AttendanceUser {
-  id: number;
+  id: string;
   name: string;
   email: string;
   registeredDate: string;
