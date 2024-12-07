@@ -50,7 +50,6 @@ export class FeedbackFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('hello');
     console.log(this.feedbackForm.value);
     if (this.feedbackForm.invalid) {
       this.feedbackForm.markAllAsTouched();
@@ -58,8 +57,13 @@ export class FeedbackFormComponent implements OnInit {
     }
 
     // Handle the form submission logic here if the form is valid
-    this.feedbackService.submitFeedback(this.feedbackForm.value);
-    console.log(this.feedbackForm.value);
+    this.feedbackService
+      .submitFeedback(this.feedbackForm.value, this.eventId)
+      .subscribe((data) => {
+        console.log(data);
+        this.feedbackForm.reset();
+        alert('Feedback submitted successfully!');
+      });
   }
 
   get formControls() {

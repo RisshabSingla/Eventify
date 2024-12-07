@@ -562,5 +562,18 @@ public class EventService {
                 )
                 .toList();
     }
+
+    public UserFeedbackEventDetailsResponse getEventDetailsFeedback(String eventId) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+        return new UserFeedbackEventDetailsResponse()
+                .setEventId(event.getId())
+                .setName(event.getName())
+                .setLocation(event.getLocation())
+                .setDate(event.getDate())
+                .setTime(event.getTime());
+    }
 }
 

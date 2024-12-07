@@ -177,4 +177,15 @@ public class EventController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+
+    @GetMapping("/getEventDetailsFeedback/{eventId}")
+    public ResponseEntity<UserFeedbackEventDetailsResponse> getEventDetailsFeedback(@PathVariable String eventId) {
+        try{
+            return ResponseEntity.ok(eventService.getEventDetailsFeedback(eventId));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
