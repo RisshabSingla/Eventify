@@ -162,8 +162,19 @@ public class EventController {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
-
     }
 
 
+    @GetMapping("/getAttendedEvents")
+    public ResponseEntity<List<UserAttendedEventsResponse>> getAttendedEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        try{
+            return ResponseEntity.ok(eventService.getAttendedEvents(currentUser));
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

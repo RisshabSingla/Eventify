@@ -1,5 +1,5 @@
 export interface EventGiveFeedback {
-  id: number;
+  id: string;
   name: string;
   date: string;
   time: string;

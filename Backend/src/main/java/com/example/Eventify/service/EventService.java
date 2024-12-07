@@ -543,5 +543,24 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+
+
+    public List<UserAttendedEventsResponse> getAttendedEvents(User currentUser){
+        // TODO: Change logic for getting attended events(right now only registered events)
+
+        if(currentUser == null || currentUser.getRegisteredEvents() == null){
+            return Collections.emptyList();
+        }
+        return currentUser.getRegisteredEvents().stream()
+                .map(event ->
+                        new UserAttendedEventsResponse()
+                                .setDate(event.getDate())
+                                .setName(event.getName())
+                                .setTime(event.getTime())
+                                .setLocation(event.getLocation())
+                                .setId(event.getId())
+                )
+                .toList();
+    }
 }
 

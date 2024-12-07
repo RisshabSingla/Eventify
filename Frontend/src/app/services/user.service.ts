@@ -47,7 +47,16 @@ export class UserService {
   }
 
   getUserGiveFeedback(): Observable<EventGiveFeedback[]> {
-    return of(USER_DASHBOARD_GIVE_FEEDBACK_EVENTS);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<EventGiveFeedback[]>(
+      `${this.apiEndpoint}events/getAttendedEvents`,
+      { headers }
+    );
+
+    // return of(USER_DASHBOARD_GIVE_FEEDBACK_EVENTS);
   }
 
   getUserViewFeedback(): Observable<UserFeedback[]> {
