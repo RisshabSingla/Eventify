@@ -2,10 +2,7 @@ package com.example.Eventify.controller;
 
 import com.example.Eventify.model.User;
 import com.example.Eventify.request.CreateEventRequest;
-import com.example.Eventify.response.AdminEventAnalyticsResponse;
-import com.example.Eventify.response.AdminEventAttendanceResponse;
-import com.example.Eventify.response.AdminEventListResponse;
-import com.example.Eventify.response.EventCreateResponse;
+import com.example.Eventify.response.*;
 import com.example.Eventify.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -71,5 +68,21 @@ public class EventController {
         User currentUser = (User) authentication.getPrincipal();
         return ResponseEntity.ok(eventService.getOverallAttendanceAnalytics(currentUser));
     }
+
+    @GetMapping("/getOverallFeedbackAnalytics")
+    public ResponseEntity<AdminEventFeedbackAnalyticsResponse> getOverallFeedbackAnalytics() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(eventService.getOverallFeedbackAnalytics(currentUser));
+    }
+
+    @GetMapping("/getRecentFeedbacks")
+    public ResponseEntity<List<AdminEventRecentFeedbackResponse>> getRecentFeedbacks() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(eventService.getRecentFeedbacks(currentUser));
+    }
+
 
 }

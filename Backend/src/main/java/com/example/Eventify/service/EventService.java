@@ -8,17 +8,14 @@ import com.example.Eventify.repository.EventRepository;
 import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.CreateEventRequest;
-import com.example.Eventify.response.AdminEventAnalyticsResponse;
-import com.example.Eventify.response.AdminEventAttendanceResponse;
-import com.example.Eventify.response.EventCreateResponse;
+import com.example.Eventify.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -124,7 +121,6 @@ public class EventService {
 
     public int getAverageFeedbackRating(User currentUser) {
 
-
         if (currentUser == null || currentUser.getCreatedEvents() == null) {
             System.out.println("No events found for the user.");
             return 0;
@@ -148,5 +144,60 @@ public class EventService {
                 .setTotalAttendedUsers(attendedUsers)
                 .setAttendanceRate(registeredUsers == 0 ? 0 : (attendedUsers * 100) / registeredUsers)
                 .setTotalNoShowUsers(registeredUsers - attendedUsers);
+    }
+
+
+    public AdminEventFeedbackAnalyticsResponse getOverallFeedbackAnalytics(User currentUser){
+        return new AdminEventFeedbackAnalyticsResponse()
+                .setTotalFeedbacks(getTotalFeedbacks(currentUser))
+                .setAverageRating(getAverageFeedbackRating(currentUser))
+                .setHighestRating(getHighestRating(currentUser));
+    }
+
+
+    public int getTotalFeedbacks(User currentUser) {
+        return (int) currentUser.getCreatedEvents().stream()
+                .filter(event -> event != null && event.getFeedbacks() != null)
+                .flatMap(event -> event.getFeedbacks().stream())
+                .filter(Objects::nonNull)
+                .count();
+    }
+
+    public int getHighestRating(User currentUser) {
+        return (int) currentUser.getCreatedEvents().stream()
+                .filter(event -> event != null && event.getFeedbacks() != null)
+                .flatMap(event -> event.getFeedbacks().stream())
+                .filter(Objects::nonNull)
+                .mapToInt(Feedback::getOverallRating)
+                .max()
+                .orElse(0);
+    }
+
+
+    public List<AdminEventRecentFeedbackResponse> getRecentFeedbacks(User currentUser) {
+        List<Event> createdEvents = currentUser.getCreatedEvents();
+
+        if (createdEvents == null || createdEvents.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Feedback> feedbacks = createdEvents.stream()
+                .filter(Objects::nonNull)
+                .filter(event -> event.getFeedbacks() != null)
+                .flatMap(event -> event.getFeedbacks().stream())
+                .filter(Objects::nonNull)
+                .sorted(Comparator.comparing(Feedback::getCreatedDate).reversed()) // Sort by createdDate in descending order
+                .toList();
+
+        List<Feedback> recentFeedbacks = feedbacks.stream()
+                .limit(20)
+                .toList();
+
+        return recentFeedbacks.stream()
+                .map(feedback -> new AdminEventRecentFeedbackResponse()
+                        .setName(feedback.getUserId().getName())
+                        .setComment(feedback.getComments())
+                        .setRating(feedback.getOverallRating()))
+                .collect(Collectors.toList());
     }
 }

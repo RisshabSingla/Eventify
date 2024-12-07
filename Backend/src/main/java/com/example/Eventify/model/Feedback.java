@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,18 +33,7 @@ public class Feedback {
     private String comments;
     private String suggestions;
 
-    // Getters and Setters
-
-    public Feedback(User userId, Event eventId, int overallRating, int venueRating, int speakerRating,
-                    String comments, String suggestions) {
-        this.userId = userId;
-        this.eventId = eventId;
-        this.overallRating = overallRating;
-        this.venueRating = venueRating;
-        this.speakerRating = speakerRating;
-        this.comments = comments;
-        this.suggestions = suggestions;
-    }
+    private Date createdDate;
 
     // Default constructor and other methods
 }
