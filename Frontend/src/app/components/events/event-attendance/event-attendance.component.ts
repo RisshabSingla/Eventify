@@ -137,13 +137,14 @@ export class EventAttendanceComponent implements OnInit {
   // Handle QR code attendance marking
   onScanSuccess(result: string) {
     console.log('QR Code Scanned: ', result);
+    console.log(this.modalUser.attendanceCode);
     if (result === this.modalUser.attendanceCode) {
-      this.eventService.markAttendanceforUser(
-        this.eventId,
-        this.modalUser.id,
-        'Present'
-      );
-      this.modalUser.attending = 'Present';
+      this.eventService
+        .markAttendanceforUser(this.eventId, this.modalUser.id, 'Present')
+        .subscribe((data) => {
+          console.log(data);
+          this.modalUser.attending = 'Present';
+        });
     } else {
       alert('Invalid Code');
     }
