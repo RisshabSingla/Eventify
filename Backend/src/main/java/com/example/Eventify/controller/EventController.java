@@ -97,5 +97,24 @@ public class EventController {
         return ResponseEntity.ok(eventService.registerEvent(eventId, currentUser));
     }
 
+    @PostMapping("/unregister/{eventId}")
+    public ResponseEntity<EventRegiserResponse> unregisterEvent(@PathVariable String eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(eventService.unregisterEvent(eventId, currentUser));
+    }
+
+
+    @GetMapping("/getEventDetail/{eventId}")
+    public ResponseEntity<EventDetailResponse> getEventDetail(@PathVariable String eventId) {
+        return ResponseEntity.ok(eventService.getEventDetail(eventId));
+    }
+
+    @GetMapping("/CheckIfRegistered/{eventId}")
+    public ResponseEntity<Boolean> checkIfRegistered(@PathVariable String eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(eventService.checkIfRegistered(eventId, currentUser));
+    }
 
 }

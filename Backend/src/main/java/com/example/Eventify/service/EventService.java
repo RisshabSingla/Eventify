@@ -136,7 +136,7 @@ public class EventService {
     }
 
 
-    public AdminEventAttendanceResponse getOverallAttendanceAnalytics(User currentUser){
+    public AdminEventAttendanceResponse getOverallAttendanceAnalytics(User currentUser) {
         int attendedUsers = getTotalAttendedUsers(currentUser);
         int registeredUsers = getTotalRegisteredUsers(currentUser);
         return new AdminEventAttendanceResponse()
@@ -147,7 +147,7 @@ public class EventService {
     }
 
 
-    public AdminEventFeedbackAnalyticsResponse getOverallFeedbackAnalytics(User currentUser){
+    public AdminEventFeedbackAnalyticsResponse getOverallFeedbackAnalytics(User currentUser) {
         return new AdminEventFeedbackAnalyticsResponse()
                 .setTotalFeedbacks(getTotalFeedbacks(currentUser))
                 .setAverageRating(getAverageFeedbackRating(currentUser))
@@ -213,7 +213,7 @@ public class EventService {
         }
 
 
-        if(event.getNumberRegistered() == event.getMaxCapacity()){
+        if (event.getNumberRegistered() == event.getMaxCapacity()) {
             return new EventRegiserResponse("Event is full", event.getNumberRegistered());
         }
 
@@ -224,7 +224,7 @@ public class EventService {
         event.setNumberRegistered(event.getNumberRegistered() + 1);
         eventRepository.save(event);
 
-        if(currentUser.getRegisteredEvents() == null){
+        if (currentUser.getRegisteredEvents() == null) {
             currentUser.setRegisteredEvents(new ArrayList<>());
         }
 
@@ -243,5 +243,63 @@ public class EventService {
         return new EventRegiserResponse("Event registered successfully", (event.getRegisteredUsers().size()));
     }
 
+    public EventRegiserResponse unregisterEvent(String eventId, User currentUser) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return new EventRegiserResponse("Event not found", -1);
+        }
+
+        if (currentUser.getRegisteredEvents() != null && event != null &&
+                currentUser.getRegisteredEvents().stream().anyMatch(e -> e.getId().equals(event.getId()))) {
+
+            currentUser.getRegisteredEvents().removeIf(e -> e.getId().equals(event.getId()));
+
+            if (event.getRegisteredUsers() != null) {
+                event.getRegisteredUsers().removeIf(user -> user.getId().equals(currentUser.getId()));
+            }
+
+            event.setNumberRegistered(event.getNumberRegistered() - 1);
+
+            userRepository.save(currentUser);
+            eventRepository.save(event);
+
+            return new EventRegiserResponse("Successfully unregistered from the event", event.getNumberRegistered());
+        } else {
+            return new EventRegiserResponse("User is not registered for the event", -1);
+        }
+
+    }
+
+
+
+
+    public EventDetailResponse getEventDetail(String eventId) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+        return new EventDetailResponse()
+                .setTitle(event.getName())
+                .setDescription(event.getDescription())
+                .setLocation(event.getLocation())
+                .setDate(event.getDate())
+                .setRegistrationLimit(event.getMaxCapacity())
+                .setFilledSeats(event.getNumberRegistered())
+                .setCategory(event.getCategory())
+                .setCoverImage(event.getCoverImage())
+                .setSpeakers(event.getSpeakers())
+                .setAgenda(event.getAgenda())
+                .setAttendeeListPrivacy(event.getAttendeeListPrivacy());
+    }
+
+
+    public boolean checkIfRegistered(String eventId, User currentUser) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return false;
+        }
+        return event.getRegisteredUsers() != null &&
+                event.getRegisteredUsers().stream().anyMatch(user -> user.getId().equals(currentUser.getId()));
+    }
 
 }

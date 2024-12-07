@@ -63,4 +63,12 @@ public class Event {
         private String description;
         private String time;
     }
+
+
+    @Data
+    @Accessors(chain = true)
+    public static class Media {
+        private String type;
+        private String src;
+    }
 }
