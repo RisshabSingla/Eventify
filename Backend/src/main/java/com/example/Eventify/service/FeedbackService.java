@@ -5,6 +5,7 @@ import com.example.Eventify.model.Feedback;
 import com.example.Eventify.model.User;
 import com.example.Eventify.repository.EventRepository;
 import com.example.Eventify.repository.FeedbackRepository;
+import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.GiveFeedbackRequest;
 import com.example.Eventify.response.FeedbackSubmitResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class FeedbackService {
 
     @Autowired
     EventRepository eventRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public FeedbackSubmitResponse giveFeedback(String eventId, GiveFeedbackRequest feedbackRequest, User currentUser) {
         Event event = eventRepository.findById(eventId).orElse(null);
@@ -39,6 +43,20 @@ public class FeedbackService {
                 .setCreatedDate(new Date());
 
         feedbackRepository.save(newFeedback);
+
+        if(currentUser.getFeedbacksGiven() == null){
+            currentUser.setFeedbacksGiven(new java.util.ArrayList<>());
+        }
+        currentUser.getFeedbacksGiven().add(newFeedback);
+
+        userRepository.save(currentUser);
+
+        if(event.getFeedbacks() == null){
+            event.setFeedbacks(new java.util.ArrayList<>());
+        }
+        event.getFeedbacks().add(newFeedback);
+
+        eventRepository.save(event);
 
         return new FeedbackSubmitResponse()
                 .setComments(newFeedback.getComments())
