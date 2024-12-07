@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +30,8 @@ public class UserStatus {
     private String currentStatus;  // (Registered, Present, Yet to come, Attended, Absent)
 
     private String attendanceCode;
+
+    private Date registeredDate;
 
 }
 

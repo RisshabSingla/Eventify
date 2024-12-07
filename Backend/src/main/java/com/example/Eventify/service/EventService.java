@@ -1,19 +1,18 @@
 package com.example.Eventify.service;
 
-import com.example.Eventify.model.Event;
-import com.example.Eventify.model.Feedback;
-import com.example.Eventify.model.Notification;
-import com.example.Eventify.model.User;
+import com.example.Eventify.model.*;
 import com.example.Eventify.repository.EventRepository;
 import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
+import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,10 @@ public class EventService {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private UserStatusRepository userStatusRepository;
+
 
     public EventCreateResponse createEvent(CreateEventRequest request, User currentUser) {
 
@@ -179,7 +182,7 @@ public class EventService {
                 .flatMap(event -> event.getFeedbacks().stream())
                 .filter(Objects::nonNull)
                 .sorted(Comparator.comparing(Feedback::getCreatedDate).reversed()) // Sort by createdDate in descending
-                                                                                   // order
+                // order
                 .toList();
 
         List<Feedback> recentFeedbacks = feedbacks.stream()
@@ -214,6 +217,19 @@ public class EventService {
         }
         event.getRegisteredUsers().add(currentUser);
         event.setNumberRegistered(event.getNumberRegistered() + 1);
+
+        UserStatus userStatus = new UserStatus()
+                .setCurrentStatus("Registered")
+                .setUserId(currentUser)
+                .setEventId(event)
+                .setRegisteredDate(new Date());
+
+        userStatusRepository.save(userStatus);
+
+        if (event.getUserStatuses() == null) {
+            event.setUserStatuses(new ArrayList<>());
+        }
+        event.getUserStatuses().add(userStatus);
         eventRepository.save(event);
 
         if (currentUser.getRegisteredEvents() == null) {
@@ -224,7 +240,7 @@ public class EventService {
         userRepository.save(currentUser);
 
         Notification notification = new Notification().setDescription("User: " + currentUser.getName()
-                + " Registered for the Event: " + event.getName()).setEventId(event)
+                        + " Registered for the Event: " + event.getName()).setEventId(event)
                 .setType("Event Registration")
                 .setTimeStamp(new Date());
         notificationRepository.save(notification);
@@ -288,7 +304,7 @@ public class EventService {
     }
 
 
-    public UserRegisteredEventResponse getRegisteredEvents(User currentUser){
+    public UserRegisteredEventResponse getRegisteredEvents(User currentUser) {
         List<UserRegisteredEventResponse.Event> registered = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> attended = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> absent = new ArrayList<>();
@@ -335,4 +351,126 @@ public class EventService {
         return new UserRegisteredEventResponse(registered, attended, absent);
 
     }
+
+
+    public EventAttendancePageAdminResponse getEventAttendancePageAdminData(String eventId, User currentUser) throws ParseException {
+
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date eventDate = formatter.parse(event.getDate());
+        Date todayDate = formatter.parse(formatter.format(new Date()));
+
+        EventAttendancePageAdminResponse.EventDetails eventDetails = new EventAttendancePageAdminResponse.EventDetails()
+                .setName(event.getName())
+                .setDescription(event.getDescription())
+                .setLocation(event.getLocation())
+                .setDate(eventDate);
+
+
+        EventAttendancePageAdminResponse.EventAttendanceMetrics metrics;
+        List<EventAttendancePageAdminResponse.AttendanceUser> users;
+
+        List<UserStatus> userStatuses = event.getUserStatuses() != null ? event.getUserStatuses() : Collections.emptyList();
+
+        if (eventDate.before(todayDate)) {
+            // Only Registered users
+            metrics = new EventAttendancePageAdminResponse.EventAttendanceMetrics()
+                    .setFilled(event.getNumberRegistered())
+                    .setAbsent(0)
+                    .setCapacity(event.getMaxCapacity())
+                    .setPresent(0)
+                    .setYetToCome(0);
+
+            users = userStatuses.stream()
+                    .filter(userStatus -> userStatus != null && "Registered".equals(userStatus.getCurrentStatus()))
+                    .map(userStatus ->
+                            new EventAttendancePageAdminResponse.AttendanceUser()
+                                    .setId(userStatus.getUserId().getId())
+                                    .setName(userStatus.getUserId().getName())
+                                    .setEmail(userStatus.getUserId().getEmail())
+                                    .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
+                                    .setCurrentStatus(userStatus.getCurrentStatus())
+                                    .setAttending("No")
+                                    .setAttendanceCode(userStatus.getAttendanceCode())
+                    ).toList();
+
+        } else if (eventDate.after(todayDate)) {
+            int totalRegistered = event.getNumberRegistered();
+            int presentUsers = getPresentUsers(event);
+
+            metrics = new EventAttendancePageAdminResponse.EventAttendanceMetrics()
+                    .setFilled(totalRegistered)
+                    .setAbsent(totalRegistered - presentUsers)
+                    .setCapacity(event.getMaxCapacity())
+                    .setPresent(presentUsers)
+                    .setYetToCome(0);
+
+
+            users = userStatuses.stream()
+                    .filter(Objects::nonNull)
+                    .map(userStatus ->
+                            new EventAttendancePageAdminResponse.AttendanceUser()
+                                    .setId(userStatus.getUserId().getId())
+                                    .setName(userStatus.getUserId().getName())
+                                    .setEmail(userStatus.getUserId().getEmail())
+                                    .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
+                                    .setCurrentStatus(userStatus.getCurrentStatus())
+                                    .setAttending("No")
+                                    .setAttendanceCode(userStatus.getAttendanceCode())
+                    ).toList();
+
+        } else {
+
+            int totalRegistered = event.getNumberRegistered();
+            int presentUsers = getPresentUsers(event);
+
+            metrics = new EventAttendancePageAdminResponse.EventAttendanceMetrics()
+                    .setFilled(totalRegistered)
+                    .setAbsent(0)
+                    .setCapacity(event.getMaxCapacity())
+                    .setPresent(presentUsers)
+                    .setYetToCome(totalRegistered - presentUsers);
+
+            users = userStatuses.stream()
+                    .filter(Objects::nonNull)
+                    .map(userStatus ->
+                            new EventAttendancePageAdminResponse.AttendanceUser()
+                                    .setId(userStatus.getUserId().getId())
+                                    .setName(userStatus.getUserId().getName())
+                                    .setEmail(userStatus.getUserId().getEmail())
+                                    .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
+                                    .setCurrentStatus(userStatus.getCurrentStatus())
+                                    .setAttending(Objects.equals(userStatus.getCurrentStatus(), "Present") ? "Present" : "Yet to Come")
+                                    .setAttendanceCode(userStatus.getAttendanceCode())
+                    ).toList();
+
+        }
+
+        return new EventAttendancePageAdminResponse()
+                .setEventDetails(eventDetails)
+                .setMetrics(metrics)
+                .setUsers(users);
+    }
+
+
+    public int getPresentUsers(Event event) {
+
+        if (event == null || event.getUserStatuses() == null) {
+            return 0;
+        }
+
+        List<UserStatus> userStatuses = event.getUserStatuses();
+
+        long presentUsers = userStatuses.stream()
+                .filter(userStatus -> userStatus != null && "Present".equals(userStatus.getCurrentStatus()))
+                .count();
+
+        return (int) presentUsers;
+    }
+
 }
+

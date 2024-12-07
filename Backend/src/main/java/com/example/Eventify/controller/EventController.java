@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -125,5 +126,20 @@ public class EventController {
 
         return ResponseEntity.ok(eventService.getRegisteredEvents(currentUser));
     }
+
+
+    @GetMapping("/getEventAttendance/{eventId}")
+    public ResponseEntity<EventAttendancePageAdminResponse> getEventAttendance(@PathVariable String eventId) throws ParseException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        try{
+            return ResponseEntity.ok(eventService.getEventAttendancePageAdminData(eventId, currentUser));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
 
 }
