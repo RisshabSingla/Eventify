@@ -20,7 +20,11 @@ import {
   EventAttendance,
 } from '../model/admin/Event_Attendance';
 import { AdminNotification } from '../model/admin/Notifications';
-import { EventFeedback } from '../model/admin/Event_Feedback';
+import {
+  EventFeedback,
+  feedbackMetrics,
+  recentFeedback,
+} from '../model/admin/Event_Feedback';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Event } from '../model/admin/Event';
 
@@ -127,6 +131,38 @@ export class AdminService {
   }
 
   getFeedbackData(): Observable<EventFeedback> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const createdByAdminEvents = this.http.get<Event[]>(
+      `${this.apiEndpoint}events/getMyCreatedEvents`,
+      { headers }
+    );
+
+    const eventFeedbackMetrics = this.http.get<feedbackMetrics>(
+      `${this.apiEndpoint}events/getOverallFeedbackAnalytics`,
+      { headers }
+    );
+
+    const recentFeedbacks = this.http.get<recentFeedback[]>(
+      `${this.apiEndpoint}events/getRecentFeedbacks`,
+      { headers }
+    );
+
+    return forkJoin([
+      createdByAdminEvents,
+      recentFeedbacks,
+      eventFeedbackMetrics,
+    ]).pipe(
+      map(([createdByAdminEvents, recentFeedbacks, eventFeedbackMetrics]) => ({
+        metrics: eventFeedbackMetrics,
+        events: createdByAdminEvents,
+        recentFeedbacks: recentFeedbacks,
+      }))
+    );
+
     return of(ADMIN_DASHBOARD_FEEDBACK_DATA);
   }
 
