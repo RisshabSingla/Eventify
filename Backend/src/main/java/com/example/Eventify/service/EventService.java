@@ -309,8 +309,9 @@ public class EventService {
         List<UserRegisteredEventResponse.Event> registered = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> attended = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> absent = new ArrayList<>();
-
+        System.out.println("Hello");
         for (Event event : currentUser.getRegisteredEvents()) {
+            System.out.println("Event name: " + event.getName());
             if (event.getUserStatuses() == null) {
                 registered.add(
                         new UserRegisteredEventResponse.Event()
@@ -325,11 +326,12 @@ public class EventService {
             } else {
                 // If userStatuses is not null, check the status using streams
                 event.getUserStatuses().stream()
-                        .filter(userStatus -> userStatus.getUserId().equals(currentUser.getId()))  // Filter by the current user
+                        .filter(userStatus -> userStatus.getUserId().getId().equals(currentUser.getId()))  // Filter by the current user
                         .findFirst()
                         .ifPresent(userStatus -> {
                             // Categorize the event based on the user's current status
                             String status = userStatus.getCurrentStatus();
+                            System.out.println(status);
                             UserRegisteredEventResponse.Event eventResponse = new UserRegisteredEventResponse.Event()
                                     .setId(event.getId())
                                     .setName(event.getName())
@@ -339,11 +341,17 @@ public class EventService {
                                     .setImage(event.getCoverImage());
 
                             if ("Attended".equalsIgnoreCase(status)) {
+                                System.out.println("Inside attended");
                                 eventResponse.setStatus("Attended");
                                 attended.add(eventResponse);
                             } else if ("Absent".equalsIgnoreCase(status)) {
+                                System.out.println("Inside absent");
                                 eventResponse.setStatus("Absent");
                                 absent.add(eventResponse);
+                            }else{
+                                System.out.println("Inside registered");
+                                eventResponse.setStatus("Registered");
+                                registered.add(eventResponse);
                             }
                         });
             }
@@ -506,6 +514,33 @@ public class EventService {
         userStatusRepository.save(matchingStatus);
 
         return new MarkAttendanceResponse().setCurrentStatus("Present");
+    }
+
+    public List<EventAttendanceQRResponse> getQRCodesforAttendance(User currentUser){
+
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+        String today = DATE_FORMAT.format(new Date());
+
+        List<Event> eventsToday = currentUser.getRegisteredEvents().stream()
+                .filter(event -> event.getDate().equals(today))
+                .toList();
+
+        return eventsToday.stream()
+                .map(event -> {
+                    Optional<UserStatus> userStatusOptional = userStatusRepository.findByUserIdAndEventId(currentUser.getId(), event.getId());
+                    return userStatusOptional.map(userStatus ->
+                            new EventAttendanceQRResponse(
+                                    event.getId(),
+                                    event.getName(),
+                                    event.getDate(),
+                                    event.getTime(),
+                                    event.getLocation(),
+                                    userStatus.getCurrentStatus(),
+                                    Optional.ofNullable(userStatus.getAttendanceCode()).orElse("")  // Handle null attendanceCode
+                            )
+                    ).orElse(null);  // If no status is found, return null
+                })
+                .collect(Collectors.toList());
     }
 
 }

@@ -160,4 +160,18 @@ public class EventController {
     }
 
 
+    @GetMapping("/getQRCodes")
+    public ResponseEntity<List<EventAttendanceQRResponse>> getQRCodes() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        try{
+            return ResponseEntity.ok(eventService.getQRCodesforAttendance( currentUser));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+
+    }
+
+
 }
