@@ -80,7 +80,7 @@
     <ul class="mt-4 space-y-2 text-gray-600">
       <li *ngFor="let item of event.agenda" class="flex items-center">
         <span class="mr-2 inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
-        {{ item }}
+        {{ item.time }} - {{ item.description }}
       </li>
     </ul>
   </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { forkJoin, map, Observable, of } from 'rxjs';
 import {
   DUMMY_EVENTS_DATA,
   EVENT_ANALYTIC_DATA,
@@ -14,7 +14,7 @@ import { EventDetails } from '../model/event/EventDetails';
 import { EventAnalytic } from '../model/event/EventAnalytic';
 import { EventAttendanceData } from '../model/event/EventAttendance';
 import { EventAttendee } from '../model/event/EventAttendee';
-import { EventDetailPage } from '../model/event/EventDetail';
+import { EventDetail, EventDetailPage } from '../model/event/EventDetail';
 import { EventEdit } from '../model/event/EventEdit';
 import { EventFeedbackData } from '../model/event/EventFeedback';
 import { EventReports } from '../model/event/EventReport';
@@ -24,7 +24,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root',
 })
 export class EventService {
-  private apiUrl = 'http://localhost:8080/events';
+  apiEndpoint = `http://localhost:8080/`;
+  currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  token = this.currentUser.token;
 
   constructor(private http: HttpClient) {}
 
@@ -55,23 +57,43 @@ export class EventService {
 
   createEvent(eventData: any): Observable<any> {
     console.log(eventData);
-    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const token = currentUser.token;
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${this.token}`,
     });
 
-    return this.http.post(this.apiUrl + '/create', eventData, { headers });
+    return this.http.post(this.apiEndpoint + 'events/create', eventData, {
+      headers,
+    });
   }
 
-  getEventDetails(
-    eventId: string,
-    userId: number
-  ): Observable<EventDetailPage> {
-    console.log(eventId, userId);
-    return of(EVENT_DETAIL_PAGE_DATA);
+  getEventDetails(eventId: string): Observable<EventDetailPage> {
+    console.log(eventId);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    const eventDetails = this.http.get<EventDetail>(
+      `${this.apiEndpoint}events/getEventDetail/` + eventId,
+      { headers }
+    );
+
+    const eventRegistered = this.http.get<boolean>(
+      `${this.apiEndpoint}events/CheckIfRegistered/` + eventId,
+      { headers }
+    );
+
+    return forkJoin([eventRegistered, eventDetails]).pipe(
+      map(([eventRegistered, eventDetails]) => ({
+        eventDetails: eventDetails,
+        isUserRegisteredForEvent: eventRegistered,
+      }))
+    );
+
+    // return of(EVENT_DETAIL_PAGE_DATA);
   }
 
   getEventEditDetails(eventId: string): Observable<EventEdit> {
@@ -84,5 +106,35 @@ export class EventService {
 
   getEventReports(eventId: string): Observable<EventReports> {
     return of(EVENT_REPORT_DATA);
+  }
+
+  registerEvent(eventId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(
+      `${this.apiEndpoint}events/register/` + eventId,
+      null,
+      {
+        headers,
+      }
+    );
+  }
+
+  unregisterEvent(eventId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.post(
+      `${this.apiEndpoint}events/unregister/` + eventId,
+      null,
+      {
+        headers,
+      }
+    );
   }
 }

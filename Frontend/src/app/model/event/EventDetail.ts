@@ -8,13 +8,18 @@ export interface Media {
   src: string;
 }
 
+export interface Agenda {
+  description: string;
+  time: string;
+}
+
 export interface EventDetail {
   id: number;
   title: string;
   date: string;
   location: string;
   description: string;
-  agenda: string[];
+  agenda: Agenda[];
   speakers: Speaker[];
   media: Media[];
   registrationLimit: number;

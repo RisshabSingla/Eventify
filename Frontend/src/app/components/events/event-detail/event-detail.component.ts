@@ -27,10 +27,7 @@ export class EventDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserRole = this.authService.getCurrentUserRole();
-
-    const currentUser = this.authService.getCurrentUser();
-    // const id = currentUser.id;
-    this.eventService.getEventDetails(this.eventId, 123).subscribe((data) => {
+    this.eventService.getEventDetails(this.eventId).subscribe((data) => {
       this.event = data.eventDetails;
       this.isUserRegisteredForEvent = data.isUserRegisteredForEvent;
     });
@@ -42,14 +39,23 @@ export class EventDetailComponent implements OnInit {
 
   registerForEvent(): void {
     // Simulate event registration
-    this.isUserRegisteredForEvent = true;
-    alert('Registered successfully!');
+
+    this.eventService.registerEvent(this.eventId).subscribe((data) => {
+      console.log(data);
+      this.event.filledSeats += 1;
+      this.isUserRegisteredForEvent = true;
+      alert('Registered successfully!');
+    });
   }
 
   cancelRegistration(): void {
     // Simulate canceling the registration
-    this.isUserRegisteredForEvent = false;
-    alert('Registration canceled!');
+    this.eventService.unregisterEvent(this.eventId).subscribe((data) => {
+      console.log(data);
+      this.event.filledSeats -= 1;
+      this.isUserRegisteredForEvent = false;
+      alert('Registration canceled!');
+    });
   }
 
   navigateToEditEvent() {
