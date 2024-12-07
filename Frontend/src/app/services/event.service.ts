@@ -66,10 +66,9 @@ export class EventService {
     });
     console.log(eventId, userId, status);
     return this.http.post(
-      `${this.apiEndpoint}events/markAttendance/` + eventId + '/' + userId,
-      {
-        headers,
-      }
+      `${this.apiEndpoint}events/markAttendance/${eventId}/${userId}`,
+      {},
+      { headers }
     );
   }
 
