@@ -54,8 +54,7 @@ public class EventService {
         currentUser.getCreatedEvents().add(savedEvent);
         userRepository.save(currentUser);
 
-        Notification notification = new Notification().
-                setType("Event Created").setEventId(savedEvent)
+        Notification notification = new Notification().setType("Event Created").setEventId(savedEvent)
                 .setDescription("Event Created " + event.getName())
                 .setTimeStamp(new Date());
 
@@ -75,11 +74,9 @@ public class EventService {
                 .setAttendeeListPrivacy(savedEvent.getAttendeeListPrivacy());
     }
 
-
     public ArrayList<Event> getAllAdminEvents() {
         return (ArrayList<Event>) eventRepository.findAll();
     }
-
 
     public AdminEventAnalyticsResponse getOverallEventAnalytics(User currentUser) {
 
@@ -102,7 +99,6 @@ public class EventService {
                 .flatMap(event -> event.getUserStatuses().stream())
                 .filter(userStatus -> "Attended".equals(userStatus.getCurrentStatus()))
                 .count();
-
 
     }
 
@@ -135,7 +131,6 @@ public class EventService {
                 .orElse(0);
     }
 
-
     public AdminEventAttendanceResponse getOverallAttendanceAnalytics(User currentUser) {
         int attendedUsers = getTotalAttendedUsers(currentUser);
         int registeredUsers = getTotalRegisteredUsers(currentUser);
@@ -146,14 +141,12 @@ public class EventService {
                 .setTotalNoShowUsers(registeredUsers - attendedUsers);
     }
 
-
     public AdminEventFeedbackAnalyticsResponse getOverallFeedbackAnalytics(User currentUser) {
         return new AdminEventFeedbackAnalyticsResponse()
                 .setTotalFeedbacks(getTotalFeedbacks(currentUser))
                 .setAverageRating(getAverageFeedbackRating(currentUser))
                 .setHighestRating(getHighestRating(currentUser));
     }
-
 
     public int getTotalFeedbacks(User currentUser) {
         return (int) currentUser.getCreatedEvents().stream()
@@ -173,7 +166,6 @@ public class EventService {
                 .orElse(0);
     }
 
-
     public List<AdminEventRecentFeedbackResponse> getRecentFeedbacks(User currentUser) {
         List<Event> createdEvents = currentUser.getCreatedEvents();
 
@@ -186,7 +178,8 @@ public class EventService {
                 .filter(event -> event.getFeedbacks() != null)
                 .flatMap(event -> event.getFeedbacks().stream())
                 .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(Feedback::getCreatedDate).reversed()) // Sort by createdDate in descending order
+                .sorted(Comparator.comparing(Feedback::getCreatedDate).reversed()) // Sort by createdDate in descending
+                                                                                   // order
                 .toList();
 
         List<Feedback> recentFeedbacks = feedbacks.stream()
@@ -212,7 +205,6 @@ public class EventService {
             return new EventRegiserResponse("User already registered for the event", event.getNumberRegistered());
         }
 
-
         if (event.getNumberRegistered() == event.getMaxCapacity()) {
             return new EventRegiserResponse("Event is full", event.getNumberRegistered());
         }
@@ -231,11 +223,8 @@ public class EventService {
         currentUser.getRegisteredEvents().add(event);
         userRepository.save(currentUser);
 
-
-        Notification notification = new Notification().
-                setDescription("User: " + currentUser.getName()
-                        + " Registered for the Event: " + event.getName()).
-                setEventId(event)
+        Notification notification = new Notification().setDescription("User: " + currentUser.getName()
+                + " Registered for the Event: " + event.getName()).setEventId(event)
                 .setType("Event Registration")
                 .setTimeStamp(new Date());
         notificationRepository.save(notification);
@@ -270,9 +259,6 @@ public class EventService {
 
     }
 
-
-
-
     public EventDetailResponse getEventDetail(String eventId) {
         Event event = eventRepository.findById(eventId).orElse(null);
         if (event == null) {
@@ -292,7 +278,6 @@ public class EventService {
                 .setAttendeeListPrivacy(event.getAttendeeListPrivacy());
     }
 
-
     public boolean checkIfRegistered(String eventId, User currentUser) {
         Event event = eventRepository.findById(eventId).orElse(null);
         if (event == null) {
@@ -302,4 +287,52 @@ public class EventService {
                 event.getRegisteredUsers().stream().anyMatch(user -> user.getId().equals(currentUser.getId()));
     }
 
+
+    public UserRegisteredEventResponse getRegisteredEvents(User currentUser){
+        List<UserRegisteredEventResponse.Event> registered = new ArrayList<>();
+        List<UserRegisteredEventResponse.Event> attended = new ArrayList<>();
+        List<UserRegisteredEventResponse.Event> absent = new ArrayList<>();
+
+        for (Event event : currentUser.getRegisteredEvents()) {
+            if (event.getUserStatuses() == null) {
+                registered.add(
+                        new UserRegisteredEventResponse.Event()
+                                .setId(event.getId())
+                                .setName(event.getName())
+                                .setDate(event.getDate())
+                                .setTime(event.getTime())
+                                .setLocation(event.getLocation())
+                                .setImage(event.getCoverImage())
+                                .setStatus("Registered")
+                );
+            } else {
+                // If userStatuses is not null, check the status using streams
+                event.getUserStatuses().stream()
+                        .filter(userStatus -> userStatus.getUserId().equals(currentUser.getId()))  // Filter by the current user
+                        .findFirst()
+                        .ifPresent(userStatus -> {
+                            // Categorize the event based on the user's current status
+                            String status = userStatus.getCurrentStatus();
+                            UserRegisteredEventResponse.Event eventResponse = new UserRegisteredEventResponse.Event()
+                                    .setId(event.getId())
+                                    .setName(event.getName())
+                                    .setDate(event.getDate())
+                                    .setTime(event.getTime())
+                                    .setLocation(event.getLocation())
+                                    .setImage(event.getCoverImage());
+
+                            if ("Attended".equalsIgnoreCase(status)) {
+                                eventResponse.setStatus("Attended");
+                                attended.add(eventResponse);
+                            } else if ("Absent".equalsIgnoreCase(status)) {
+                                eventResponse.setStatus("Absent");
+                                absent.add(eventResponse);
+                            }
+                        });
+            }
+        }
+
+        return new UserRegisteredEventResponse(registered, attended, absent);
+
+    }
 }

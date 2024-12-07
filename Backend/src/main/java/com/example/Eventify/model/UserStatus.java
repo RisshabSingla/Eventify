@@ -27,14 +27,7 @@ public class UserStatus {
 
     private String currentStatus;  // (Registered, Present, Yet to come, Attended, Absent)
 
-    // Getters and Setters
+    private String attendanceCode;
 
-    public UserStatus(Event eventId, User userId, String currentStatus) {
-        this.eventId = eventId;
-        this.userId = userId;
-        this.currentStatus = currentStatus;
-    }
-
-    // Default constructor and other methods
 }
 

@@ -117,4 +117,13 @@ public class EventController {
         return ResponseEntity.ok(eventService.checkIfRegistered(eventId, currentUser));
     }
 
+
+    @GetMapping("/getRegisteredEvents")
+    public ResponseEntity<UserRegisteredEventResponse> getRegisteredEvents() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(eventService.getRegisteredEvents(currentUser));
+    }
+
 }
