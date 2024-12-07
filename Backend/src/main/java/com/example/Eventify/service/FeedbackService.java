@@ -8,10 +8,12 @@ import com.example.Eventify.repository.FeedbackRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.request.GiveFeedbackRequest;
 import com.example.Eventify.response.FeedbackSubmitResponse;
+import com.example.Eventify.response.UserGivenFeedbackResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class FeedbackService {
@@ -38,20 +40,20 @@ public class FeedbackService {
                 .setOverallRating(feedbackRequest.getOverallRating())
                 .setSpeakerRating(feedbackRequest.getSpeakerRating())
                 .setVenueRating(feedbackRequest.getVenueRating())
-                .setSuggestions(feedbackRequest.getSuggestions())
+                .setSuggestions(feedbackRequest.getFutureSuggestions())
                 .setEventId(event)
                 .setCreatedDate(new Date());
 
         feedbackRepository.save(newFeedback);
 
-        if(currentUser.getFeedbacksGiven() == null){
+        if (currentUser.getFeedbacksGiven() == null) {
             currentUser.setFeedbacksGiven(new java.util.ArrayList<>());
         }
         currentUser.getFeedbacksGiven().add(newFeedback);
 
         userRepository.save(currentUser);
 
-        if(event.getFeedbacks() == null){
+        if (event.getFeedbacks() == null) {
             event.setFeedbacks(new java.util.ArrayList<>());
         }
         event.getFeedbacks().add(newFeedback);
@@ -66,4 +68,25 @@ public class FeedbackService {
                 .setSuggestions(newFeedback.getSuggestions())
                 .setId(newFeedback.getId());
     }
+
+    public List<UserGivenFeedbackResponse> getFeedbacks(User currentUser) {
+
+        if (currentUser.getFeedbacksGiven() == null) {
+            return null;
+        }
+        return currentUser.getFeedbacksGiven().stream().map(feedback -> new UserGivenFeedbackResponse()
+                        .setComments(feedback.getComments())
+                        .setSpeakerRating(feedback.getSpeakerRating())
+                        .setVenueRating(feedback.getVenueRating())
+                        .setSuggestions(feedback.getSuggestions())
+                        .setEventName(feedback.getEventId().getName())
+                        .setDescription(feedback.getEventId().getDescription())
+                        .setImage(feedback.getEventId().getCoverImage())
+                        .setDate(feedback.getEventId().getDate())
+                        .setLocation(feedback.getEventId().getLocation())
+                        .setRating(feedback.getOverallRating())
+                )
+                .toList();
+    }
+
 }

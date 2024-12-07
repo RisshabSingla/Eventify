@@ -15,5 +15,5 @@ public class GiveFeedbackRequest {
     private  int venueRating;
     private  int speakerRating;
     private String comments;
-    private String suggestions;
+    private String futureSuggestions;
 }
