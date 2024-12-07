@@ -12,12 +12,17 @@ import { UserEvents } from '../model/user/registeredEvents';
 import { EventQRCode } from '../model/user/QRCode';
 import { EventGiveFeedback } from '../model/user/giveFeedback';
 import { UserFeedback } from '../model/user/viewFeedback';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  constructor() {}
+  apiEndpoint = `http://localhost:8080/`;
+  currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  token = this.currentUser.token;
+
+  constructor(private http: HttpClient) {}
 
   getDashBoardItems(): Observable<UserDashboardItems> {
     return of(USER_DASHBOARD_DATA);
@@ -28,7 +33,17 @@ export class UserService {
   }
 
   getUserQREvents(): Observable<EventQRCode[]> {
-    return of(USER_DASHBOARD_EVENTS_QR);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventQRCode[]>(
+      `${this.apiEndpoint}events/getQRCodes`,
+      { headers }
+    );
+
+    // return of(USER_DASHBOARD_EVENTS_QR);
   }
 
   getUserGiveFeedback(): Observable<EventGiveFeedback[]> {
