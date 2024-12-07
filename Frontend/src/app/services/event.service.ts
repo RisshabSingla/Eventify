@@ -41,6 +41,17 @@ export class EventService {
 
   getEventAttendanceData(id: string): Observable<EventAttendanceData> {
     console.log(id);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventAttendanceData>(
+      `${this.apiEndpoint}events/getEventAttendance/` + id,
+      { headers }
+    );
+
     return of(EVENT_ATTENDANCE_DATA);
   }
 

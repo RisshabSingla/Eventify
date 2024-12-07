@@ -56,9 +56,7 @@ export class EventAttendanceComponent implements OnInit {
   }
 
   isEventToday(): boolean {
-    return (
-      this.eventDetails.date.toDateString() === this.currentDate.toDateString()
-    );
+    return this.eventDetails.date === this.currentDate;
   }
 
   // Update user statuses based on the event date
