@@ -361,7 +361,10 @@ public class EventService {
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        System.out.println("Event date is : "+ event.getDate());
+
         Date eventDate = formatter.parse(event.getDate());
+        System.out.println("After is: "+ eventDate);
         Date todayDate = formatter.parse(formatter.format(new Date()));
 
         EventAttendancePageAdminResponse.EventDetails eventDetails = new EventAttendancePageAdminResponse.EventDetails()
@@ -470,6 +473,41 @@ public class EventService {
                 .count();
 
         return (int) presentUsers;
+    }
+
+
+    public MarkAttendanceResponse markAttendanceforEvent(String eventId, String userId){
+        Event event = eventRepository.findById(eventId).orElse(null);
+        User currentUser = userRepository.findById(userId).orElse(null);
+
+        if (event == null || currentUser == null) {
+            return new MarkAttendanceResponse().setCurrentStatus("Event or user not found");
+        }
+
+        List<UserStatus> userStatuses = event.getUserStatuses();
+
+        if (userStatuses == null || userStatuses.isEmpty()) {
+            return new MarkAttendanceResponse().setCurrentStatus("No user statuses found");
+        }
+
+        // Use streams to find the UserStatus for the current user
+        UserStatus matchingStatus = userStatuses.stream()
+                .filter(userStatus -> userStatus != null && userStatus.getUserId().getId().equals(currentUser.getId()))
+                .findFirst()
+                .orElse(null);
+
+        if (matchingStatus == null) {
+            return new MarkAttendanceResponse().setCurrentStatus("User not registered for this event");
+        }
+
+        // Update the status to "Present"
+        matchingStatus.setCurrentStatus("Present");
+
+        // Save the updated event
+        eventRepository.save(event);
+        userStatusRepository.save(matchingStatus);
+
+        return new MarkAttendanceResponse().setCurrentStatus("Present");
     }
 
 }

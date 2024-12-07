@@ -3,8 +3,11 @@ package com.example.Eventify.response;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @Data
@@ -66,5 +69,25 @@ public class EventAttendancePageAdminResponse {
         private String description; // Description of the event
         private String location;    // Location of the event
         private Date date;          // Event date
+
+
+        public EventDetails setDate(Date date) {
+            if (date != null) {
+                // Ensure the date is in the desired time zone and format
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                formatter.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata")); // IST TimeZone
+                String formattedDate = formatter.format(date);
+                try {
+                    this.date = formatter.parse(formattedDate); // Parse back to Date
+
+                    System.out.println("new date is: " + this.date);
+                } catch (ParseException e) {
+                    throw new RuntimeException("Date parsing failed: " + e.getMessage(), e);
+                }
+            } else {
+                this.date = null;
+            }
+            return this;
+        }
     }
 }
