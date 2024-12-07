@@ -143,20 +143,12 @@ public class EventController {
 
     @PostMapping("/markAttendance/{eventId}/{userId}")
     public ResponseEntity<MarkAttendanceResponse> markAttendanceEvent(@PathVariable String eventId, @PathVariable String userId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-
-        if(!Objects.equals(currentUser.getRole(), "Admin")){
-            return ResponseEntity.badRequest().body(null);
-        }
-
         try{
             return ResponseEntity.ok(eventService.markAttendanceforEvent(eventId, userId));
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e);
             return ResponseEntity.badRequest().body(null);
         }
-
     }
 
 
