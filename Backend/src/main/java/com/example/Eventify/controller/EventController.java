@@ -85,4 +85,17 @@ public class EventController {
     }
 
 
+    @PostMapping("/register/{eventId}")
+    public ResponseEntity<EventRegiserResponse> registerEvent(@PathVariable String eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        if(Objects.equals(currentUser.getRole(), "Admin")) {
+            return ResponseEntity.badRequest().body(new EventRegiserResponse("Admins cannot register for events", -1));
+        }
+
+        return ResponseEntity.ok(eventService.registerEvent(eventId, currentUser));
+    }
+
+
 }

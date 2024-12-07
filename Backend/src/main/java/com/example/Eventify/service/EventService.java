@@ -200,4 +200,48 @@ public class EventService {
                         .setRating(feedback.getOverallRating()))
                 .collect(Collectors.toList());
     }
+
+    public EventRegiserResponse registerEvent(String eventId, User currentUser) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return new EventRegiserResponse("Event not found", -1);
+        }
+
+        if (currentUser.getRegisteredEvents() != null && event != null &&
+                currentUser.getRegisteredEvents().stream().anyMatch(e -> e.getId().equals(event.getId()))) {
+            return new EventRegiserResponse("User already registered for the event", event.getNumberRegistered());
+        }
+
+
+        if(event.getNumberRegistered() == event.getMaxCapacity()){
+            return new EventRegiserResponse("Event is full", event.getNumberRegistered());
+        }
+
+        if (event.getRegisteredUsers() == null) {
+            event.setRegisteredUsers(new ArrayList<>());
+        }
+        event.getRegisteredUsers().add(currentUser);
+        event.setNumberRegistered(event.getNumberRegistered() + 1);
+        eventRepository.save(event);
+
+        if(currentUser.getRegisteredEvents() == null){
+            currentUser.setRegisteredEvents(new ArrayList<>());
+        }
+
+        currentUser.getRegisteredEvents().add(event);
+        userRepository.save(currentUser);
+
+
+        Notification notification = new Notification().
+                setDescription("User: " + currentUser.getName()
+                        + " Registered for the Event: " + event.getName()).
+                setEventId(event)
+                .setType("Event Registration")
+                .setTimeStamp(new Date());
+        notificationRepository.save(notification);
+
+        return new EventRegiserResponse("Event registered successfully", (event.getRegisteredUsers().size()));
+    }
+
+
 }
