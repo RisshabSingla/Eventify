@@ -78,7 +78,7 @@ public class EventService {
                 .setId(savedEvent.getId());
     }
 
-    public List<ExploreEventsResponse> exploreEvents(){
+    public List<ExploreEventsResponse> exploreEvents() {
 
         List<Event> events = eventRepository.findAll();
         return events.stream()
@@ -327,7 +327,7 @@ public class EventService {
 //        System.out.println("Hello");
 
 
-        if(currentUser.getRegisteredEvents() == null){
+        if (currentUser.getRegisteredEvents() == null) {
             return new UserRegisteredEventResponse(registered, attended, absent);
         }
 
@@ -369,7 +369,7 @@ public class EventService {
                                 System.out.println("Inside absent");
                                 eventResponse.setStatus("Absent");
                                 absent.add(eventResponse);
-                            }else{
+                            } else {
                                 System.out.println("Inside registered");
                                 eventResponse.setStatus("Registered");
                                 registered.add(eventResponse);
@@ -503,7 +503,7 @@ public class EventService {
     }
 
 
-    public MarkAttendanceResponse markAttendanceforEvent(String eventId, String userId){
+    public MarkAttendanceResponse markAttendanceforEvent(String eventId, String userId) {
         Event event = eventRepository.findById(eventId).orElse(null);
         User currentUser = userRepository.findById(userId).orElse(null);
 
@@ -537,7 +537,7 @@ public class EventService {
         return new MarkAttendanceResponse().setCurrentStatus("Present");
     }
 
-    public List<EventAttendanceQRResponse> getQRCodesforAttendance(User currentUser){
+    public List<EventAttendanceQRResponse> getQRCodesforAttendance(User currentUser) {
 
         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         String today = DATE_FORMAT.format(new Date());
@@ -565,11 +565,10 @@ public class EventService {
     }
 
 
-
-    public List<UserAttendedEventsResponse> getAttendedEvents(User currentUser){
+    public List<UserAttendedEventsResponse> getAttendedEvents(User currentUser) {
         // TODO: Change logic for getting attended events(right now only registered events)
 
-        if(currentUser == null || currentUser.getRegisteredEvents() == null){
+        if (currentUser == null || currentUser.getRegisteredEvents() == null) {
             return Collections.emptyList();
         }
         return currentUser.getRegisteredEvents().stream()
@@ -595,6 +594,36 @@ public class EventService {
                 .setLocation(event.getLocation())
                 .setDate(event.getDate())
                 .setTime(event.getTime());
+    }
+
+
+    public List<EventAttendanceExportResponse.EventAttendanceData> getEventsWithAttendanceForUser(User currentUser) {
+        if (currentUser == null || currentUser.getCreatedEvents() == null) {
+            return Collections.emptyList();
+        }
+
+        return currentUser.getCreatedEvents().stream()
+                .filter(event -> event != null && event.getUserStatuses() != null) // Filter out null events or userStatuses
+                .map(event -> {
+                    List<UserStatus> userStatuses = event.getUserStatuses();
+
+                    List<EventAttendanceExportResponse.AttendanceUser> users = userStatuses.stream()
+                            .filter(userStatus -> userStatus != null && userStatus.getUserId() != null) // Filter null UserStatus or UserId
+                            .map(userStatus -> new EventAttendanceExportResponse.AttendanceUser()
+                                    .setName(Optional.ofNullable(userStatus.getUserId().getName()).orElse("Unknown"))
+                                    .setEmail(Optional.ofNullable(userStatus.getUserId().getEmail()).orElse("Unknown"))
+                                    .setCurrentStatus(Optional.ofNullable(userStatus.getCurrentStatus()).orElse("Unknown"))
+                                    .setAttendanceCode(Optional.ofNullable(userStatus.getAttendanceCode()).orElse("N/A"))
+                                    .setRegisteredDate(Optional.ofNullable(userStatus.getRegisteredDate())
+                                            .map(Object::toString)
+                                            .orElse("Unknown")))
+                            .toList();
+
+                    return new EventAttendanceExportResponse.EventAttendanceData()
+                            .setEventName(Optional.ofNullable(event.getName()).orElse("Untitled Event"))
+                            .setUserStatuses(users);
+                })
+                .toList();
     }
 }
 
