@@ -324,7 +324,13 @@ public class EventService {
         List<UserRegisteredEventResponse.Event> registered = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> attended = new ArrayList<>();
         List<UserRegisteredEventResponse.Event> absent = new ArrayList<>();
-        System.out.println("Hello");
+//        System.out.println("Hello");
+
+
+        if(currentUser.getRegisteredEvents() == null){
+            return new UserRegisteredEventResponse(registered, attended, absent);
+        }
+
         for (Event event : currentUser.getRegisteredEvents()) {
             System.out.println("Event name: " + event.getName());
             if (event.getUserStatuses() == null) {
