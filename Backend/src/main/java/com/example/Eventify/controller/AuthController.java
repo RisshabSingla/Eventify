@@ -8,7 +8,9 @@ import com.example.Eventify.request.RegisterRequest;
 import com.example.Eventify.response.LoginResponse;
 import com.example.Eventify.response.RegisterResponse;
 import com.example.Eventify.service.AuthService;
+import com.example.Eventify.service.DeviceLocationService;
 import com.example.Eventify.service.JWTService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +27,8 @@ public class AuthController {
     private final AuthService authenticationService;
 
     private final UserRepository userRepository;
-    public AuthController(JWTService jwtService, AuthService authenticationService, UserRepository userRepository) {
+
+    public AuthController(JWTService jwtService, AuthService authenticationService, UserRepository userRepository, DeviceLocationService deviceLocationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
@@ -50,8 +53,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginUserDto,  HttpServletRequest request) {
+        User authenticatedUser = authenticationService.authenticate(loginUserDto, request);
         String jwtToken = jwtService.generateToken(authenticatedUser);
         LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime()).setRole(authenticatedUser.getRole());
         return ResponseEntity.ok(loginResponse);
