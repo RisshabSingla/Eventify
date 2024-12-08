@@ -2,6 +2,7 @@ package com.example.Eventify.controller;
 
 import com.example.Eventify.model.User;
 import com.example.Eventify.request.CreateEventRequest;
+import com.example.Eventify.request.EditEventRequest;
 import com.example.Eventify.response.*;
 import com.example.Eventify.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,6 +198,26 @@ public class EventController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
+    @GetMapping("/{eventId}/edit")
+    public ResponseEntity<EditEventDetailsResponse> getEventDetails(@PathVariable String eventId) {
+        EditEventDetailsResponse eventEdit = eventService.getEventDetailsForEdit(eventId);
+        return ResponseEntity.ok(eventEdit);
+    }
+
+    @PutMapping("/update/{eventId}")
+    public ResponseEntity<?> updateEventDetails(
+            @PathVariable String eventId,
+            @RequestBody EditEventRequest eventDetailsRequest) {
+
+        try {
+            eventService.updateEvent(eventId, eventDetailsRequest);
+            return ResponseEntity.ok().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);  // Return 400 if error occurs
         }
     }
 }

@@ -49,7 +49,11 @@ public class Event {
 
     // Getters and Setters
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Data
+    @Getter
+    @Setter
     @Accessors(chain = true)
     public static class Speaker {
         private String name;
@@ -57,7 +61,11 @@ public class Event {
 
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Data
+    @Getter
+    @Setter
     @Accessors(chain = true)
     public static class AgendaItem {
         private String description;
@@ -65,7 +73,11 @@ public class Event {
     }
 
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Data
+    @Getter
+    @Setter
     @Accessors(chain = true)
     public static class Media {
         private String type;

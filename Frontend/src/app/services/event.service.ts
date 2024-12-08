@@ -133,7 +133,36 @@ export class EventService {
   }
 
   getEventEditDetails(eventId: string): Observable<EventEdit> {
-    return of(EVENT_EDIT_DATA);
+    // console.log(eventId);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventEdit>(
+      `${this.apiEndpoint}events/${eventId}/edit`,
+      { headers }
+    );
+
+    // return of(EVENT_EDIT_DATA);
+  }
+
+  updateEvent(eventId: string, eventData: any): Observable<any> {
+    // console.log(eventId, eventData);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${this.apiEndpoint}events/update/${eventId}`,
+      eventData,
+      {
+        headers,
+      }
+    );
+    // return of();
   }
 
   getEventFeedbackData(eventId: string): Observable<EventFeedbackData> {

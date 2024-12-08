@@ -21,7 +21,6 @@ export class EventEditComponent implements OnInit {
   formSubmitted = false;
   eventId = '';
   formData!: EventEdit;
-  // Dummy event data to populate the form
 
   constructor(
     private fb: FormBuilder,
@@ -51,9 +50,8 @@ export class EventEditComponent implements OnInit {
 
     this.eventService.getEventEditDetails(this.eventId).subscribe((data) => {
       this.formData = data;
+      this.populateForm(this.formData);
     });
-
-    this.populateForm(this.formData);
   }
 
   futureDateValidator(control: AbstractControl): ValidationErrors | null {
@@ -122,7 +120,17 @@ export class EventEditComponent implements OnInit {
     if (this.eventForm.invalid) {
       return;
     }
-    console.log(this.eventForm.value);
+
+    this.eventService.updateEvent(this.eventId, this.eventForm.value).subscribe(
+      (response) => {
+        this.eventForm.reset();
+        alert('Event updated successfully');
+        this.router.navigate(['admin/event-management']);
+      },
+      (error) => {
+        console.error('Error updating event', error);
+      }
+    );
   }
 
   // Populate the form with dummy event data

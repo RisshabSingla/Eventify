@@ -6,6 +6,7 @@ import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.CreateEventRequest;
+import com.example.Eventify.request.EditEventRequest;
 import com.example.Eventify.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -624,6 +625,80 @@ public class EventService {
                             .setUserStatuses(users);
                 })
                 .toList();
+    }
+
+
+    public EditEventDetailsResponse getEventDetailsForEdit(String eventId) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+        return new EditEventDetailsResponse()
+                .setEventId(event.getId())
+                .setEventTitle(Optional.ofNullable(event.getName()).orElse("Untitled Event"))
+                .setEventDescription(Optional.ofNullable(event.getDescription()).orElse(""))
+                .setEventDate(Optional.ofNullable(event.getDate()).orElse(""))
+                .setEventTime(Optional.ofNullable(event.getTime()).orElse(""))
+                .setEventLocation(Optional.ofNullable(event.getLocation()).orElse(""))
+                .setEventCategory(Optional.ofNullable(event.getCategory()).orElse(""))
+                .setRegistrationLimit(Optional.of(event.getMaxCapacity()).orElse(0))
+                .setEventTags("")
+                .setCoverImage(Optional.ofNullable(event.getCoverImage()).orElse(""))
+                .setAgenda(
+                        event.getAgenda() != null && !event.getAgenda().isEmpty()
+                                ? event.getAgenda().stream()
+                                .map(agendaItem -> new EditEventDetailsResponse.AgendaItem()
+                                        .setAgendaItem(agendaItem.getDescription())
+                                        .setStartTime(agendaItem.getTime()))
+                                .collect(Collectors.toList())
+                                : Collections.emptyList())
+                .setSpeakers(
+                        Optional.ofNullable(event.getSpeakers())
+                                .map(speakers -> speakers.stream()
+                                        .map(speaker -> new EditEventDetailsResponse.Speaker()
+                                                .setName(speaker.getName())
+                                                .setBio(speaker.getBio()))
+                                        .collect(Collectors.toList()))
+                                .orElse(Collections.emptyList()))
+                .setAttendeeList(Optional.ofNullable(event.getAttendeeListPrivacy()).orElse(""));
+    }
+
+
+
+
+
+    public void updateEvent(String eventId, EditEventRequest
+            eventDetailsRequest) throws Exception {
+
+        // Fetch the existing event from the database
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new Exception("Event not found"));
+
+        // Update event details
+        event.setName(eventDetailsRequest.getEventTitle());
+        event.setDescription(eventDetailsRequest.getEventDescription());
+        event.setDate(eventDetailsRequest.getEventDate());
+        event.setTime(eventDetailsRequest.getEventTime());
+        event.setLocation(eventDetailsRequest.getEventLocation());
+        event.setCategory(eventDetailsRequest.getEventCategory());
+        event.setMaxCapacity(eventDetailsRequest.getRegistrationLimit());
+        event.setCoverImage(eventDetailsRequest.getCoverImage());
+
+        event.setAgenda(mapAgenda(eventDetailsRequest.getAgenda()));
+        event.setSpeakers(mapSpeakers(eventDetailsRequest.getSpeakers()));
+        event.setAttendeeListPrivacy(eventDetailsRequest.getAttendeeList());
+
+        eventRepository.save(event);
+    }
+
+
+    private List<Event.AgendaItem> mapAgenda(List<EditEventRequest.AgendaItemRequest> agendaRequest) {
+        // Map the request agenda items to the event's agenda
+        return agendaRequest.stream().map(item -> new Event.AgendaItem(item.getAgendaItem(), item.getStartTime())).collect(Collectors.toList());
+    }
+
+    private List<Event.Speaker> mapSpeakers(List<EditEventRequest.SpeakerRequest> speakerRequest) {
+        // Map the request speakers to the event's speakers
+        return speakerRequest.stream().map(item -> new Event.Speaker(item.getName(), item.getBio())).collect(Collectors.toList());
     }
 }
 
