@@ -35,7 +35,7 @@ export class UserService {
       { headers }
     );
 
-    return of(USER_DASHBOARD_DATA);
+    // return of(USER_DASHBOARD_DATA);
   }
 
   getUserEvents(): Observable<UserEvents> {
@@ -64,6 +64,19 @@ export class UserService {
     );
 
     // return of(USER_DASHBOARD_EVENTS_QR);
+  }
+
+  updateUserDetails(userDetails: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.put(
+      `${this.apiEndpoint}users/updateUserDetails`,
+      userDetails,
+      { headers }
+    );
   }
 
   getUserGiveFeedback(): Observable<EventGiveFeedback[]> {

@@ -3,7 +3,7 @@
 >
   <!-- Profile Section (at the top) -->
   <div
-    class="flex items-center space-x-6 bg-gray-50 p-5 rounded-md shadow-md col-span-1 lg:col-span-2"
+    class="flex items-center space-x-6 bg-gray-50 p-5 rounded-md shadow-md col-span-1 lg:col-span-2 relative"
   >
     <img
       class="w-20 h-20 rounded-full object-cover"
@@ -16,6 +16,13 @@
       </h3>
       <p class="text-base text-black truncate">{{ userDetails.userEmail }}</p>
     </div>
+    <!-- Edit Icon -->
+    <button
+      class="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+      (click)="openEditOverlay()"
+    >
+      <i class="fas fa-edit text-xl"></i>
+    </button>
   </div>
 
   <!-- Event Participation Summary -->
@@ -37,16 +44,6 @@
     </div>
   </div>
 
-  <!-- Notifications -->
-  <!-- <div class="bg-white p-5 rounded-md shadow-md border border-gray-200">
-    <h4 class="text-xl font-semibold text-black">Notifications</h4>
-    <ul class="space-y-2 text-base text-black">
-      <li *ngFor="let notification of userNotifications" class="py-1">
-        {{ notification }}
-      </li>
-    </ul>
-  </div> -->
-
   <!-- User Stats -->
   <div class="bg-white p-5 rounded-md shadow-md border border-gray-200">
     <h4 class="text-xl font-semibold text-black">User Stats</h4>
@@ -56,6 +53,98 @@
         {{ userStats.totalEventsRegistered }}
       </p>
       <p><strong>Feedback Given:</strong> {{ userStats.feedbackGiven }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Overlay -->
+<div
+  *ngIf="isEditOverlayOpen"
+  class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+>
+  <div class="bg-white p-8 rounded-lg shadow-2xl w-11/12 max-w-lg">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+      Edit Profile
+    </h2>
+    <div class="space-y-6">
+      <!-- Profile Image with Edit Icon -->
+      <div class="relative w-24 h-24 mx-auto">
+        <img
+          class="w-24 h-24 rounded-full object-cover border-4 border-gray-300"
+          [src]="uploadedImageUrl || userDetails.userImageUrl"
+          alt="User Image"
+        />
+        <label
+          for="imageUpload"
+          class="absolute bottom-0 right-0 bg-blue-500 text-white p-2 rounded-full shadow-md hover:bg-blue-600 cursor-pointer"
+        >
+          ✏️
+          <input
+            id="imageUpload"
+            type="file"
+            accept="image/*"
+            (change)="onImageUpload($event)"
+            class="hidden"
+          />
+        </label>
+      </div>
+
+      <!-- User Details Form -->
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+          for="userName"
+          >Name</label
+        >
+        <input
+          [(ngModel)]="editableUserDetails.userName"
+          id="userName"
+          type="text"
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+          for="userEmail"
+          >Email</label
+        >
+        <input
+          [value]="editableUserDetails.userEmail"
+          id="userEmail"
+          type="email"
+          disabled
+          class="w-full rounded-lg border-gray-300 bg-gray-100 text-gray-500 shadow-sm p-2"
+        />
+      </div>
+      <div>
+        <label
+          class="block text-sm font-medium text-gray-700 mb-1"
+          for="userPhone"
+          >Phone</label
+        >
+        <input
+          [(ngModel)]="editableUserDetails.phoneNumber"
+          id="userPhone"
+          type="text"
+          class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2"
+        />
+      </div>
+    </div>
+    <!-- Action Buttons -->
+    <div class="flex justify-end space-x-4 mt-8">
+      <button
+        class="bg-gray-400 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-500"
+        (click)="closeEditOverlay()"
+      >
+        Cancel
+      </button>
+      <button
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+        (click)="saveUserDetails()"
+      >
+        Save Changes
+      </button>
     </div>
   </div>
 </div>

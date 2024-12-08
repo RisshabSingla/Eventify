@@ -26,6 +26,7 @@ public class UserDashboardItemsResponse {
         private String userImageUrl;
         private String userName;
         private String userEmail;
+        private String phoneNumber;
     }
 
 

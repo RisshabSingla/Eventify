@@ -2,6 +2,7 @@ export interface UserDetail {
   userImageUrl: string;
   userName: string;
   userEmail: string;
+  phoneNumber: string;
 }
 
 export interface UserEventSummary {

@@ -8,6 +8,7 @@ import { UserDashboardRegisteredComponent } from './user-dashboard-registered/us
 import { UserDashboardQrCodeComponent } from './user-dashboard-qr-code/user-dashboard-qr-code.component';
 import { UserDashboardGiveFeedbackComponent } from './user-dashboard-give-feedback/user-dashboard-give-feedback.component';
 import { UserDashboardViewFeedbackComponent } from './user-dashboard-view-feedback/user-dashboard-view-feedback.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,6 @@ import { UserDashboardViewFeedbackComponent } from './user-dashboard-view-feedba
     UserDashboardGiveFeedbackComponent,
     UserDashboardViewFeedbackComponent,
   ],
-  imports: [CommonModule, UserRoutingModule],
+  imports: [CommonModule, UserRoutingModule, FormsModule],
 })
 export class UserModule {}
