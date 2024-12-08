@@ -22,7 +22,7 @@ export class UserDashboardGiveFeedbackComponent {
   }
 
   // Navigate to the feedback form for the selected event
-  navigateToFeedbackForm(eventId: number) {
+  navigateToFeedbackForm(eventId: string) {
     this.router.navigate(['user/give-feedback/' + eventId]);
   }
 }

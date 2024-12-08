@@ -65,7 +65,7 @@ export class AuthService {
   ): Observable<string> {
     const payload = { name, email, password, role };
 
-    return this.http.post<any>(`${this.apiUrl}/register`, payload).pipe(
+    return this.http.post<any>(`${this.apiUrl}auth/signup`, payload).pipe(
       tap((response) => {
         console.log('User registered successfully:', response);
         this.currentUser = {
