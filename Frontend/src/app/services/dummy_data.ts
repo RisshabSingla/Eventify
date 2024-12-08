@@ -281,7 +281,7 @@ export const ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA: EventAttendance = {
   ],
 };
 
-export const ADMIN_DASHBOARD_NOTIFICATIONS_DATA: AdminNotification[] = [
+export const ADMIN_DASHBOARD_NOTIFICATIONS_DATA = [
   {
     type: 'new event',
     description: 'A new event has been created: Tech Conference 2024.',
@@ -712,7 +712,7 @@ export const ADMIN_DASHBOARD_REPORTS_DATA: EventReport = {
   ],
 };
 
-export const USER_DASHBOARD_DATA: UserDashboardItems = {
+export const USER_DASHBOARD_DATA = {
   userDetails: {
     userImageUrl: 'https://via.placeholder.com/150',
     userName: 'John Doe',
@@ -734,7 +734,7 @@ export const USER_DASHBOARD_DATA: UserDashboardItems = {
   },
 };
 
-export const USER_DASHBOARD_EVENTS: UserEvents = {
+export const USER_DASHBOARD_EVENTS = {
   registered: [
     {
       id: 1,
@@ -1249,7 +1249,7 @@ export const EVENT_ANALYTIC_DATA: EventAnalytic = {
   ],
 };
 
-export const EVENT_ATTENDANCE_DATA: EventAttendanceData = {
+export const EVENT_ATTENDANCE_DATA = {
   metrics: {
     capacity: 200,
     filled: 180,
@@ -1448,7 +1448,7 @@ export const EVENT_ATTENDANCE_DATA: EventAttendanceData = {
   },
 };
 
-export const EVENT_ATTENDEE_DATA: EventAttendee = {
+export const EVENT_ATTENDEE_DATA = {
   eventDetails: {
     eventId: 1,
     eventName: 'Tech Conference 2024',
@@ -1534,7 +1534,7 @@ export const EVENT_ATTENDEE_DATA: EventAttendee = {
   ],
 };
 
-export const EVENT_DETAIL_PAGE_DATA: EventDetailPage = {
+export const EVENT_DETAIL_PAGE_DATA = {
   eventDetails: {
     id: 1,
     title: 'Tech Conference 2024',
