@@ -22,18 +22,22 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final NotificationRepository notificationRepository; // Add this line heri
+    private final NotificationRepository notificationRepository;
+
+
+    private final EmailService emailService;
 
     public AuthService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
-            NotificationRepository notificationRepository
+            NotificationRepository notificationRepository, EmailService emailService
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.notificationRepository = notificationRepository;
+        this.emailService = emailService;
     }
 
     public User signup(RegisterRequest input) {
@@ -51,7 +55,24 @@ public class AuthService {
 
         notificationRepository.save(notification);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Send a confirmation email
+        String subject = "Account Created Successfully";
+        String text = "<html><body>"
+                + "<p>Dear " + user.getName() + ",</p>"
+                + "<p>Your account has been created successfully. Welcome to our platform!</p>"
+                + "<p>Regards,</p>"
+                + "<p><b>Team Eventify</b></p>"
+                + "</body></html>";
+
+        try {
+            emailService.sendEmail(user.getEmail(), subject, text);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return savedUser;
     }
 
     public User authenticate(LoginRequest input) {
