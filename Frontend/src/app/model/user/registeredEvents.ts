@@ -1,11 +1,11 @@
 export interface Event {
   id: number;
-  name: String;
-  date: String;
-  time: String;
-  location: String;
-  image: String;
-  status: String;
+  name: string;
+  date: string;
+  time: string;
+  location: string;
+  image: string;
+  status: string;
 }
 
 export interface UserEvents {
