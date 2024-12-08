@@ -4,6 +4,7 @@ import { UserEvents } from '../../../model/user/registeredEvents';
 import { UserService } from '../../../services/user.service';
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { CalendarService } from '../../../services/calendar.service';
 
 @Component({
   selector: 'app-user-dashboard-registered',
@@ -14,7 +15,11 @@ export class UserDashboardRegisteredComponent implements OnInit {
   events!: UserEvents;
   calendar: Calendar | undefined;
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private calendarService: CalendarService
+  ) {}
 
   ngOnInit(): void {
     this.userService.getUserEvents().subscribe((data) => {
@@ -41,7 +46,7 @@ export class UserDashboardRegisteredComponent implements OnInit {
 
   mapEvents(
     events: {
-      id: number;
+      id: string;
       name: string;
       date: string; // Corrected to lowercase
       time: string;
@@ -73,5 +78,11 @@ export class UserDashboardRegisteredComponent implements OnInit {
 
   giveFeedback(event: any) {
     this.router.navigate(['/user/give-feedback/' + event.id]);
+  }
+
+  downloadIcal(event: any) {
+    console.log(event);
+
+    this.calendarService.downloadIcal(event);
   }
 }
