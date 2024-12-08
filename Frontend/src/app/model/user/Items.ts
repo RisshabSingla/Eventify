@@ -18,6 +18,5 @@ export interface UserStats {
 export interface UserDashboardItems {
   userDetails: UserDetail;
   userEventSummary: UserEventSummary;
-  userNotifications: string[];
   userStats: UserStats;
 }

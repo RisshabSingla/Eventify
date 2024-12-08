@@ -25,6 +25,16 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getDashBoardItems(): Observable<UserDashboardItems> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<UserDashboardItems>(
+      `${this.apiEndpoint}users/getUserDashboardDetails`,
+      { headers }
+    );
+
     return of(USER_DASHBOARD_DATA);
   }
 

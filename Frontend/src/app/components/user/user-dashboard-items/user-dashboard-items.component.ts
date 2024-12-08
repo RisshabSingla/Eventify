@@ -14,7 +14,6 @@ import { UserService } from '../../../services/user.service';
 export class UserDashboardItemsComponent implements OnInit {
   userDetails!: UserDetail;
   userEventSummary!: UserEventSummary;
-  userNotifications!: string[];
   userStats!: UserStats;
 
   constructor(private userService: UserService) {}
@@ -23,7 +22,6 @@ export class UserDashboardItemsComponent implements OnInit {
     this.userService.getDashBoardItems().subscribe((data) => {
       this.userDetails = data.userDetails;
       this.userEventSummary = data.userEventSummary;
-      this.userNotifications = data.userNotifications;
       this.userStats = data.userStats;
     });
   }
