@@ -51,7 +51,18 @@ public class UserController {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
+    }
 
 
+    @GetMapping("/getUserDetails")
+    public ResponseEntity<UserDashboardItemsResponse.UserDetail> getUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(userService.getUserDetails(currentUser));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

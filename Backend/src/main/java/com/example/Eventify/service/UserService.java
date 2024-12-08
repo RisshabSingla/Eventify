@@ -67,4 +67,19 @@ public class UserService {
 
         userRepository.save(currentUser);
     }
+
+
+    public UserDashboardItemsResponse.UserDetail  getUserDetails(User currentUser){
+        String profileImage = (currentUser.getProfileImage() != null) ? currentUser.getProfileImage() : "default-profile-image.png";
+        String userName = (currentUser.getName() != null) ? currentUser.getName() : "Anonymous User";
+        String userEmail = (currentUser.getEmail() != null) ? currentUser.getEmail() : "No Email Provided";
+        String userPhone = (currentUser.getPhoneNumber() != null) ? currentUser.getPhoneNumber() : "No Phone Provided";
+
+
+        return new UserDashboardItemsResponse.UserDetail()
+                .setUserImageUrl(profileImage)
+                .setUserName(userName)
+                .setUserEmail(userEmail)
+                .setPhoneNumber(userPhone);
+    }
 }
