@@ -8,6 +8,7 @@ import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.request.EditEventRequest;
 import com.example.Eventify.response.*;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class EventService {
 
     @Autowired
     private UserStatusRepository userStatusRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
     public EventCreateResponse createEvent(CreateEventRequest request, User currentUser) {
@@ -214,7 +218,7 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
-    public EventRegiserResponse registerEvent(String eventId, User currentUser) {
+    public EventRegiserResponse registerEvent(String eventId, User currentUser) throws MessagingException {
         Event event = eventRepository.findById(eventId).orElse(null);
         if (event == null) {
             return new EventRegiserResponse("Event not found", -1);
@@ -261,6 +265,29 @@ public class EventService {
                 .setType("Event Registration")
                 .setTimeStamp(new Date());
         notificationRepository.save(notification);
+
+        String subject = "Event Registration Confirmation - " + event.getName();
+        String text = "<html><body>"
+                + "<p>Dear " + currentUser.getName() + ",</p>"
+                + "<p>You have successfully registered for the event: <b>" + event.getName() + "</b>.</p>"
+                + "<p><b>Event Details:</b></p>"
+                + "<ul>"
+                + "<li><b>Event Name:</b> " + event.getName() + "</li>"
+                + "<li><b>Date:</b> " + event.getDate() + "</li>"
+                + "<li><b>Location:</b> " + event.getLocation() + "</li>"
+                + "<li><b>Time:</b> " + event.getTime() + "</li>"
+                + "</ul>"
+                + "<p>Thank you for registering! We look forward to seeing you there.</p>"
+                + "<p>Best Regards,</p>"
+                + "<p><b>Team Eventify</b></p>"
+                + "</body></html>";
+
+        try{
+            emailService.sendEmail(currentUser.getEmail(), subject, text);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
 
         return new EventRegiserResponse("Event registered successfully", (event.getRegisteredUsers().size()));
     }
@@ -688,6 +715,42 @@ public class EventService {
         event.setAttendeeListPrivacy(eventDetailsRequest.getAttendeeList());
 
         eventRepository.save(event);
+
+        StringBuilder agendaBuilder = new StringBuilder();
+        for (Event.AgendaItem agendaItem : event.getAgenda()) {
+            agendaBuilder.append("<li><b>").append(agendaItem.getDescription()).append("</b> at ").append(agendaItem.getTime()).append("</li>");
+        }
+
+        // Format Speakers
+        StringBuilder speakersBuilder = new StringBuilder();
+        for (Event.Speaker speaker : event.getSpeakers()) {
+            speakersBuilder.append("<li><b>").append(speaker.getName()).append("</b> - ").append(speaker.getBio()).append("</li>");
+        }
+
+        String subject = "Event Updated: " + event.getName();
+        String text = "<html><body>"
+                + "<p>Dear Attendee,</p>"
+                + "<p>We wanted to inform you that the details for the event <b>" + event.getName() + "</b> have been updated:</p>"
+                + "<ul>"
+                + "<li><b>Event Name:</b> " + event.getName() + "</li>"
+                + "<li><b>Date:</b> " + event.getDate() + "</li>"
+                + "<li><b>Location:</b> " + event.getLocation() + "</li>"
+                + "<li><b>Time:</b> " + event.getTime() + "</li>"
+                + "<li><b>Registration Limit:</b> " + event.getMaxCapacity() + "</li>"
+                + "<li><b>Agenda:</b><ul>" + agendaBuilder.toString() + "</ul></li>"
+                + "<li><b>Speakers:</b><ul>" + speakersBuilder.toString() + "</ul></li>"
+                + "</ul>"
+                + "<p>Please review the updated event details. We look forward to your participation!</p>"
+                + "<p>Best Regards,</p>"
+                + "<p><b>Team Eventify</b></p>"
+                + "</body></html>";
+
+        // Send the email to all registered users
+        for (User user : event.getRegisteredUsers()) {
+            emailService.sendEmail(user.getEmail(), subject, text);
+        }
+
+
     }
 
 

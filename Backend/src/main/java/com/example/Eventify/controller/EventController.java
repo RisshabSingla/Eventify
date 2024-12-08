@@ -5,6 +5,7 @@ import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.request.EditEventRequest;
 import com.example.Eventify.response.*;
 import com.example.Eventify.service.EventService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -99,7 +100,7 @@ public class EventController {
 
 
     @PostMapping("/register/{eventId}")
-    public ResponseEntity<EventRegiserResponse> registerEvent(@PathVariable String eventId) {
+    public ResponseEntity<EventRegiserResponse> registerEvent(@PathVariable String eventId) throws MessagingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
