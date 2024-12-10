@@ -773,5 +773,11 @@ public class EventService {
         // Map the request speakers to the event's speakers
         return speakerRequest.stream().map(item -> new Event.Speaker(item.getName(), item.getBio())).collect(Collectors.toList());
     }
+
+    public List<UserCreatedEventsInfoResponse> getEventsByUser(User currentUser){
+        return eventRepository.findByCreatedBy(currentUser).stream()
+                .map(event -> new UserCreatedEventsInfoResponse(event.getId(), event.getName()))
+                .collect(Collectors.toList());
+    }
 }
 

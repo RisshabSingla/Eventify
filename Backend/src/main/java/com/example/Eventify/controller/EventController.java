@@ -1,5 +1,6 @@
 package com.example.Eventify.controller;
 
+import com.example.Eventify.model.Event;
 import com.example.Eventify.model.User;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.request.EditEventRequest;
@@ -220,5 +221,13 @@ public class EventController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);  // Return 400 if error occurs
         }
+    }
+
+
+    @GetMapping("getEventNames")
+    public ResponseEntity<List<UserCreatedEventsInfoResponse>> getEventNames() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(eventService.getEventsByUser(currentUser));
     }
 }
