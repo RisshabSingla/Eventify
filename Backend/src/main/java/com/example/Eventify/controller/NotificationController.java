@@ -20,7 +20,6 @@ public class NotificationController {
 
     @GetMapping("/getAdminNotifications")
     public ResponseEntity<List<AdminNotificationsResponse>> getAdminNotifications() {
-        System.out.println("Hello");
         return ResponseEntity.ok(notificationService.getAdminNotifications());
     }
 }

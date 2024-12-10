@@ -88,16 +88,27 @@ public class EventService {
     }
 
     public List<ExploreEventsResponse> exploreEvents() {
-
         List<Event> events = eventRepository.findAll();
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+
         return events.stream()
+                .filter(event -> {
+                    try {
+                        LocalDate eventDate = LocalDate.parse(event.getDate(), dateFormatter);
+                        return !eventDate.isBefore(today);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
                 .map(event -> new ExploreEventsResponse()
                         .setId(event.getId())
                         .setTitle(event.getName())
                         .setDescription(event.getDescription())
                         .setDate(event.getDate())
                         .setLocation(event.getLocation())
-                        .setImage("https://picsum.photos/400/200"))
+                        .setImage(event.getCoverImage()))
                 .collect(Collectors.toList());
     }
 
