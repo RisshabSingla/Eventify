@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -18,7 +19,7 @@ public class DocumentExportService {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             for (EventAttendanceExportResponse.EventAttendanceData event : events) {
                 // Create a new sheet for each event
-                Sheet sheet = workbook.createSheet(event.getEventName());
+                Sheet sheet = workbook.createSheet(event.getEventName() + UUID.randomUUID());
                 createHeaderRow(sheet);
 
                 int rowIndex = 1; // Start after the header row
