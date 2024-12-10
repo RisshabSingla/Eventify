@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminNotification } from '../../../model/admin/Notifications';
 import { AdminService } from '../../../services/admin.service';
+import { Admin_Event_Details } from '../../../model/admin/Admin_Event_Details';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-admin-notifications',
@@ -11,10 +13,28 @@ import { AdminService } from '../../../services/admin.service';
 export class AdminNotificationsComponent implements OnInit {
   notifications: AdminNotification[] = [];
 
-  constructor(private router: Router, private adminService: AdminService) {}
+  events: Admin_Event_Details[] = [];
+
+  notificationType: string = 'All';
+  selectedEvent: string = '';
+  isModalOpen: boolean = false;
+  notificationText: string = '';
+
+  constructor(
+    private router: Router,
+    private adminService: AdminService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.loadNotifications();
+    this.loadEventNames();
+  }
+
+  loadEventNames() {
+    this.adminService.getEventNames().subscribe((data) => {
+      this.events = data;
+    });
   }
 
   loadNotifications(): void {
@@ -27,7 +47,26 @@ export class AdminNotificationsComponent implements OnInit {
     });
   }
 
-  pushNewNotification() {
-    console.log('New Notification button clicked');
+  openNotificationModal() {
+    this.isModalOpen = true;
+  }
+
+  // Close the modal
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  pushNotification() {
+    this.notificationService
+      .sendNotification(
+        this.notificationType,
+        this.selectedEvent,
+        this.notificationText
+      )
+      .subscribe((data: string) => {
+        alert('Notification Sent');
+        console.log(data);
+      });
+    this.closeModal();
   }
 }

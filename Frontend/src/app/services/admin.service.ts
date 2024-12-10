@@ -29,6 +29,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Event } from '../model/admin/Event';
 import { UserDetail } from '../model/user/Items';
 import { EventReport } from '../model/admin/Event_Reports';
+import { Admin_Event_Details } from '../model/admin/Admin_Event_Details';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,20 @@ export class AdminService {
 
   getDashboardItems(): Observable<Items> {
     return of(ADMIN_DASHBOARD_DATA);
+  }
+
+  getEventNames(): Observable<Admin_Event_Details[]> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<Admin_Event_Details[]>(
+      `${this.apiEndpoint}events/getEventNames`,
+      {
+        headers,
+      }
+    );
   }
 
   getEventManagementData(): Observable<EventManagement> {
