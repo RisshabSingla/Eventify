@@ -6,6 +6,9 @@ import {
 } from '../../../model/user/Items';
 import { UserService } from '../../../services/user.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { EventService } from '../../../services/event.service';
+import { EventDetails } from '../../../model/event/EventDetails';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-dashboard-items',
@@ -29,7 +32,14 @@ export class UserDashboardItemsComponent implements OnInit {
     'https://api.cloudinary.com/v1_1/dacl5s2dn/image/upload';
   private uploadPreset = 'CollaboraLearnFileUpload';
 
-  constructor(private userService: UserService, private http: HttpClient) {}
+  events: EventDetails[] = [];
+
+  constructor(
+    private userService: UserService,
+    private http: HttpClient,
+    private eventService: EventService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.userService.getDashBoardItems().subscribe((data) => {
@@ -37,6 +47,22 @@ export class UserDashboardItemsComponent implements OnInit {
       this.userEventSummary = data.userEventSummary;
       this.userStats = data.userStats;
     });
+    this.fetchEvents();
+  }
+
+  fetchEvents(): void {
+    this.eventService.getAllEvents().subscribe(
+      (events: EventDetails[]) => {
+        this.events = events;
+      },
+      (error) => {
+        console.error('Error fetching events:', error);
+      }
+    );
+  }
+
+  navigateToEvent(eventId: number): void {
+    this.router.navigate(['/user/explore/', eventId]);
   }
 
   openEditOverlay() {

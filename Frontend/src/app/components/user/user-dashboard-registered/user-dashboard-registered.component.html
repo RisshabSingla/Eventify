@@ -21,22 +21,18 @@
         />
         <div class="p-5">
           <h3
-            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+            class="text-lg font-semibold text-gray-800 line-clamp-2 h-14 overflow-hidden"
           >
             {{ event.name }}
           </h3>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.date }} | {{ event.time }}
           </p>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.location }}
           </p>
           <p
-            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+            class="text-sm font-medium text-blue-600 line-clamp-1 h-6 overflow-hidden"
           >
             {{ event.status }}
           </p>
@@ -80,22 +76,18 @@
         />
         <div class="p-5">
           <h3
-            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+            class="text-lg font-semibold text-gray-800 line-clamp-2 h-14 overflow-hidden"
           >
             {{ event.name }}
           </h3>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.date }} | {{ event.time }}
           </p>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.location }}
           </p>
           <p
-            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+            class="text-sm font-medium text-blue-600 line-clamp-1 h-6 overflow-hidden"
           >
             {{ event.status }}
           </p>
@@ -106,10 +98,10 @@
             View Details
           </button>
           <button
-            class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-200"
-            (click)="giveFeedback(event)"
+            class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            (click)="downloadIcal(event)"
           >
-            Give Feedback
+            Download iCal File
           </button>
         </div>
       </div>
@@ -135,22 +127,18 @@
         />
         <div class="p-5">
           <h3
-            class="text-lg font-semibold text-gray-800 line-clamp-2 min-h-[3.2rem] lg:min-h-[2rem]"
+            class="text-lg font-semibold text-gray-800 line-clamp-2 h-14 overflow-hidden"
           >
             {{ event.name }}
           </h3>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[3rem] lg:min-h-[1.8rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.date }} | {{ event.time }}
           </p>
-          <p
-            class="text-sm text-gray-500 line-clamp-2 min-h-[2.5rem] lg:min-h-[2rem]"
-          >
+          <p class="text-sm text-gray-500 line-clamp-2 h-6 overflow-hidden">
             {{ event.location }}
           </p>
           <p
-            class="text-sm font-medium text-blue-600 line-clamp-1 min-h-[1.5rem]"
+            class="text-sm font-medium text-blue-600 line-clamp-1 h-6 overflow-hidden"
           >
             {{ event.status }}
           </p>
@@ -159,6 +147,12 @@
             (click)="viewEventDetails(event)"
           >
             View Details
+          </button>
+          <button
+            class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-200"
+            (click)="downloadIcal(event)"
+          >
+            Download iCal File
           </button>
         </div>
       </div>
