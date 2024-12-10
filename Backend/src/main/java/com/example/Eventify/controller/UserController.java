@@ -5,6 +5,7 @@ import com.example.Eventify.request.UserDetailsUpdateRequest;
 import com.example.Eventify.response.UserDashboardItemsResponse;
 import com.example.Eventify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,18 +20,33 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+    public ResponseEntity<?> authenticatedUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (authentication == null || !authentication.isAuthenticated()) {
+                System.out.println("User not authenticated");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+
+            User currentUser = (User) authentication.getPrincipal();
+            return ResponseEntity.ok(currentUser);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
-
     @GetMapping("/getUserDashboardDetails")
-    public ResponseEntity<UserDashboardItemsResponse> getUserDashboardDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
+    public ResponseEntity<?> getUserDashboardDetails() {
         try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                System.out.println("User not authenticated");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+
+            User currentUser = (User) authentication.getPrincipal();
             return ResponseEntity.ok(userService.getUserDashboardDetails(currentUser));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -41,13 +57,17 @@ public class UserController {
 
     @PutMapping("/updateUserDetails")
     public ResponseEntity<?> updateUserDetails(@RequestBody UserDetailsUpdateRequest updateRequestData) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated.");
+            }
 
-        try{
+            User currentUser = (User) authentication.getPrincipal();
+
             userService.updateUser(currentUser, updateRequestData);
             return ResponseEntity.ok().body(null);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
@@ -55,10 +75,15 @@ public class UserController {
 
 
     @GetMapping("/getUserDetails")
-    public ResponseEntity<UserDashboardItemsResponse.UserDetail> getUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
+    public ResponseEntity<?> getUserDetails() {
         try {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated.");
+        }
+
+        User currentUser = (User) authentication.getPrincipal();
+
             return ResponseEntity.ok(userService.getUserDetails(currentUser));
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -284,9 +286,9 @@ public class EventService {
                 + "<p><b>Team Eventify</b></p>"
                 + "</body></html>";
 
-        try{
+        try {
             emailService.sendEmail(currentUser.getEmail(), subject, text);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -361,51 +363,42 @@ public class EventService {
             return new UserRegisteredEventResponse(registered, attended, absent);
         }
 
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
         for (Event event : currentUser.getRegisteredEvents()) {
-            System.out.println("Event name: " + event.getName());
-            if (event.getUserStatuses() == null) {
-                registered.add(
-                        new UserRegisteredEventResponse.Event()
+            event.getUserStatuses().stream()
+                    .filter(userStatus -> userStatus.getUserId().getId().equals(currentUser.getId()))  // Filter by the current user
+                    .findFirst()
+                    .ifPresent(userStatus -> {
+                        // Categorize the event based on the user's current status
+                        String status = userStatus.getCurrentStatus();
+                        LocalDate eventDate = LocalDate.parse(event.getDate(), formatter); // Parse event date
+                        LocalDate today = LocalDate.now();
+
+                        UserRegisteredEventResponse.Event eventResponse = new UserRegisteredEventResponse.Event()
                                 .setId(event.getId())
                                 .setName(event.getName())
                                 .setDate(event.getDate())
                                 .setTime(event.getTime())
                                 .setLocation(event.getLocation())
-                                .setImage(event.getCoverImage())
-                                .setStatus("Registered")
-                );
-            } else {
-                // If userStatuses is not null, check the status using streams
-                event.getUserStatuses().stream()
-                        .filter(userStatus -> userStatus.getUserId().getId().equals(currentUser.getId()))  // Filter by the current user
-                        .findFirst()
-                        .ifPresent(userStatus -> {
-                            // Categorize the event based on the user's current status
-                            String status = userStatus.getCurrentStatus();
-                            System.out.println(status);
-                            UserRegisteredEventResponse.Event eventResponse = new UserRegisteredEventResponse.Event()
-                                    .setId(event.getId())
-                                    .setName(event.getName())
-                                    .setDate(event.getDate())
-                                    .setTime(event.getTime())
-                                    .setLocation(event.getLocation())
-                                    .setImage(event.getCoverImage());
+                                .setImage(event.getCoverImage());
 
-                            if ("Attended".equalsIgnoreCase(status)) {
-                                System.out.println("Inside attended");
+                        if (eventDate.isBefore(today)) {
+                            if ("Present".equalsIgnoreCase(status)) {
                                 eventResponse.setStatus("Attended");
                                 attended.add(eventResponse);
-                            } else if ("Absent".equalsIgnoreCase(status)) {
-                                System.out.println("Inside absent");
+                            } else  {
                                 eventResponse.setStatus("Absent");
                                 absent.add(eventResponse);
-                            } else {
-                                System.out.println("Inside registered");
-                                eventResponse.setStatus("Registered");
-                                registered.add(eventResponse);
                             }
-                        });
-            }
+                        } else {  // Event date is in the future or today
+                            eventResponse.setStatus("Registered");
+                            registered.add(eventResponse);
+                        }
+                    });
+
         }
 
         return new UserRegisteredEventResponse(registered, attended, absent);
@@ -596,20 +589,27 @@ public class EventService {
 
 
     public List<UserAttendedEventsResponse> getAttendedEvents(User currentUser) {
-        // TODO: Change logic for getting attended events(right now only registered events)
-
-        if (currentUser == null || currentUser.getRegisteredEvents() == null) {
+        if (currentUser == null || currentUser.getId() == null) {
             return Collections.emptyList();
         }
-        return currentUser.getRegisteredEvents().stream()
-                .map(event ->
-                        new UserAttendedEventsResponse()
-                                .setDate(event.getDate())
-                                .setName(event.getName())
-                                .setTime(event.getTime())
-                                .setLocation(event.getLocation())
-                                .setId(event.getId())
-                )
+
+        // Fetch all UserStatus entries for the given user where the status is "Present"
+        List<UserStatus> userStatuses = userStatusRepository.findByUserIdAndCurrentStatus(
+                currentUser.getId(),
+                "Present"
+        );
+
+        // Map the results to the response DTO
+        return userStatuses.stream()
+                .map(userStatus -> {
+                    Event event = userStatus.getEventId(); // Fetch the associated event
+                    return new UserAttendedEventsResponse()
+                            .setDate(event.getDate())
+                            .setName(event.getName())
+                            .setTime(event.getTime())
+                            .setLocation(event.getLocation())
+                            .setId(event.getId());
+                })
                 .toList();
     }
 
@@ -691,9 +691,6 @@ public class EventService {
                                 .orElse(Collections.emptyList()))
                 .setAttendeeList(Optional.ofNullable(event.getAttendeeListPrivacy()).orElse(""));
     }
-
-
-
 
 
     public void updateEvent(String eventId, EditEventRequest
