@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventGiveFeedbackData } from '../../../model/event/EventGiveFeedback';
 import { FeedbackService } from '../../../services/feedback.service';
 
@@ -17,7 +17,8 @@ export class FeedbackFormComponent implements OnInit {
   constructor(
     private _ar: ActivatedRoute,
     private fb: FormBuilder,
-    private feedbackService: FeedbackService
+    private feedbackService: FeedbackService,
+    private router: Router
   ) {
     this.eventId = _ar.snapshot.params['id'];
     console.log(this.eventId);
@@ -63,6 +64,7 @@ export class FeedbackFormComponent implements OnInit {
         console.log(data);
         this.feedbackForm.reset();
         alert('Feedback submitted successfully!');
+        this.router.navigate(['user/give-feedback']);
       });
   }
 
