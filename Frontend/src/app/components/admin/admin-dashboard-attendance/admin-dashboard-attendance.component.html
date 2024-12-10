@@ -66,15 +66,29 @@
         *ngFor="let event of events"
         class="bg-white border rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
       >
-        <h3 class="text-lg font-semibold text-gray-800">{{ event.name }}</h3>
-        <p class="text-sm text-gray-700 mt-2">{{ event.description }}</p>
-        <p class="text-md text-gray-600 mb-4">{{ event.date }}</p>
-        <button
-          [routerLink]="'/admin/attendance/' + event.id"
-          class="px-5 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition"
-        >
-          View Event Attendance
-        </button>
+        <h3 class="text-lg font-semibold text-gray-800 h-5 overflow-hidden">
+          {{ event.name }}
+        </h3>
+        <p class="text-sm text-gray-700 mt-2 h-12 overflow-hidden">
+          {{ event.description }}
+        </p>
+        <p class="text-md text-gray-600 mb-4 h-5 overflow-hidden">
+          {{ event.date }}
+        </p>
+        <div class="xl:flex gap-4">
+          <button
+            [routerLink]="'/admin/attendance/' + event.id"
+            class="px-5 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition m-1"
+          >
+            View Event Attendance
+          </button>
+          <button
+            class="px-5 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition m-1"
+            (click)="downloadEventAttendance(event.id)"
+          >
+            Download Excel File
+          </button>
+        </div>
       </div>
     </div>
   </div>

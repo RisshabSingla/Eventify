@@ -47,4 +47,24 @@ export class AdminDashboardAttendanceComponent implements OnInit {
       }
     );
   }
+
+  downloadEventAttendance(eventId: string) {
+    alert('Downloading attendance for event ' + eventId);
+    this.exportService.downloadAttendanceforEvent(eventId).subscribe(
+      (response: Blob) => {
+        const link = document.createElement('a');
+        const url = window.URL.createObjectURL(response);
+        link.href = url;
+        link.download = 'attendance.xlsx';
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        alert('Attendance downloaded!');
+      },
+      (error) => {
+        console.error('Error downloading the file', error);
+        alert('There was an error downloading the attendance file.');
+      }
+    );
+  }
 }

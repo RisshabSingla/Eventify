@@ -19,7 +19,11 @@ export class AdminNotificationsComponent implements OnInit {
 
   loadNotifications(): void {
     this.adminService.getNotifications().subscribe((data) => {
-      this.notifications = data;
+      this.notifications = data.sort((a: any, b: any) => {
+        return (
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+      });
     });
   }
 

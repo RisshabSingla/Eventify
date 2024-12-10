@@ -28,6 +28,7 @@ import {
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Event } from '../model/admin/Event';
 import { UserDetail } from '../model/user/Items';
+import { EventReport } from '../model/admin/Event_Reports';
 
 @Injectable({
   providedIn: 'root',
@@ -89,7 +90,7 @@ export class AdminService {
       }))
     );
 
-    return of(ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA);
+    // return of(ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA);
   }
 
   getEventAttendanceData(): Observable<EventAttendance> {
@@ -114,7 +115,7 @@ export class AdminService {
         events: createdByAdminEvents,
       }))
     );
-    return of(ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA);
+    // return of(ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA);
   }
 
   getNotifications(): Observable<AdminNotification[]> {
@@ -164,10 +165,10 @@ export class AdminService {
       }))
     );
 
-    return of(ADMIN_DASHBOARD_FEEDBACK_DATA);
+    // return of(ADMIN_DASHBOARD_FEEDBACK_DATA);
   }
 
-  getReportsData() {
+  getReportsData(): Observable<EventReport> {
     return of(ADMIN_DASHBOARD_REPORTS_DATA);
   }
 

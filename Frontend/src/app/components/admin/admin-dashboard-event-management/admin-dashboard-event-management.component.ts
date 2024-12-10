@@ -82,11 +82,11 @@ export class AdminDashboardEventManagementComponent implements OnInit {
 
   // Utility function to map `name` to `title`
   mapEvents(
-    events: { id: number; name: string; date: string }[],
+    events: { id: string; name: string; date: string }[],
     color: string
   ) {
     return events.map((event) => ({
-      id: event.id.toString(),
+      id: event.id,
       title: event.name,
       date: event.date,
       backgroundColor: color,

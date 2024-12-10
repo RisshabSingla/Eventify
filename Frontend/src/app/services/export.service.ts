@@ -23,4 +23,18 @@ export class ExportService {
       responseType: 'blob',
     });
   }
+
+  downloadAttendanceforEvent(eventId: string): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(
+      `${this.apiEndpoint}export/exportEventAttendance/${eventId}`,
+      {
+        headers: headers,
+        responseType: 'blob',
+      }
+    );
+  }
 }
