@@ -11,7 +11,11 @@ import com.example.Eventify.request.NotificationSendRequest;
 import com.example.Eventify.response.AdminNotificationsResponse;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -32,10 +36,11 @@ public class NotificationService {
     @Autowired
     EventRepository eventRepository;
 
-    public List<AdminNotificationsResponse> getAdminNotifications() {
+    public List<AdminNotificationsResponse> getAdminNotifications(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("timeStamp")));
 
-        return notificationRepository
-                .findAll().stream()
+        List<Notification> notifications = notificationRepository.findAll(pageable).getContent();
+        return notifications.stream()
                 .map(notification -> {
                     return new AdminNotificationsResponse(
                             notification.getType(),
@@ -45,7 +50,6 @@ public class NotificationService {
                     );
                 })
                 .toList();
-
     }
 
 

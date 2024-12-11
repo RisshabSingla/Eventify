@@ -1,6 +1,5 @@
 package com.example.Eventify.controller;
 
-import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.request.NotificationSendRequest;
 import com.example.Eventify.response.AdminNotificationsResponse;
 import com.example.Eventify.service.NotificationService;
@@ -19,13 +18,20 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/getAdminNotifications")
-    public ResponseEntity<List<AdminNotificationsResponse>> getAdminNotifications() {
-        return ResponseEntity.ok(notificationService.getAdminNotifications());
+    public ResponseEntity<List<AdminNotificationsResponse>> getAdminNotifications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        try {
+            return ResponseEntity.ok(notificationService.getAdminNotifications(page, size));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
-
     @PostMapping("sendNotification")
-    public ResponseEntity<String> sendNotification(@RequestBody NotificationSendRequest notificationSendRequest) throws MessagingException {
+    public ResponseEntity<String> sendNotification(@RequestBody NotificationSendRequest notificationSendRequest)
+            throws MessagingException {
 
         boolean notificationSent = notificationService.sendNotification(notificationSendRequest);
 

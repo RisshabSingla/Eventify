@@ -11,6 +11,7 @@ import com.example.Eventify.response.*;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -87,8 +88,13 @@ public class EventService {
                 .setId(savedEvent.getId());
     }
 
-    public List<ExploreEventsResponse> exploreEvents() {
-        List<Event> events = eventRepository.findAll();
+    public List<ExploreEventsResponse> exploreEvents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Event> events = eventRepository.findAll(pageable).getContent();
+        if (events.isEmpty()) {
+            return Collections.emptyList();
+        }
 
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate today = LocalDate.now();
@@ -113,8 +119,9 @@ public class EventService {
     }
 
 
-    public ArrayList<Event> getAllAdminEvents() {
-        return (ArrayList<Event>) eventRepository.findAll();
+    public List<Event> getAllAdminEvents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return eventRepository.findAll(pageable).getContent();
     }
 
     public AdminEventAnalyticsResponse getOverallEventAnalytics(User currentUser) {

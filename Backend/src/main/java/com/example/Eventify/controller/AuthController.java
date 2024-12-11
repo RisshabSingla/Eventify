@@ -35,12 +35,11 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerUserDto) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerUserDto) {
         Optional<User> existingUser = userRepository.findByEmail(registerUserDto.getEmail());
 
         if (existingUser.isPresent()) {
-            // If the user exists, return a 400 Bad Request with an error message
-            return ResponseEntity.badRequest().body("User with this email already exists");
+            return ResponseEntity.badRequest().body(null);
         }
 
         User registeredUser = authenticationService.signup(registerUserDto);
@@ -53,10 +52,32 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginUserDto,  HttpServletRequest request) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto, request);
-        String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime()).setRole(authenticatedUser.getRole());
-        return ResponseEntity.ok(loginResponse);
+    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginRequest loginUserDto, HttpServletRequest request) {
+        try {
+            if (loginUserDto == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            User authenticatedUser = authenticationService.authenticate(loginUserDto, request);
+
+            if (authenticatedUser == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            String jwtToken = jwtService.generateToken(authenticatedUser);
+
+            if (jwtToken == null || jwtToken.isEmpty()) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            LoginResponse loginResponse = new LoginResponse()
+                    .setToken(jwtToken)
+                    .setExpiresIn(jwtService.getExpirationTime())
+                    .setRole(authenticatedUser.getRole());
+
+            return ResponseEntity.ok(loginResponse);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }
