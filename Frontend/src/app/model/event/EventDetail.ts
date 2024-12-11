@@ -14,7 +14,6 @@ export interface Agenda {
 }
 
 export interface EventDetail {
-  id: number;
   title: string;
   date: string;
   location: string;

@@ -29,16 +29,16 @@ public class Event {
     private String category;
     private String coverImage;
 
-    @DBRef
+    @DBRef(lazy = true)
     private User createdBy;  // Reference to User class (creator of the event)
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<User> registeredUsers;  // Reference to the registered users (List of User objects)
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Feedback> feedbacks;  // Reference to Feedback class (List of feedbacks for the event)
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<UserStatus> userStatuses;  // Reference to UserStatus class (Tracking attendance and status)
 
     private List<Speaker> speakers;  // Array of speakers with name and bio

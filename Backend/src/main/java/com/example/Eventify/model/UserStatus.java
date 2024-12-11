@@ -21,10 +21,10 @@ public class UserStatus {
     @Id
     private String id;
 
-    @DBRef
+    @DBRef(lazy = true)
     private Event eventId;  // Reference to Event class
 
-    @DBRef
+    @DBRef(lazy = true)
     private User userId;  // Reference to User class
 
     private String currentStatus;  // (Registered, Present, Yet to come, Attended, Absent)

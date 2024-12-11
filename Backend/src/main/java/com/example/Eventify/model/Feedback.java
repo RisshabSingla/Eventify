@@ -21,10 +21,10 @@ public class Feedback {
     @Id
     private String id;
 
-    @DBRef
+    @DBRef(lazy = true)
     private User userId;  // Reference to User class
 
-    @DBRef
+    @DBRef(lazy = true)
     private Event eventId;  // Reference to Event class
 
     private int overallRating;

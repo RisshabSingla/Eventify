@@ -9,7 +9,7 @@ import {
   ADMIN_DASHBOARD_REPORTS_DATA,
 } from './dummy_data';
 import { Items } from '../model/admin/Items';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EventManagement } from '../model/admin/Event_Management';
 import {
   AnalyticMetrics,
@@ -64,20 +64,9 @@ export class AdminService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const allEvents = this.http.get<Event[]>(
-      `${this.apiEndpoint}events/getAllEvents`,
+    return this.http.get<EventManagement>(
+      `${this.apiEndpoint}events/getEventManagementDetails`,
       { headers }
-    );
-    const createdByAdminEvents = this.http.get<Event[]>(
-      `${this.apiEndpoint}events/getMyCreatedEvents`,
-      { headers }
-    );
-
-    return forkJoin([createdByAdminEvents, allEvents]).pipe(
-      map(([createdByAdminEvents, allEvents]) => ({
-        createdByAdminEvents: createdByAdminEvents,
-        allEvents: allEvents,
-      }))
     );
     // return of(ADMIN_DASHBOARD_EVENT_MANAGEMENT_DATA);
   }
@@ -88,23 +77,10 @@ export class AdminService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const createdByAdminEvents = this.http.get<Event[]>(
-      `${this.apiEndpoint}events/getMyCreatedEvents`,
+    return this.http.get<EventAnalytics>(
+      `${this.apiEndpoint}events/getEventAnalyticsPageDetails`,
       { headers }
     );
-
-    const eventAnalytics = this.http.get<AnalyticMetrics>(
-      `${this.apiEndpoint}events/getOverallEventAnalytics`,
-      { headers }
-    );
-
-    return forkJoin([createdByAdminEvents, eventAnalytics]).pipe(
-      map(([createdByAdminEvents, eventAnalytics]) => ({
-        metrics: eventAnalytics,
-        events: createdByAdminEvents,
-      }))
-    );
-
     // return of(ADMIN_DASHBOARD_EVENT_ANALYTICS_DATA);
   }
 
@@ -114,22 +90,11 @@ export class AdminService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const createdByAdminEvents = this.http.get<Event[]>(
-      `${this.apiEndpoint}events/getMyCreatedEvents`,
+    return this.http.get<EventAttendance>(
+      `${this.apiEndpoint}events/getEventAttendancePageDetails`,
       { headers }
     );
 
-    const eventAttendanceMetrics = this.http.get<attendanceMetrics>(
-      `${this.apiEndpoint}events/getOverallAttendanceAnalytics`,
-      { headers }
-    );
-
-    return forkJoin([createdByAdminEvents, eventAttendanceMetrics]).pipe(
-      map(([createdByAdminEvents, eventAttendanceMetrics]) => ({
-        metrics: eventAttendanceMetrics,
-        events: createdByAdminEvents,
-      }))
-    );
     // return of(ADMIN_DASHBOARD_EVENT_ATTENDANCE_DATA);
   }
 
@@ -153,31 +118,9 @@ export class AdminService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const createdByAdminEvents = this.http.get<Event[]>(
-      `${this.apiEndpoint}events/getMyCreatedEvents`,
+    return this.http.get<EventFeedback>(
+      `${this.apiEndpoint}events/GetEventFeedbackPageDetails`,
       { headers }
-    );
-
-    const eventFeedbackMetrics = this.http.get<feedbackMetrics>(
-      `${this.apiEndpoint}events/getOverallFeedbackAnalytics`,
-      { headers }
-    );
-
-    const recentFeedbacks = this.http.get<recentFeedback[]>(
-      `${this.apiEndpoint}events/getRecentFeedbacks`,
-      { headers }
-    );
-
-    return forkJoin([
-      createdByAdminEvents,
-      recentFeedbacks,
-      eventFeedbackMetrics,
-    ]).pipe(
-      map(([createdByAdminEvents, recentFeedbacks, eventFeedbackMetrics]) => ({
-        metrics: eventFeedbackMetrics,
-        events: createdByAdminEvents,
-        recentFeedbacks: recentFeedbacks,
-      }))
     );
 
     // return of(ADMIN_DASHBOARD_FEEDBACK_DATA);

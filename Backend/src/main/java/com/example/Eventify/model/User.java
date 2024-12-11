@@ -32,13 +32,13 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String lastLogin;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Event> registeredEvents;  // Reference to Event class
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Event> createdEvents;
 
-    @DBRef
+    @DBRef(lazy = true)
     private List<Feedback> feedbacksGiven;  // Reference to Feedback class
 
     // Getters and Setters

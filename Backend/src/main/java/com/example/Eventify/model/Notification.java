@@ -24,7 +24,7 @@ public class Notification {
     private String description;
     private Date timeStamp;
 
-    @DBRef
+    @DBRef(lazy = true)
     private Event eventId;  // Reference to Event class
 
 }

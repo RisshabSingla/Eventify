@@ -400,7 +400,7 @@ public class EventService {
                             if ("Present".equalsIgnoreCase(status)) {
                                 eventResponse.setStatus("Attended");
                                 attended.add(eventResponse);
-                            } else  {
+                            } else {
                                 eventResponse.setStatus("Absent");
                                 absent.add(eventResponse);
                             }
@@ -774,10 +774,35 @@ public class EventService {
         return speakerRequest.stream().map(item -> new Event.Speaker(item.getName(), item.getBio())).collect(Collectors.toList());
     }
 
-    public List<UserCreatedEventsInfoResponse> getEventsByUser(User currentUser){
+    public List<UserCreatedEventsInfoResponse> getEventsByUser(User currentUser) {
         return eventRepository.findByCreatedBy(currentUser).stream()
                 .map(event -> new UserCreatedEventsInfoResponse(event.getId(), event.getName()))
                 .collect(Collectors.toList());
     }
+
+
+    public EventDetailUserResponse getEventDetailForUser(String eventId, User currentUser) {
+        Event event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            return null;
+        }
+
+        return new EventDetailUserResponse(
+                new EventDetailResponse()
+                        .setTitle(event.getName())
+                        .setDescription(event.getDescription())
+                        .setLocation(event.getLocation())
+                        .setDate(event.getDate())
+                        .setRegistrationLimit(event.getMaxCapacity())
+                        .setFilledSeats(event.getNumberRegistered())
+                        .setCategory(event.getCategory())
+                        .setSpeakers(event.getSpeakers())
+                        .setAgenda(event.getAgenda())
+                ,
+                checkIfRegistered(eventId, currentUser));
+    }
+
+
+
 }
 

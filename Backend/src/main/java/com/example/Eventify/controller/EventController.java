@@ -30,7 +30,7 @@ public class EventController {
 //        System.out.println(request);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        if(!Objects.equals(currentUser.getRole(), "Admin")) {
+        if (!Objects.equals(currentUser.getRole(), "Admin")) {
             return ResponseEntity.badRequest().body("Only admins can create events");
         }
 
@@ -41,7 +41,7 @@ public class EventController {
 
     @GetMapping("/exploreEvents")
     public ResponseEntity<List<ExploreEventsResponse>> exploreEvents() {
-        try{
+        try {
             return ResponseEntity.ok(eventService.exploreEvents());
         } catch (Exception e) {
             System.out.println(e);
@@ -64,7 +64,12 @@ public class EventController {
     @GetMapping("/getAllEvents")
     public ResponseEntity<List<AdminEventListResponse>> getAllEvents() {
         List<AdminEventListResponse> response = eventService.getAllAdminEvents().stream()
-                .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
+                .map(event ->
+                        new AdminEventListResponse(
+                                event.getId(),
+                                event.getName(),
+                                event.getDescription(),
+                                event.getDate()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
@@ -78,7 +83,7 @@ public class EventController {
     }
 
     @GetMapping("/getOverallAttendanceAnalytics")
-    public ResponseEntity<AdminEventAttendanceResponse  > getOverallAttendanceAnalytics() {
+    public ResponseEntity<AdminEventAttendanceResponse> getOverallAttendanceAnalytics() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         return ResponseEntity.ok(eventService.getOverallAttendanceAnalytics(currentUser));
@@ -105,7 +110,7 @@ public class EventController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
 
-        if(Objects.equals(currentUser.getRole(), "Admin")) {
+        if (Objects.equals(currentUser.getRole(), "Admin")) {
             return ResponseEntity.badRequest().body(new EventRegiserResponse("Admins cannot register for events", -1));
         }
 
@@ -146,9 +151,9 @@ public class EventController {
     public ResponseEntity<EventAttendancePageAdminResponse> getEventAttendance(@PathVariable String eventId) throws ParseException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        try{
+        try {
             return ResponseEntity.ok(eventService.getEventAttendancePageAdminData(eventId, currentUser));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
@@ -156,10 +161,10 @@ public class EventController {
 
 
     @PostMapping("/markAttendance/{eventId}/{userId}")
-    public ResponseEntity<MarkAttendanceResponse> markAttendanceEvent(@PathVariable String eventId, @PathVariable String userId){
-        try{
+    public ResponseEntity<MarkAttendanceResponse> markAttendanceEvent(@PathVariable String eventId, @PathVariable String userId) {
+        try {
             return ResponseEntity.ok(eventService.markAttendanceforEvent(eventId, userId));
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.badRequest().body(null);
         }
@@ -170,9 +175,9 @@ public class EventController {
     public ResponseEntity<List<EventAttendanceQRResponse>> getQRCodes() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        try{
-            return ResponseEntity.ok(eventService.getQRCodesforAttendance( currentUser));
-        }catch (Exception e){
+        try {
+            return ResponseEntity.ok(eventService.getQRCodesforAttendance(currentUser));
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
@@ -183,7 +188,7 @@ public class EventController {
     public ResponseEntity<List<UserAttendedEventsResponse>> getAttendedEvents() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
-        try{
+        try {
             return ResponseEntity.ok(eventService.getAttendedEvents(currentUser));
 
         } catch (Exception e) {
@@ -195,7 +200,7 @@ public class EventController {
 
     @GetMapping("/getEventDetailsFeedback/{eventId}")
     public ResponseEntity<UserFeedbackEventDetailsResponse> getEventDetailsFeedback(@PathVariable String eventId) {
-        try{
+        try {
             return ResponseEntity.ok(eventService.getEventDetailsFeedback(eventId));
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -230,4 +235,90 @@ public class EventController {
         User currentUser = (User) authentication.getPrincipal();
         return ResponseEntity.ok(eventService.getEventsByUser(currentUser));
     }
+
+
+    @GetMapping("getEventDetailForUser/{eventId}")
+    public ResponseEntity<EventDetailUserResponse> getEventDetailforUser(@PathVariable String eventId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        try {
+            return ResponseEntity.ok(eventService.getEventDetailForUser(eventId, currentUser));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("getEventManagementDetails")
+    public ResponseEntity<AdminEventManagementPageResponse> getEventManagementPageDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        List<AdminEventListResponse> allEvents = eventService.getAllAdminEvents().stream()
+                .map(event ->
+                        new AdminEventListResponse(
+                                event.getId(),
+                                event.getName(),
+                                event.getDescription(),
+                                event.getDate()))
+                .toList();
+
+        List<AdminEventListResponse> adminCreatedEvents = currentUser.getCreatedEvents().stream()
+                .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
+                .toList();
+        AdminEventManagementPageResponse response = new AdminEventManagementPageResponse(allEvents, adminCreatedEvents);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("getEventAnalyticsPageDetails")
+    public ResponseEntity<AdminEventAnalyticsPageResponse> getEventAnalyticsPageDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        List<AdminEventListResponse> allEvents = currentUser.getCreatedEvents().stream()
+                .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
+                .toList();
+
+        AdminEventAnalyticsResponse metrics = eventService.getOverallEventAnalytics(currentUser);
+
+        AdminEventAnalyticsPageResponse response = new AdminEventAnalyticsPageResponse(allEvents, metrics);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("getEventAttendancePageDetails")
+    public ResponseEntity<AdminEventAttendancePageResponse> getEventAttendancePageDetails() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        List<AdminEventListResponse> events = currentUser.getCreatedEvents().stream()
+                .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
+                .toList();
+
+        AdminEventAttendanceResponse metrics = eventService.getOverallAttendanceAnalytics(currentUser);
+
+        AdminEventAttendancePageResponse response = new AdminEventAttendancePageResponse(events, metrics);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("GetEventFeedbackPageDetails")
+    public ResponseEntity<AdminEventFeedbackPageResponse> getEventFeedbackPageDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        List<AdminEventListResponse> response = currentUser.getCreatedEvents().stream()
+                .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(), event.getDate()))
+                .toList();
+        AdminEventFeedbackAnalyticsResponse metrics = eventService.getOverallFeedbackAnalytics(currentUser);
+
+        List<AdminEventRecentFeedbackResponse> recentFeedbacks = eventService.getRecentFeedbacks(currentUser);
+        AdminEventFeedbackPageResponse pageResponse = new AdminEventFeedbackPageResponse(response, recentFeedbacks, metrics);
+        return ResponseEntity.ok(pageResponse);
+    }
+
 }
+
+

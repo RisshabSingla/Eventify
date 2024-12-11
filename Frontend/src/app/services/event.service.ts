@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { forkJoin, map, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   DUMMY_EVENTS_DATA,
   EVENT_ANALYTIC_DATA,
@@ -112,24 +112,10 @@ export class EventService {
       Authorization: `Bearer ${this.token}`,
     });
 
-    const eventDetails = this.http.get<EventDetail>(
-      `${this.apiEndpoint}events/getEventDetail/` + eventId,
+    return this.http.get<EventDetailPage>(
+      `${this.apiEndpoint}events/getEventDetailForUser/` + eventId,
       { headers }
     );
-
-    const eventRegistered = this.http.get<boolean>(
-      `${this.apiEndpoint}events/CheckIfRegistered/` + eventId,
-      { headers }
-    );
-
-    return forkJoin([eventRegistered, eventDetails]).pipe(
-      map(([eventRegistered, eventDetails]) => ({
-        eventDetails: eventDetails,
-        isUserRegisteredForEvent: eventRegistered,
-      }))
-    );
-
-    // return of(EVENT_DETAIL_PAGE_DATA);
   }
 
   getEventEditDetails(eventId: string): Observable<EventEdit> {

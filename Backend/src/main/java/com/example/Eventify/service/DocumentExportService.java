@@ -23,7 +23,7 @@ public class DocumentExportService {
                 Sheet sheet = workbook.createSheet(event.getEventName() + UUID.randomUUID());
                 createHeaderRow(sheet);
 
-                int rowIndex = 1; // Start after the header row
+                int rowIndex = 1;
                 for (EventAttendanceExportResponse.AttendanceUser user : event.getUserStatuses()) {
                     Row row = sheet.createRow(rowIndex++);
                     row.createCell(0).setCellValue(user.getName());
@@ -33,7 +33,6 @@ public class DocumentExportService {
                     row.createCell(4).setCellValue(user.getRegisteredDate());
                 }
 
-                // Auto-size columns for better readability
                 for (int i = 0; i < 5; i++) {
                     sheet.autoSizeColumn(i);
                 }
@@ -60,7 +59,7 @@ public class DocumentExportService {
             Sheet sheet = workbook.createSheet("Attendance");
             createHeaderRow(sheet);
 
-            int rowIndex = 1; // Start after the header row
+            int rowIndex = 1;
             for (UserStatus userStatus : userStatuses) {
                 Row row = sheet.createRow(rowIndex++);
                 row.createCell(0).setCellValue(userStatus.getUserId().getName());
@@ -70,7 +69,6 @@ public class DocumentExportService {
                 row.createCell(4).setCellValue(userStatus.getRegisteredDate());
             }
 
-            // Auto-size columns for better readability
             for (int i = 0; i < 5; i++) {
                 sheet.autoSizeColumn(i);
             }
