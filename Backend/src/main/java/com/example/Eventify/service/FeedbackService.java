@@ -3,11 +3,14 @@ package com.example.Eventify.service;
 import com.example.Eventify.model.Event;
 import com.example.Eventify.model.Feedback;
 import com.example.Eventify.model.User;
+import com.example.Eventify.model.UserStatus;
 import com.example.Eventify.repository.EventRepository;
 import com.example.Eventify.repository.FeedbackRepository;
 import com.example.Eventify.repository.UserRepository;
+import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.GiveFeedbackRequest;
 import com.example.Eventify.response.FeedbackSubmitResponse;
+import com.example.Eventify.response.MarkAttendanceResponse;
 import com.example.Eventify.response.UserGivenFeedbackResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +31,22 @@ public class FeedbackService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserStatusRepository userStatusRepository;
+
     public FeedbackSubmitResponse giveFeedback(String eventId, GiveFeedbackRequest feedbackRequest, User currentUser) {
         Event event = eventRepository.findById(eventId).orElse(null);
         if (event == null) {
+            return null;
+        }
+
+        UserStatus matchingStatus = userStatusRepository.findByEventIdAndUserId(eventId, currentUser.getId());
+
+        if (matchingStatus == null) {
+            return null;
+        }
+
+        if (!"Present".equals(matchingStatus.getCurrentStatus())) {
             return null;
         }
 
