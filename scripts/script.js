@@ -1263,35 +1263,9 @@ async function createEvent(event, token) {
   }
 }
 
-async function registerForEvents2(eventIds, token) {
-  const registrationPromises = eventIds.map(
-    async (eventId) =>
-      await axios
-        .post(
-          `${baseUrl}/events/register/${eventId}`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
-        .then(() => {
-          console.log(`User registered for event ID ${eventId}`);
-        })
-        .catch((error) => {
-          console.error(
-            `Failed to register user for event ID ${eventId}:`,
-            error.response?.data || error.message
-          );
-        })
-  );
-
-  await Promise.all(registrationPromises);
-}
-
 async function markAttendanceForUsers(users, pastEventIds) {
   const totalUsers = users.length;
   const presentCount = Math.floor(totalUsers * 0.8);
-  const attendancePromises = [];
   let number = 0;
   for (const eventId of pastEventIds) {
     const usersMarkedPresent = new Set();
@@ -1303,13 +1277,12 @@ async function markAttendanceForUsers(users, pastEventIds) {
 
     for (const user of users) {
       if (usersMarkedPresent.has(user.id)) {
-        attendancePromises.push(markAttendance(user.id, eventId));
+        await markAttendance(user.id, eventId);
         number++;
       }
     }
   }
-  await Promise.all(attendancePromises);
-  console.log("Total number is : ", number);
+  console.log("Total attendance marked: ", number);
 }
 
 async function markAttendance(userId, eventId) {
@@ -1332,6 +1305,31 @@ async function markAttendance(userId, eventId) {
       error
     );
   }
+}
+
+async function registerUsersForEvent(eventId, users) {
+  const userRegistrationPromises = users.map(
+    async (user) =>
+      await axios
+        .post(
+          `${baseUrl}/events/register/${eventId}`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${user.token}` },
+          }
+        )
+        .then(() => {
+          console.log(`User ${user.token} registered for event ID ${eventId}`);
+        })
+        .catch((error) => {
+          console.error(
+            `Failed to register user ${user.token} for event ID ${eventId}:`,
+            error.response?.data || error.message
+          );
+        })
+  );
+
+  await Promise.all(userRegistrationPromises);
 }
 
 async function main() {
@@ -1385,11 +1383,9 @@ async function main() {
     user.id = userResponse.id;
   }
 
-  const registrationPromises = users.map(async (user) => {
-    await registerForEvents2(allEventIds, user.token);
-  });
-
-  await Promise.all(registrationPromises);
+  for (const eventId of allEventIds) {
+    await registerUsersForEvent(eventId, users);
+  }
 
   console.log("All users registered for all events.");
   console.log(pastEventIds);
