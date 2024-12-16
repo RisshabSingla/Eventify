@@ -37,7 +37,26 @@
       <h3 class="text-xl font-medium text-blue-700">Present</h3>
       <p class="text-blue-500 text-3xl">{{ metrics.present }}</p>
     </div>
-    <div class="bg-white shadow-lg rounded-lg p-4 text-center">
+    <div
+      *ngIf="isEventInPast() && !isEventToday()"
+      class="bg-white shadow-lg rounded-lg p-4 text-center"
+    >
+      <h3 class="text-xl font-medium text-blue-700">Absent</h3>
+      <p class="text-blue-500 text-3xl">
+        {{ metrics.filled - metrics.present }}
+      </p>
+    </div>
+    <div
+      *ngIf="isEventToday()"
+      class="bg-white shadow-lg rounded-lg p-4 text-center"
+    >
+      <h3 class="text-xl font-medium text-blue-700">Yet to Come</h3>
+      <p class="text-blue-500 text-3xl">{{ metrics.yetToCome }}</p>
+    </div>
+    <div
+      *ngIf="isEventInFuture()"
+      class="bg-white shadow-lg rounded-lg p-4 text-center"
+    >
       <h3 class="text-xl font-medium text-blue-700">Yet to Come</h3>
       <p class="text-blue-500 text-3xl">{{ metrics.yetToCome }}</p>
     </div>
@@ -56,15 +75,26 @@
             <th class="border p-3 text-left">Registered Date</th>
 
             <!-- Show current status only if the event is not today -->
-            <th *ngIf="!isEventToday()" class="border p-3 text-left">
+            <th
+              *ngIf="!isEventToday()"
+              class="border p-3 text-left justify-center"
+            >
               Current Status
             </th>
 
             <!-- Show attending column only if the event is today -->
-            <th *ngIf="isEventToday()" class="border p-3 text-left">
+            <th
+              *ngIf="isEventToday()"
+              class="border p-3 text-left justify-center"
+            >
               Attending
             </th>
-            <th *ngIf="isEventToday()" class="border p-3 text-left">Actions</th>
+            <th
+              *ngIf="isEventToday()"
+              class="border p-3 text-left flex justify-center"
+            >
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -79,8 +109,17 @@
             </td>
 
             <!-- Show current status only if the event is not today -->
-            <td *ngIf="!isEventToday()" class="border p-3">
-              <span class="text-blue-600">{{ user.currentStatus }}</span>
+            <td *ngIf="!isEventToday()" class="border p-3 flex justify-center">
+              <span
+                [ngClass]="{
+                  'text-green-600': user.currentStatus === 'Present',
+                  'text-blue-500': user.currentStatus === 'Registered',
+                  'text-red-500': user.currentStatus === 'Absent'
+                }"
+                class="font-semibold"
+              >
+                {{ user.currentStatus }}
+              </span>
             </td>
 
             <!-- Conditionally show Attending column -->

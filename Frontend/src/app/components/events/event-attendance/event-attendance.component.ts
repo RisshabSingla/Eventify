@@ -48,7 +48,7 @@ export class EventAttendanceComponent implements OnInit {
       this.currentDevice =
         videoDevices.length > 0 ? videoDevices[0] : undefined;
     });
-    this.updateUserStatuses();
+    // this.updateUserStatuses();
   }
 
   get tableHeaders(): string[] {
@@ -70,25 +70,28 @@ export class EventAttendanceComponent implements OnInit {
     return eventDateString === currentDateString;
   }
 
-  // Update user statuses based on the event date
-  updateUserStatuses() {
-    const eventDate = this.eventDetails.date;
-    const isToday =
-      eventDate.toDateString() === this.currentDate.toDateString();
-    const isFuture = eventDate > this.currentDate;
-    const isPast = eventDate < this.currentDate;
+  isEventInPast(): boolean {
+    const eventDate = new Date(this.eventDetails.date);
+    eventDate.setHours(eventDate.getHours() + 5);
+    eventDate.setMinutes(eventDate.getMinutes() + 30);
 
-    this.users.forEach((user) => {
-      if (isFuture) {
-        user.currentStatus = 'Registered';
-        user.attending = '';
-      } else if (isToday) {
-        user.currentStatus = 'Registered';
-      } else if (isPast) {
-        user.currentStatus = Math.random() > 0.5 ? 'Attended' : 'Absent';
-        user.attending = '';
-      }
-    });
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+
+    return eventDate < currentDate;
+  }
+
+  isEventInFuture(): boolean {
+    const eventDate = new Date(this.eventDetails.date);
+    eventDate.setHours(eventDate.getHours() + 5);
+    eventDate.setMinutes(eventDate.getMinutes() + 30);
+
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 5);
+    currentDate.setMinutes(currentDate.getMinutes() + 30);
+
+    return eventDate > currentDate;
   }
 
   openManualModal(user: AttendanceUser) {
