@@ -27,24 +27,21 @@ function getRandomDate(offsetType) {
 
   const randomDate = new Date(today);
   randomDate.setDate(today.getDate() + randomOffset);
-  const formattedDate = randomDate.toISOString().split("T")[0];
-  return formattedDate;
+  return randomDate.toISOString().split("T")[0];
 }
 
 function generateEventDates(totalEvents) {
   const eventDates = [];
-
   const pastCount = Math.min(15, totalEvents);
+  const todayCount = Math.min(3, totalEvents - pastCount);
+  const futureCount = totalEvents - pastCount - todayCount;
+
   for (let i = 0; i < pastCount; i++) {
     eventDates.push(getRandomDate("past"));
   }
-
-  const todayCount = Math.min(3, totalEvents - pastCount);
   for (let i = 0; i < todayCount; i++) {
     eventDates.push(getRandomDate("today"));
   }
-
-  const futureCount = totalEvents - pastCount - todayCount;
   for (let i = 0; i < futureCount; i++) {
     eventDates.push(getRandomDate("future"));
   }
@@ -55,14 +52,10 @@ function generateEventDates(totalEvents) {
 async function registerAndLoginUser(user) {
   try {
     const signupResponse = await axios.post(`${baseUrl}/auth/signup`, user);
-    console.log(`Signup Response (${user.role}):`, signupResponse.data);
-
     const loginResponse = await axios.post(`${baseUrl}/auth/login`, {
       email: user.email,
       password: user.password,
     });
-
-    console.log(`Login Token (${user.role}):`, loginResponse.data.token);
 
     return {
       id: signupResponse.data.id,
@@ -84,24 +77,21 @@ async function createEvent(event, token) {
     });
 
     allEventIds.push(response.data.id);
-    console.log("Event Created");
-    // console.log(
-    //   `Event "${event.eventTitle}" created successfully:`,
-    //   response.data
-    // );
     return response.data.id;
   } catch (error) {
     console.error(
       `Failed to create event "${event.eventTitle}":`,
       error.response?.data || error.message
     );
+    throw error;
   }
 }
 
 async function markAttendanceForUsers(users, pastEventIds) {
   const totalUsers = users.length;
   const presentCount = Math.floor(totalUsers * 0.8);
-  let number = 0;
+  const attendancePromises = [];
+
   for (const eventId of pastEventIds) {
     const usersMarkedPresent = new Set();
 
@@ -110,19 +100,18 @@ async function markAttendanceForUsers(users, pastEventIds) {
       usersMarkedPresent.add(users[randomIndex].id);
     }
 
-    for (const user of users) {
-      if (usersMarkedPresent.has(user.id)) {
-        await markAttendance(user.id, eventId);
-        number++;
-      }
+    for (const userId of usersMarkedPresent) {
+      attendancePromises.push(markAttendance(userId, eventId));
     }
   }
-  console.log("Total attendance marked: ", number);
+
+  await Promise.all(attendancePromises);
+  console.log(`Attendance marked for ${attendancePromises.length} records.`);
 }
 
 async function markAttendance(userId, eventId) {
   try {
-    const response = await axios.post(
+    await axios.post(
       `${baseUrl}/events/markAttendance/${eventId}/${userId}`,
       {},
       {
@@ -131,33 +120,33 @@ async function markAttendance(userId, eventId) {
         },
       }
     );
-    // console.log(response.data);
-
-    console.log(`Attendance for ${userId} for event ${eventId} marked `);
+    console.log(`Attendance for ${userId} for event ${eventId} marked.`);
   } catch (error) {
     console.error(
       `Failed to mark attendance for user ${userId} for event ${eventId}:`,
-      error
+      error.response?.data || error.message
     );
   }
 }
 
 async function registerUsersForEvent(eventId, users) {
-  for (const user of users) {
-    try {
-      await axios.post(
+  const registrationPromises = users.map((user) => {
+    return axios
+      .post(
         `${baseUrl}/events/register/${eventId}`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } }
-      );
-      console.log(`User ${user.token} registered for event ID ${eventId}`);
-    } catch (error) {
-      console.error(
-        `Failed to register user ${user.token} for event ID ${eventId}:`,
-        error.response?.data || error.message
-      );
-    }
-  }
+      )
+      .catch((error) => {
+        console.error(
+          `Failed to register user ${user.token} for event ID ${eventId}:`,
+          error.response?.data || error.message
+        );
+      });
+  });
+
+  await Promise.all(registrationPromises);
+  console.log(`Users registered for event ID ${eventId}.`);
 }
 
 function getRandomFeedback() {
@@ -166,18 +155,12 @@ function getRandomFeedback() {
   ];
 }
 
-// Function to give feedback for a user and event
 async function giveFeedback(eventId, user, feedback) {
   try {
-    const response = await axios.post(
-      `${baseUrl}/feedback/giveFeedback/${eventId}`,
-      feedback,
-      {
-        headers: { Authorization: `Bearer ${user.token}` },
-      }
-    );
-    // console.log(response.data);
-    console.log(`Feedback submitted by user ${user.id} for event ${eventId}`);
+    await axios.post(`${baseUrl}/feedback/giveFeedback/${eventId}`, feedback, {
+      headers: { Authorization: `Bearer ${user.token}` },
+    });
+    console.log(`Feedback submitted by user ${user.id} for event ${eventId}.`);
   } catch (error) {
     console.error(
       `Failed to submit feedback for user ${user.id} and event ${eventId}:`,
@@ -186,79 +169,84 @@ async function giveFeedback(eventId, user, feedback) {
   }
 }
 
-// Main function to populate feedbacks
-async function populateFeedbacks() {
+async function populateFeedbacks(users) {
+  const feedbackPromises = [];
+
   for (const eventId of pastEventIds) {
     for (const user of users) {
       const feedback = getRandomFeedback();
-      await giveFeedback(eventId, user, feedback);
+      feedbackPromises.push(giveFeedback(eventId, user, feedback));
     }
   }
+
+  await Promise.all(feedbackPromises);
   console.log("Feedback population completed.");
 }
 
 async function main() {
   const totalEvents = events.length;
-
   const eventDates = generateEventDates(totalEvents);
-
   events.forEach((event, index) => {
     event.eventDate = eventDates[index];
   });
 
   try {
-    const admin1 = await registerAndLoginUser(admin[0]);
-    admin[0].token = admin1.token;
-    admin[0].id = admin1.id;
-  } catch (err) {
-    console.log("Error in admin creation 1");
-  }
+    const [admin1, admin2] = await Promise.all(
+      admin.map((adminUser) => registerAndLoginUser(adminUser))
+    );
 
-  try {
-    const admin2 = await registerAndLoginUser(admin[1]);
-    admin[1].token = admin2.token;
+    admin[0].id = admin1.id;
+    admin[0].token = admin1.token;
     admin[1].id = admin2.id;
+    admin[1].token = admin2.token;
   } catch (err) {
-    console.log("Error in admin creation 2");
+    console.error("Error in admin creation.", err);
+    return;
   }
 
   try {
     const today = new Date();
-    for (const event of events.slice(0, 20)) {
+    const eventCreationPromises = events.map(async (event, index) => {
+      const adminToken = index < 20 ? admin[0].token : admin[1].token;
       const eventDate = new Date(event.eventDate);
-      const eventId = await createEvent(event, admin[0].token);
-      if (eventDate <= today) {
-        pastEventIds.push(eventId);
-      }
-    }
-    for (const event of events.slice(20)) {
-      const eventDate = new Date(event.eventDate);
-      const eventId = await createEvent(event, admin[1].token);
-      if (eventDate <= today) {
-        pastEventIds.push(eventId);
-      }
-    }
+      const eventId = await createEvent(event, adminToken);
+      if (eventDate <= today) pastEventIds.push(eventId);
+    });
+
+    await Promise.all(eventCreationPromises);
   } catch (err) {
-    console.log("Error in event creation");
+    console.error("Error in event creation", err);
+    return;
   }
 
-  for (const user of users) {
-    const userResponse = await registerAndLoginUser(user);
-    user.token = userResponse.token;
-    user.id = userResponse.id;
+  try {
+    const userRegistrationPromises = users.map((user) =>
+      registerAndLoginUser(user).then((userResponse) => {
+        user.id = userResponse.id;
+        user.token = userResponse.token;
+      })
+    );
+
+    await Promise.all(userRegistrationPromises);
+  } catch (err) {
+    console.error("Error in user registration", err);
+    return;
   }
 
-  for (const eventId of allEventIds) {
-    await registerUsersForEvent(eventId, users);
-  }
+  try {
+    const registrationPromises = allEventIds.map((eventId) =>
+      registerUsersForEvent(eventId, users)
+    );
 
-  console.log("All users registered for all events.");
-  console.log(pastEventIds);
-  console.log(allEventIds);
+    await Promise.all(registrationPromises);
+    console.log("All users registered for all events.");
+  } catch (err) {
+    console.error("Error in user-event registration", err);
+    return;
+  }
 
   await markAttendanceForUsers(users, pastEventIds);
-
-  await populateFeedbacks();
+  await populateFeedbacks(users);
 }
 
-main();
+main().catch((err) => console.error("Error in main execution", err));
