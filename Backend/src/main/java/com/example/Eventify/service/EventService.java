@@ -496,7 +496,7 @@ public class EventService {
                                     .setName(userStatus.getUserId().getName())
                                     .setEmail(userStatus.getUserId().getEmail())
                                     .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
-                                    .setCurrentStatus(userStatus.getCurrentStatus())
+                                    .setCurrentStatus(Objects.equals(userStatus.getCurrentStatus(), "Present") ? "Present":"Absent")
                                     .setAttending("No")
                                     .setAttendanceCode(userStatus.getAttendanceCode())
                     ).toList();
