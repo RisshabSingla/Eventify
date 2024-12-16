@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,9 +145,8 @@ public class EventService {
         return (int) currentUser.getCreatedEvents().stream()
                 .filter(event -> event.getUserStatuses() != null)
                 .flatMap(event -> event.getUserStatuses().stream())
-                .filter(userStatus -> "Attended".equals(userStatus.getCurrentStatus()))
+                .filter(userStatus -> "Present".equals(userStatus.getCurrentStatus()))
                 .count();
-
     }
 
     public int getTotalRegisteredUsers(User currentUser) {
@@ -180,11 +181,36 @@ public class EventService {
     public AdminEventAttendanceResponse getOverallAttendanceAnalytics(User currentUser) {
         int attendedUsers = getTotalAttendedUsers(currentUser);
         int registeredUsers = getTotalRegisteredUsers(currentUser);
+        int absentUsers = getAbsentUsers(currentUser);
         return new AdminEventAttendanceResponse()
                 .setTotalRegisteredUsers(registeredUsers)
                 .setTotalAttendedUsers(attendedUsers)
-                .setAttendanceRate(registeredUsers == 0 ? 0 : (attendedUsers * 100) / registeredUsers)
-                .setTotalNoShowUsers(registeredUsers - attendedUsers);
+                .setAttendanceRate(registeredUsers == 0 ? 0 : (attendedUsers * 100) / (attendedUsers+absentUsers))
+                .setTotalNoShowUsers(absentUsers);
+    }
+
+    public int getAbsentUsers(User currentUser){
+        if (currentUser == null || currentUser.getCreatedEvents() == null) {
+            System.out.println("No events found for the user.");
+            return 0;
+        }
+
+        LocalDate currentDate = LocalDate.now();
+
+        return (int) currentUser.getCreatedEvents().stream()
+                .filter(event -> event.getDate() != null)
+                .filter(event -> {
+                    try {
+                        LocalDate eventDate = LocalDate.parse(event.getDate());
+                        return eventDate.isBefore(currentDate);
+                    } catch (DateTimeParseException e) {
+                        return false;
+                    }
+                })
+                .filter(event -> event.getUserStatuses() != null)
+                .flatMap(event -> event.getUserStatuses().stream())
+                .filter(userStatus -> userStatus.getCurrentStatus() == null || !"Present".equals(userStatus.getCurrentStatus()))
+                .count();
     }
 
     public AdminEventFeedbackAnalyticsResponse getOverallFeedbackAnalytics(User currentUser) {
@@ -240,6 +266,7 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public EventRegiserResponse registerEvent(String eventId, User currentUser) throws MessagingException {
         Event event = eventRepository.findById(eventId).orElse(null);
         if (event == null) {
@@ -448,28 +475,8 @@ public class EventService {
         List<UserStatus> userStatuses = event.getUserStatuses() != null ? event.getUserStatuses() : Collections.emptyList();
 
         if (eventDate.before(todayDate)) {
-            // Only Registered users
-            metrics = new EventAttendancePageAdminResponse.EventAttendanceMetrics()
-                    .setFilled(event.getNumberRegistered())
-                    .setAbsent(0)
-                    .setCapacity(event.getMaxCapacity())
-                    .setPresent(0)
-                    .setYetToCome(0);
 
-            users = userStatuses.stream()
-                    .filter(userStatus -> userStatus != null && "Registered".equals(userStatus.getCurrentStatus()))
-                    .map(userStatus ->
-                            new EventAttendancePageAdminResponse.AttendanceUser()
-                                    .setId(userStatus.getUserId().getId())
-                                    .setName(userStatus.getUserId().getName())
-                                    .setEmail(userStatus.getUserId().getEmail())
-                                    .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
-                                    .setCurrentStatus(userStatus.getCurrentStatus())
-                                    .setAttending("No")
-                                    .setAttendanceCode(userStatus.getAttendanceCode())
-                    ).toList();
 
-        } else if (eventDate.after(todayDate)) {
             int totalRegistered = event.getNumberRegistered();
             int presentUsers = getPresentUsers(event);
 
@@ -483,6 +490,28 @@ public class EventService {
 
             users = userStatuses.stream()
                     .filter(Objects::nonNull)
+                    .map(userStatus ->
+                            new EventAttendancePageAdminResponse.AttendanceUser()
+                                    .setId(userStatus.getUserId().getId())
+                                    .setName(userStatus.getUserId().getName())
+                                    .setEmail(userStatus.getUserId().getEmail())
+                                    .setRegisteredDate(String.valueOf(userStatus.getRegisteredDate()))
+                                    .setCurrentStatus(userStatus.getCurrentStatus())
+                                    .setAttending("No")
+                                    .setAttendanceCode(userStatus.getAttendanceCode())
+                    ).toList();
+
+        } else if (eventDate.after(todayDate)) {
+            // Only Registered users
+            metrics = new EventAttendancePageAdminResponse.EventAttendanceMetrics()
+                    .setFilled(event.getNumberRegistered())
+                    .setAbsent(0)
+                    .setCapacity(event.getMaxCapacity())
+                    .setPresent(0)
+                    .setYetToCome(0);
+
+            users = userStatuses.stream()
+                    .filter(userStatus -> userStatus != null && "Registered".equals(userStatus.getCurrentStatus()))
                     .map(userStatus ->
                             new EventAttendancePageAdminResponse.AttendanceUser()
                                     .setId(userStatus.getUserId().getId())
@@ -808,7 +837,6 @@ public class EventService {
                 ,
                 checkIfRegistered(eventId, currentUser));
     }
-
 
 
 }

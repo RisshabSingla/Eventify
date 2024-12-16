@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public class EventController {
 
     @GetMapping("/getAllEvents")
     public ResponseEntity<List<AdminEventListResponse>> getAllEvents(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "40") int size) {
         List<AdminEventListResponse> response = eventService.getAllAdminEvents(page, size).stream()
                 .map(event -> new AdminEventListResponse(
                         event.getId(),
@@ -277,11 +278,13 @@ public class EventController {
                         event.getName(),
                         event.getDescription(),
                         event.getDate()))
+                .sorted(Comparator.comparing(AdminEventListResponse::getDate))
                 .toList();
 
         List<AdminEventListResponse> adminCreatedEvents = currentUser.getCreatedEvents().stream()
                 .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(),
                         event.getDate()))
+                .sorted(Comparator.comparing(AdminEventListResponse::getDate))
                 .toList();
         AdminEventManagementPageResponse response = new AdminEventManagementPageResponse(allEvents, adminCreatedEvents);
 
@@ -296,6 +299,7 @@ public class EventController {
         List<AdminEventListResponse> allEvents = currentUser.getCreatedEvents().stream()
                 .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(),
                         event.getDate()))
+                .sorted(Comparator.comparing(AdminEventListResponse::getDate))
                 .toList();
 
         AdminEventAnalyticsResponse metrics = eventService.getOverallEventAnalytics(currentUser);
@@ -312,6 +316,7 @@ public class EventController {
         List<AdminEventListResponse> events = currentUser.getCreatedEvents().stream()
                 .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(),
                         event.getDate()))
+                .sorted(Comparator.comparing(AdminEventListResponse::getDate))
                 .toList();
 
         AdminEventAttendanceResponse metrics = eventService.getOverallAttendanceAnalytics(currentUser);
