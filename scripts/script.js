@@ -1169,6 +1169,154 @@ const users = [
   },
 ];
 
+const feedbackTemplates = [
+  {
+    overallRating: 5,
+    venueRating: 5,
+    speakerRating: 5,
+    comments: "Fantastic event! Everything was perfect.",
+    futureSuggestions: "Keep up the great work!",
+  },
+  {
+    overallRating: 4,
+    venueRating: 5,
+    speakerRating: 3,
+    comments:
+      "The event was well-organized, but the speaker could have been more engaging.",
+    futureSuggestions: "Consider adding a Q&A session at the end.",
+  },
+  {
+    overallRating: 3,
+    venueRating: 4,
+    speakerRating: 3,
+    comments:
+      "Average experience. The venue was nice, but the event was a bit dull.",
+    futureSuggestions: "Focus on making the sessions more interactive.",
+  },
+  {
+    overallRating: 2,
+    venueRating: 3,
+    speakerRating: 2,
+    comments: "Not a great experience. There were several logistical issues.",
+    futureSuggestions: "Improve time management and communication.",
+  },
+  {
+    overallRating: 1,
+    venueRating: 2,
+    speakerRating: 1,
+    comments: "Very disappointing event. Nothing went as planned.",
+    suggestions: "Reconsider the event structure and execution.",
+  },
+  {
+    overallRating: 5,
+    venueRating: 5,
+    speakerRating: 4,
+    comments: "Amazing event with great energy. Loved the venue!",
+    futureSuggestions: "Maybe include more breaks to network with others.",
+  },
+  {
+    overallRating: 4,
+    venueRating: 4,
+    speakerRating: 5,
+    comments: "Great speaker! Learned a lot from the session.",
+    futureSuggestions: "The venue could have better seating arrangements.",
+  },
+  {
+    overallRating: 3,
+    venueRating: 3,
+    speakerRating: 4,
+    comments: "Content was interesting, but the venue was too small.",
+    futureSuggestions: "Choose a larger venue for future events.",
+  },
+  {
+    overallRating: 2,
+    venueRating: 2,
+    speakerRating: 3,
+    comments: "Speaker was okay, but the event lacked proper organization.",
+    futureSuggestions: "Plan the agenda more thoroughly.",
+  },
+  {
+    overallRating: 1,
+    venueRating: 1,
+    speakerRating: 2,
+    comments: "Disorganized and chaotic event. Not worth attending.",
+    futureSuggestions:
+      "Focus on the basics: clear communication and structure.",
+  },
+  {
+    overallRating: 5,
+    venueRating: 5,
+    speakerRating: 5,
+    comments:
+      "Loved every part of it! The speaker was inspiring, and the venue was beautiful.",
+    futureSuggestions: "Maybe extend the session duration for more insights.",
+  },
+  {
+    overallRating: 4,
+    venueRating: 4,
+    speakerRating: 4,
+    comments: "Good event with a balanced schedule.",
+    futureSuggestions:
+      "Include more networking opportunities between sessions.",
+  },
+  {
+    overallRating: 3,
+    venueRating: 3,
+    speakerRating: 3,
+    comments: "The event was decent but lacked a wow factor.",
+    futureSuggestions: "Consider adding live demos or activities.",
+  },
+  {
+    overallRating: 2,
+    venueRating: 4,
+    speakerRating: 2,
+    comments: "The venue was great, but the content felt repetitive.",
+    futureSuggestions: "Curate more diverse and engaging topics.",
+  },
+  {
+    overallRating: 1,
+    venueRating: 3,
+    speakerRating: 1,
+    comments: "Unprofessional event with unprepared speakers.",
+    futureSuggestions: "Ensure speakers are well-versed in the subject matter.",
+  },
+  {
+    overallRating: 5,
+    venueRating: 5,
+    speakerRating: 4,
+    comments: "Incredible event with great insights and networking.",
+    futureSuggestions: "Host this event more frequently.",
+  },
+  {
+    overallRating: 4,
+    venueRating: 3,
+    speakerRating: 4,
+    comments: "Overall a great experience, but the venue lighting was poor.",
+    futureSuggestions: "Improve the lighting and seating arrangement.",
+  },
+  {
+    overallRating: 3,
+    venueRating: 2,
+    speakerRating: 3,
+    comments: "It was okay, but not up to my expectations.",
+    futureSuggestions: "Provide clearer communication before the event.",
+  },
+  {
+    overallRating: 2,
+    venueRating: 1,
+    speakerRating: 2,
+    comments: "Below average. Venue was difficult to locate.",
+    futureSuggestions: "Send detailed directions with the event invitation.",
+  },
+  {
+    overallRating: 1,
+    venueRating: 2,
+    speakerRating: 1,
+    comments: "I regret attending this event.",
+    futureSuggestions: "Consider feedback seriously to improve future events.",
+  },
+];
+
 const pastEventIds = [];
 const allEventIds = [];
 
@@ -1199,12 +1347,12 @@ function getRandomDate(offsetType) {
 function generateEventDates(totalEvents) {
   const eventDates = [];
 
-  const pastCount = Math.min(10, totalEvents);
+  const pastCount = Math.min(15, totalEvents);
   for (let i = 0; i < pastCount; i++) {
     eventDates.push(getRandomDate("past"));
   }
 
-  const todayCount = Math.min(2, totalEvents - pastCount);
+  const todayCount = Math.min(3, totalEvents - pastCount);
   for (let i = 0; i < todayCount; i++) {
     eventDates.push(getRandomDate("today"));
   }
@@ -1308,28 +1456,58 @@ async function markAttendance(userId, eventId) {
 }
 
 async function registerUsersForEvent(eventId, users) {
-  const userRegistrationPromises = users.map(
-    async (user) =>
-      await axios
-        .post(
-          `${baseUrl}/events/register/${eventId}`,
-          {},
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          }
-        )
-        .then(() => {
-          console.log(`User ${user.token} registered for event ID ${eventId}`);
-        })
-        .catch((error) => {
-          console.error(
-            `Failed to register user ${user.token} for event ID ${eventId}:`,
-            error.response?.data || error.message
-          );
-        })
-  );
+  for (const user of users) {
+    try {
+      await axios.post(
+        `${baseUrl}/events/register/${eventId}`,
+        {},
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      console.log(`User ${user.token} registered for event ID ${eventId}`);
+    } catch (error) {
+      console.error(
+        `Failed to register user ${user.token} for event ID ${eventId}:`,
+        error.response?.data || error.message
+      );
+    }
+  }
+}
 
-  await Promise.all(userRegistrationPromises);
+function getRandomFeedback() {
+  return feedbackTemplates[
+    Math.floor(Math.random() * feedbackTemplates.length)
+  ];
+}
+
+// Function to give feedback for a user and event
+async function giveFeedback(eventId, user, feedback) {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/feedback/giveFeedback/${eventId}`,
+      feedback,
+      {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+    );
+    // console.log(response.data);
+    console.log(`Feedback submitted by user ${user.id} for event ${eventId}`);
+  } catch (error) {
+    console.error(
+      `Failed to submit feedback for user ${user.id} and event ${eventId}:`,
+      error.response?.data || error.message
+    );
+  }
+}
+
+// Main function to populate feedbacks
+async function populateFeedbacks() {
+  for (const eventId of pastEventIds) {
+    for (const user of users) {
+      const feedback = getRandomFeedback();
+      await giveFeedback(eventId, user, feedback);
+    }
+  }
+  console.log("Feedback population completed.");
 }
 
 async function main() {
@@ -1392,6 +1570,8 @@ async function main() {
   console.log(allEventIds);
 
   await markAttendanceForUsers(users, pastEventIds);
+
+  await populateFeedbacks();
 }
 
 main();
