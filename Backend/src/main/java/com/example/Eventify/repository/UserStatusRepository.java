@@ -13,4 +13,6 @@ public interface UserStatusRepository extends MongoRepository<UserStatus, String
     List<UserStatus> findByUserIdAndCurrentStatus(String userId, String currentStatus);
 
     List<UserStatus>findByEventId(String eventId);
+
+    UserStatus findByEventIdAndUserId(String eventId, String userId);
 }

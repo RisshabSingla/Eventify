@@ -558,23 +558,23 @@ public class EventService {
             return new MarkAttendanceResponse().setCurrentStatus("No user statuses found");
         }
 
-        // Use streams to find the UserStatus for the current user
-        UserStatus matchingStatus = userStatuses.stream()
-                .filter(userStatus -> userStatus != null && userStatus.getUserId().getId().equals(currentUser.getId()))
-                .findFirst()
-                .orElse(null);
+        UserStatus matchingStatus = userStatusRepository.findByEventIdAndUserId(eventId, userId);
 
         if (matchingStatus == null) {
             return new MarkAttendanceResponse().setCurrentStatus("User not registered for this event");
         }
 
+        if ("Present".equals(matchingStatus.getCurrentStatus())) {
+            return new MarkAttendanceResponse().setCurrentStatus("User already marked as Present");
+        }
+
         // Update the status to "Present"
         matchingStatus.setCurrentStatus("Present");
 
-        // Save the updated event
-        eventRepository.save(event);
+        // Save the updated UserStatus
         userStatusRepository.save(matchingStatus);
 
+        // Return the updated status
         return new MarkAttendanceResponse().setCurrentStatus("Present");
     }
 
