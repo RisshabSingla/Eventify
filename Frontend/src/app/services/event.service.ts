@@ -48,6 +48,19 @@ export class EventService {
 
   getEventAnalyticsData(id: string): Observable<EventAnalytic> {
     console.log(id);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventAnalytic>(
+      `${this.apiEndpoint}events/getEventAnalytics/${id}`,
+      {
+        headers,
+      }
+    );
+
     return of(EVENT_ANALYTIC_DATA);
   }
 

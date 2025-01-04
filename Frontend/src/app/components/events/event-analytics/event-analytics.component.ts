@@ -25,10 +25,11 @@ export class EventAnalyticsComponent implements OnInit {
   ngOnInit(): void {
     this.eventService
       .getEventAnalyticsData(this.eventId)
-      .subscribe((event: EventAnalytic) => (this.event = event));
-
-    this.createRegistrationGraph();
-    this.createFeedbackGraph();
+      .subscribe((event: EventAnalytic) => {
+        this.event = event;
+        this.createRegistrationGraph();
+        this.createFeedbackGraph();
+      });
   }
 
   createRegistrationGraph(): void {

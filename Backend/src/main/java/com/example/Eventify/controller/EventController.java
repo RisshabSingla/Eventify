@@ -343,4 +343,19 @@ public class EventController {
         return ResponseEntity.ok(pageResponse);
     }
 
+    @GetMapping("getEventAnalytics/{eventId}")
+    public ResponseEntity<EventAnalyticsPageResponse> getEventAnalytics(@PathVariable String eventId) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User currentUser = (User) authentication.getPrincipal();
+
+            // Call the service method to get event analytics
+            EventAnalyticsPageResponse eventAnalytics = eventService.getEventAnalytics(eventId);
+            return ResponseEntity.ok(eventAnalytics);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

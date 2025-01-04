@@ -838,6 +838,57 @@ public class EventService {
                 checkIfRegistered(eventId, currentUser));
     }
 
+    public EventAnalyticsPageResponse getEventAnalytics(String eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        double averageRating = 0.0;
+        long actualAttendance = 0;
+        Map<String, Integer> feedbackCounts = new HashMap<>();
+        feedbackCounts.put("1 star", 0);
+        feedbackCounts.put("2 star", 0);
+        feedbackCounts.put("3 star", 0);
+        feedbackCounts.put("4 star", 0);
+        feedbackCounts.put("5 star", 0);
+        List<String> topFeedbacks = new ArrayList<>();
+
+        List<Feedback> feedbacks = event.getFeedbacks();
+        if (feedbacks != null && !feedbacks.isEmpty()) {
+            averageRating = feedbacks.stream()
+                    .mapToInt(Feedback::getOverallRating)
+                    .average()
+                    .orElse(0.0);
+
+            feedbacks.forEach(feedback -> {
+                String key = feedback.getOverallRating() + " star";
+                feedbackCounts.put(key, feedbackCounts.getOrDefault(key, 0) + 1);
+            });
+
+            topFeedbacks = feedbacks.stream()
+                    .map(Feedback::getComments)
+                    .filter(Objects::nonNull) // Filter out null comments
+                    .limit(5)
+                    .collect(Collectors.toList());
+        }
+
+        List<UserStatus> userStatuses = userStatusRepository.findByEventId(eventId);
+        if (userStatuses != null) {
+            actualAttendance = userStatuses.stream()
+                    .filter(userStatus -> "Present".equalsIgnoreCase(userStatus.getCurrentStatus()))
+                    .count();
+        }
+
+        return new EventAnalyticsPageResponse()
+                .setId(event.getId())
+                .setName(event.getName())
+                .setTotalRegistrations(event.getNumberRegistered())
+                .setActualAttendance((int) actualAttendance)
+                .setFeedbackRating(averageRating)
+                .setTotalFeedbackCount(feedbacks != null ? feedbacks.size() : 0)
+                .setFeedbackCounts(feedbackCounts)
+                .setTopFeedbacks(topFeedbacks);
+    }
+
 
 }
 

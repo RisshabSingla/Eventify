@@ -1,6 +1,5 @@
 package com.example.Eventify.service;
 
-
 import com.example.Eventify.model.UserStatus;
 import com.example.Eventify.response.EventAttendanceExportResponse;
 import org.apache.poi.ss.usermodel.*;
@@ -13,8 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
-
 
 @Service
 public class DocumentExportService {
