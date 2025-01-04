@@ -22,8 +22,8 @@ public class DocumentExportService {
     public byte[] generateAttendanceExcelforEvents(List<EventAttendanceExportResponse.EventAttendanceData> events) throws IOException {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
             for (EventAttendanceExportResponse.EventAttendanceData event : events) {
-                // Create a new sheet for each event
-                Sheet sheet = workbook.createSheet(event.getEventName() + UUID.randomUUID());
+                String sheetName = generateUniqueSheetName(workbook, event.getEventName());
+                Sheet sheet = workbook.createSheet(sheetName);
                 createHeaderRow(sheet);
 
                 int rowIndex = 1;
@@ -46,6 +46,22 @@ public class DocumentExportService {
             workbook.write(outputStream);
             return outputStream.toByteArray();
         }
+    }
+
+    private String generateUniqueSheetName(XSSFWorkbook workbook, String originalName) {
+        final int MAX_LENGTH = 31;
+        String trimmedName = originalName.length() > MAX_LENGTH
+                ? originalName.substring(0, MAX_LENGTH)
+                : originalName;
+        String uniqueName = trimmedName;
+        int counter = 1;
+
+        while (workbook.getSheet(uniqueName) != null) {
+            String suffix = "-" + counter++;
+            int maxLength = MAX_LENGTH - suffix.length();
+            uniqueName = trimmedName.substring(0, Math.min(trimmedName.length(), maxLength)) + suffix;
+        }
+        return uniqueName;
     }
 
     private void createHeaderRow(Sheet sheet) {
