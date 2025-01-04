@@ -1,10 +1,7 @@
 package com.example.Eventify.service;
 
 import com.example.Eventify.model.*;
-import com.example.Eventify.repository.EventRepository;
-import com.example.Eventify.repository.NotificationRepository;
-import com.example.Eventify.repository.UserRepository;
-import com.example.Eventify.repository.UserStatusRepository;
+import com.example.Eventify.repository.*;
 import com.example.Eventify.request.CreateEventRequest;
 import com.example.Eventify.request.EditEventRequest;
 import com.example.Eventify.response.*;
@@ -40,6 +37,9 @@ public class EventService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
 
     public EventCreateResponse createEvent(CreateEventRequest request, User currentUser) {
@@ -889,6 +889,105 @@ public class EventService {
                 .setTopFeedbacks(topFeedbacks);
     }
 
+    public EventFeedbackPageResponse getEventFeedbackPageData(String eventId) {
+        try {
+            // Fetch the event details from the database
+            Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
 
+            // Fetch feedbacks for the event
+            List<Feedback> feedbacks = feedbackRepository.findByEventId(eventId);
+
+            // Calculate feedback metrics
+            EventFeedbackPageResponse.FeedbackMetrics metrics = calculateFeedbackMetrics(feedbacks);
+
+            // Create EventDetails object
+            EventFeedbackPageResponse.EventDetails eventDetails = new EventFeedbackPageResponse.EventDetails();
+            eventDetails.setEventId(event.getId());
+            eventDetails.setTitle(event.getName());
+            eventDetails.setDescription(event.getDescription());
+            eventDetails.setDate(event.getDate());
+            eventDetails.setVenue(event.getLocation());
+
+            // Create EventFeedbackPageResponse object
+            EventFeedbackPageResponse eventFeedbackData = new EventFeedbackPageResponse();
+            eventFeedbackData.setEventDetails(eventDetails);
+            eventFeedbackData.setMetrics(metrics);
+            List<EventFeedbackPageResponse.Feedback> feedbackResponseList = feedbacks.stream()
+                    .map(feedback -> {
+                        EventFeedbackPageResponse.Feedback feedbackDTO = new EventFeedbackPageResponse.Feedback();
+                        feedbackDTO.setId(feedback.getId());
+                        feedbackDTO.setName(feedback.getUserId() != null && feedback.getUserId().getUsername() != null
+                                ? feedback.getUserId().getUsername()
+                                : "Unknown User");
+
+                        feedbackDTO.setFeedback(feedback.getComments() != null ? feedback.getComments() : "No feedback provided");
+                        feedbackDTO.setRating(feedback.getOverallRating()); // Assuming rating will always be provided
+
+                        return feedbackDTO;
+                    })
+                    .collect(Collectors.toList()); // Collect the mapped feedback into a list
+
+            eventFeedbackData.setFeedbacks(feedbackResponseList);
+
+            return eventFeedbackData;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException("Failed to fetch event feedback data");
+        }
+    }
+
+    private EventFeedbackPageResponse.FeedbackMetrics calculateFeedbackMetrics(List<Feedback> feedbacks) {
+        EventFeedbackPageResponse.FeedbackMetrics metrics = new EventFeedbackPageResponse.FeedbackMetrics();
+        if (feedbacks != null && !feedbacks.isEmpty()) {
+            metrics.setTotalFeedbacks(feedbacks.size());
+
+            // Calculate average rating
+            double averageRating = feedbacks.stream()
+                    .mapToInt(Feedback::getOverallRating)
+                    .average()
+                    .orElse(0.0);
+            metrics.setAverageRating(averageRating);
+
+            // Initialize feedback count map
+            Map<String, Integer> feedbackCountMap = new HashMap<>();
+            feedbackCountMap.put("1 star", 0);
+            feedbackCountMap.put("2 star", 0);
+            feedbackCountMap.put("3 star", 0);
+            feedbackCountMap.put("4 star", 0);
+            feedbackCountMap.put("5 star", 0);
+
+            // Count feedback ratings
+            feedbacks.forEach(feedback -> {
+                String key = feedback.getOverallRating() + " star";
+                feedbackCountMap.put(key, feedbackCountMap.getOrDefault(key, 0) + 1);
+            });
+
+            metrics.setFeedBackCount(feedbackCountMap);
+
+            int totalFeedbackCount = feedbacks.size();
+            int positiveFeedbacks = (int) feedbacks.stream().filter(feedback -> feedback.getOverallRating() >= 3).count();
+            int negativeFeedbacks = totalFeedbackCount - positiveFeedbacks;
+
+            double positiveFeedbackPercentage = totalFeedbackCount > 0
+                    ? (positiveFeedbacks * 100.0) / totalFeedbackCount
+                    : 0.0;
+
+            double negativeFeedbackPercentage = totalFeedbackCount > 0
+                    ? (negativeFeedbacks * 100.0) / totalFeedbackCount
+                    : 0.0;
+
+            metrics.setPositiveFeedback(positiveFeedbackPercentage);
+            metrics.setNegativeFeedback(negativeFeedbackPercentage);
+        } else {
+            // Set default values if no feedback
+            metrics.setTotalFeedbacks(0);
+            metrics.setAverageRating(0.0);
+            metrics.setPositiveFeedback(0);
+            metrics.setNegativeFeedback(0);
+            metrics.setFeedBackCount(null);
+        }
+        return metrics;
+    }
 }
 

@@ -29,9 +29,8 @@ export class EventFeedbackComponent implements OnInit {
       this.eventDetails = data.eventDetails;
       this.metrics = data.metrics;
       this.feedbacks = data.feedbacks;
+      this.createPieChart();
     });
-
-    this.createPieChart();
   }
 
   // Create Pie Chart based on feedback rating distribution

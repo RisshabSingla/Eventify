@@ -1563,7 +1563,7 @@ export const EVENT_EDIT_DATA: EventEdit = {
   attendeeList: 'public',
 };
 
-export const EVENT_FEEDBACK_DATA: EventFeedbackData = {
+export const EVENT_FEEDBACK_DATA = {
   eventDetails: {
     eventId: '1',
     title: 'Event Title Example',

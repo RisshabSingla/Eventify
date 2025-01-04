@@ -332,6 +332,7 @@ public class EventController {
         User currentUser = (User) authentication.getPrincipal();
 
         List<AdminEventListResponse> response = currentUser.getCreatedEvents().stream()
+                .sorted(Comparator.comparing(Event::getDate))
                 .map(event -> new AdminEventListResponse(event.getId(), event.getName(), event.getDescription(),
                         event.getDate()))
                 .toList();
@@ -355,6 +356,19 @@ public class EventController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
+    @GetMapping("getEventFeedbackDetails/{eventId}")
+    public ResponseEntity<EventFeedbackPageResponse> getEventFeedbackDetails(@PathVariable String eventId) {
+        try {
+            EventFeedbackPageResponse eventFeedbackData = eventService.getEventFeedbackPageData(eventId);
+            return ResponseEntity.ok(eventFeedbackData);
+        } catch (Exception e) {
+            // Log the error and return a bad request with error message
+            return ResponseEntity.badRequest()
+                    .body(null);
         }
     }
 

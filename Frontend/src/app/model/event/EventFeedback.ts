@@ -17,13 +17,13 @@ export interface FeedbackCount {
 export interface FeedbackMetrics {
   totalFeedbacks: number;
   averageRating: number;
-  positiveFeedback: string;
-  negativeFeedback: string;
+  positiveFeedback: number;
+  negativeFeedback: number;
   feedBackCount: FeedbackCount;
 }
 
 export interface Feedback {
-  id: number;
+  id: string;
   name: string;
   feedback: string;
   rating: number;

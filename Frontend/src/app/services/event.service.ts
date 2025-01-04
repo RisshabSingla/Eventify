@@ -165,7 +165,17 @@ export class EventService {
   }
 
   getEventFeedbackData(eventId: string): Observable<EventFeedbackData> {
-    return of(EVENT_FEEDBACK_DATA);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<EventFeedbackData>(
+      `${this.apiEndpoint}events/getEventFeedbackDetails/${eventId}`,
+      {
+        headers,
+      }
+    );
+    // return of(EVENT_FEEDBACK_DATA);
   }
 
   getEventReports(eventId: string): Observable<EventReports> {
