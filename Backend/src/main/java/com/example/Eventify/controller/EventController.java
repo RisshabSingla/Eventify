@@ -383,4 +383,15 @@ public class EventController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("getEventReportsPageDetails/{eventId}")
+    public ResponseEntity<EventReportPageResponse> getEventReportsPageDetails(@PathVariable String eventId) {
+        try{
+            EventReportPageResponse res = eventService.getEventReportsPageData(eventId);
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

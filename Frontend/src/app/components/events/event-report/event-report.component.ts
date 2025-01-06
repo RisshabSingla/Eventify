@@ -33,10 +33,9 @@ export class EventReportComponent implements OnInit {
       this.eventDetails = data.eventDetails;
       this.eventStats = data.eventStats;
       this.feedbackStats = data.feedbackStats;
+      this.createAttendanceChart();
+      this.createFeedbackChart();
     });
-
-    this.createAttendanceChart();
-    this.createFeedbackChart();
   }
 
   // Create Attendance Bar Chart
@@ -104,10 +103,6 @@ export class EventReportComponent implements OnInit {
         responsive: true,
       },
     });
-  }
-
-  downloadReport() {
-    alert('Downloading report for this event');
   }
 
   goToEventPage() {

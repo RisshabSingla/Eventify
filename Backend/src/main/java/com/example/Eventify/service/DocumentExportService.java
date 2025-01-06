@@ -5,6 +5,7 @@ import com.example.Eventify.model.User;
 import com.example.Eventify.model.UserStatus;
 import com.example.Eventify.response.EventAttendanceExportResponse;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -179,7 +179,18 @@ export class EventService {
   }
 
   getEventReports(eventId: string): Observable<EventReports> {
-    return of(EVENT_REPORT_DATA);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get<EventReports>(
+      `${this.apiEndpoint}events/getEventReportsPageDetails/${eventId}`,
+      {
+        headers,
+      }
+    );
+
+    // return of(EVENT_REPORT_DATA);
   }
 
   registerEvent(eventId: string): Observable<any> {

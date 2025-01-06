@@ -12,6 +12,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -993,7 +995,12 @@ public class EventService {
 
     public AdminEventReportPageResponse getAdminReportsPageData() {
         List<Event> events = Optional.of(eventRepository.findAll()).orElse(Collections.emptyList());
-
+        events.sort((event1, event2) -> {
+            if (event1.getDate() == null || event2.getDate() == null) {
+                return 0;
+            }
+            return event1.getDate().compareTo(event2.getDate());
+        });
         int totalEvents = events.size();
         int totalFeedback = Math.toIntExact(Optional.of(feedbackRepository.count()).orElse(0L));
         int totalRegistrations = Math.toIntExact(Optional.of(userStatusRepository.count()).orElse(0L));
@@ -1049,6 +1056,96 @@ public class EventService {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public EventReportPageResponse getEventReportsPageData(String eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        // Prepare the EventDetails with null checks
+        EventReportPageResponse.EventDetails eventDetails = new EventReportPageResponse.EventDetails()
+                .setId(event.getId())
+                .setTitle(event.getName() != null ? event.getName() : "N/A")
+                .setDateTime((event.getDate() != null ? event.getDate() : "") + " " + (event.getTime() != null ? event.getTime() : ""))
+                .setVenue(event.getLocation() != null ? event.getLocation() : "N/A")
+                .setDescription(event.getDescription() != null ? event.getDescription() : "No Description");
+
+        // Prepare the EventStats with null checks
+        EventReportPageResponse.EventStats eventStats = new EventReportPageResponse.EventStats()
+                .setTotalAttendees(getTotalAttendees(event))
+                .setTotalRegistrations(event.getNumberRegistered())
+                .setEventCapacity(event.getMaxCapacity())
+                .setAttendanceRate(calculateAttendanceRate(event));
+
+        // Prepare the FeedbackStats with null checks
+        EventReportPageResponse.FeedbackStats feedbackStats = new EventReportPageResponse.FeedbackStats()
+                .setTotalFeedbacks(event.getFeedbacks() != null ? event.getFeedbacks().size() : 0)
+                .setAverageRating(getAverageRating(event))
+                .setPositiveFeedback(getPositiveFeedbackCount(event))
+                .setNegativeFeedback(getNegativeFeedbackCount(event));
+
+        // Combine all into a single response DTO using builder pattern
+        return new EventReportPageResponse()
+                .setEventDetails(eventDetails)
+                .setEventStats(eventStats)
+                .setFeedbackStats(feedbackStats);
+    }
+
+    public int getPositiveFeedbackCount(Event event) {
+        if (event.getFeedbacks() == null) {
+            return 0; // Handle the case where feedbacks are null
+        }
+
+        return (int) event.getFeedbacks().stream()
+                .filter(feedback -> feedback.getOverallRating() > 3)
+                .count();
+    }
+
+    public int getNegativeFeedbackCount(Event event) {
+        if (event.getFeedbacks() == null) {
+            return 0; // Handle the case where feedbacks are null
+        }
+
+        return (int) event.getFeedbacks().stream()
+                .filter(feedback -> feedback.getOverallRating() <= 3)
+                .count();
+    }
+
+    public double getAverageRating(Event event) {
+        if (event.getFeedbacks() == null || event.getFeedbacks().isEmpty()) {
+            return 0.0; // Return 0 if there are no feedbacks
+        }
+
+        double average = event.getFeedbacks().stream()
+                .mapToInt(Feedback::getOverallRating)
+                .average()
+                .orElse(0.0);
+
+        // Round to 2 decimal places
+        BigDecimal roundedAverage = new BigDecimal(average).setScale(2, RoundingMode.HALF_UP);
+
+        return roundedAverage.doubleValue();
+    }
+
+    public int getTotalAttendees(Event event) {
+        if (event.getUserStatuses() == null) {
+            return 0; // Handle the case where the list of user statuses is null
+        }
+
+        return (int) event.getUserStatuses().stream()
+                .filter(userStatus -> "Present".equals(userStatus.getCurrentStatus()))
+                .count();
+    }
+
+    private double calculateAttendanceRate(Event event) {
+        if (event.getNumberRegistered() == 0) {
+            return 0.0;
+        }
+
+        double attendanceRate = (double) getTotalAttendees(event) / event.getNumberRegistered() * 100;
+        BigDecimal roundedRate = new BigDecimal(attendanceRate).setScale(2, RoundingMode.HALF_UP);
+        return roundedRate.doubleValue();
     }
 }
 
