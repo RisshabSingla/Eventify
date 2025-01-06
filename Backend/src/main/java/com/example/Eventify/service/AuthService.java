@@ -52,7 +52,9 @@ public class AuthService {
                 .setName(input.getName())
                 .setEmail(input.getEmail())
                 .setRole(input.getRole())
-                .setPassword(passwordEncoder.encode(input.getPassword()));
+                .setPassword(passwordEncoder.encode(input.getPassword()))
+                .setLastLogin(String.valueOf(new Date()))
+                .setRegisteredDate(String.valueOf(new Date()));
 
         Notification notification = new Notification()
                 .setDescription("Account Created: " + user.getName())
@@ -75,7 +77,7 @@ public class AuthService {
         try {
             emailService.sendEmail(user.getEmail(), subject, text);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
 
         return savedUser;
@@ -123,6 +125,9 @@ public class AuthService {
             if (userOptional.isEmpty()) {
                 throw new RuntimeException("User not found with email: " + input.getEmail());
             }
+
+            userOptional.get().setLastLogin(String.valueOf(new Date()));
+            userRepository.save(userOptional.get());
 
             return userOptional.get();
 

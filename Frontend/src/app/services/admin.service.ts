@@ -127,7 +127,17 @@ export class AdminService {
   }
 
   getReportsData(): Observable<EventReport> {
-    return of(ADMIN_DASHBOARD_REPORTS_DATA);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<EventReport>(
+      `${this.apiEndpoint}events/getAdminReportsPageDetails`,
+      { headers }
+    );
+
+    // return of(ADMIN_DASHBOARD_REPORTS_DATA);
   }
 
   getUserDetails(): Observable<UserDetail> {

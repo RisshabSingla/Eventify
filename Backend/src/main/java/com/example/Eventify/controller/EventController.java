@@ -372,4 +372,15 @@ public class EventController {
         }
     }
 
+    @GetMapping("getAdminReportsPageDetails")
+    public ResponseEntity<AdminEventReportPageResponse> getAdminReportsPageDetails() {
+        try {
+            AdminEventReportPageResponse res  = eventService.getAdminReportsPageData();
+            return ResponseEntity.ok(res);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

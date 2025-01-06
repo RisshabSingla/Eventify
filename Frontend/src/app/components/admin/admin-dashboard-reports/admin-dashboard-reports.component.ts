@@ -5,6 +5,8 @@ import {
 } from '../../../model/admin/Event_Reports';
 import { Event } from '../../../model/admin/Event';
 import { AdminService } from '../../../services/admin.service';
+import { Observable } from 'rxjs';
+import { ExportService } from '../../../services/export.service';
 
 @Component({
   selector: 'app-admin-dashboard-reports',
@@ -15,7 +17,10 @@ export class AdminDashboardReportsComponent implements OnInit {
   metrics!: reportsMetrics;
   events: Event[] = [];
 
-  constructor(private adminService: AdminService) {}
+  constructor(
+    private adminService: AdminService,
+    private exportService: ExportService
+  ) {}
 
   ngOnInit(): void {
     this.adminService.getReportsData().subscribe((data: EventReport) => {
@@ -27,19 +32,50 @@ export class AdminDashboardReportsComponent implements OnInit {
   downloadReport(type: string) {
     switch (type) {
       case 'mostPopularEvents':
-        alert('Downloading Most Popular Events Report...');
+        this.downloadFile(
+          this.exportService.downloadMostPopularEvents(),
+          'most_popular_events.xlsx'
+        );
         break;
       case 'upcomingEvents':
-        alert('Downloading Upcoming Events Summary...');
+        this.downloadFile(
+          this.exportService.downloadUpcomingEvents(),
+          'upcoming_events.xlsx'
+        );
         break;
       case 'activeUsers':
-        alert('Downloading Active Users Report...');
+        this.downloadFile(
+          this.exportService.downloadActiveUsers(),
+          'active_users.xlsx'
+        );
         break;
       case 'newRegistrations':
-        alert('Downloading New Registrations Report...');
+        this.downloadFile(
+          this.exportService.downloadNewRegistrations(),
+          'new_registrations.xlsx'
+        );
         break;
       default:
         console.error('Invalid report type');
     }
+  }
+
+  private downloadFile(observable: Observable<Blob>, fileName: string) {
+    observable.subscribe(
+      (data: Blob) => {
+        const blob = new Blob([data], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error downloading file', error);
+      }
+    );
   }
 }

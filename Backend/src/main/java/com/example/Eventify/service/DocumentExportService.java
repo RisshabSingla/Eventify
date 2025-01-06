@@ -1,9 +1,12 @@
 package com.example.Eventify.service;
 
+import com.example.Eventify.model.Event;
+import com.example.Eventify.model.User;
 import com.example.Eventify.model.UserStatus;
 import com.example.Eventify.response.EventAttendanceExportResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -15,6 +18,12 @@ import java.util.TimeZone;
 
 @Service
 public class DocumentExportService {
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private UserService userService;
 
     public byte[] generateAttendanceExcelforEvents(List<EventAttendanceExportResponse.EventAttendanceData> events) throws IOException {
         try (XSSFWorkbook workbook = new XSSFWorkbook()) {
@@ -110,4 +119,99 @@ public class DocumentExportService {
         }
     }
 
+
+    public byte[] generateMostPopularEventsExcel() {
+        List<Event> mostPopularEvents = eventService.getMostPopularEvents(); // Replace with appropriate method
+        return createExcelFromEvents("Most Popular Events", mostPopularEvents);
+    }
+
+    public byte[] generateUpcomingEventsExcel() {
+        List<Event> upcomingEvents = eventService.getUpcomingEvents(); // Replace with appropriate method
+        return createExcelFromEvents("Upcoming Events", upcomingEvents);
+    }
+
+    public byte[] generateActiveUsersExcel() {
+        List<User> activeUsers = userService.getActiveUsers(); // Replace with appropriate method
+        return createExcelFromUsers("Active Users", activeUsers);
+    }
+
+    public byte[] generateNewRegistrationsExcel() {
+        List<User> newRegistrations = userService.getNewRegistrations(); // Replace with appropriate method
+        return createExcelFromUsers("New Registrations", newRegistrations);
+    }
+
+    private byte[] createExcelFromEvents(String sheetName, List<Event> events) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(sheetName);
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Event Name", "Date", "Description", "Location"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Populate rows with event data
+        int rowIndex = 1;
+        for (Event event : events) {
+            Row row = sheet.createRow(rowIndex++);
+            row.createCell(0).setCellValue(event.getName());
+            row.createCell(1).setCellValue(event.getDate());
+            row.createCell(2).setCellValue(event.getDescription());
+            row.createCell(3).setCellValue(event.getLocation());
+        }
+
+        return writeWorkbookToByteArray(workbook);
+    }
+
+    private byte[] createExcelFromUsers(String sheetName, List<User> users) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(sheetName);
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {"Id","Email", "Name", "Phone Number"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            headerStyle.setFont(font);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Populate rows with user data
+        int rowIndex = 1;
+        for (User user : users) {
+            Row row = sheet.createRow(rowIndex++);
+            row.createCell(0).setCellValue(user.getId());
+            row.createCell(1).setCellValue(user.getEmail());
+            row.createCell(2).setCellValue(user.getName());
+            row.createCell(3).setCellValue(user.getPhoneNumber());
+        }
+
+        return writeWorkbookToByteArray(workbook);
+    }
+
+    private byte[] writeWorkbookToByteArray(Workbook workbook) {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 0; i < sheet.getRow(0).getPhysicalNumberOfCells(); i++) {
+                sheet.autoSizeColumn(i);
+            }
+            workbook.write(outputStream);
+            workbook.close();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Error generating Excel file", e);
+        }
+    }
 }

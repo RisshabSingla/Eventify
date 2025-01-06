@@ -989,5 +989,66 @@ public class EventService {
         }
         return metrics;
     }
+
+
+    public AdminEventReportPageResponse getAdminReportsPageData() {
+        List<Event> events = Optional.of(eventRepository.findAll()).orElse(Collections.emptyList());
+
+        int totalEvents = events.size();
+        int totalFeedback = Math.toIntExact(Optional.of(feedbackRepository.count()).orElse(0L));
+        int totalRegistrations = Math.toIntExact(Optional.of(userStatusRepository.count()).orElse(0L));
+
+        List<AdminEventReportPageResponse.EventDTO> eventDTOs = events.stream()
+                .filter(Objects::nonNull) // Ensure no null events are processed
+                .map(event -> new AdminEventReportPageResponse.EventDTO()
+                        .setId(event.getId())
+                        .setName(event.getName())
+                        .setDate(event.getDate())
+                        .setDescription(event.getDescription()))
+                .collect(Collectors.toList());
+
+        AdminEventReportPageResponse.ReportsMetrics metrics = new AdminEventReportPageResponse.ReportsMetrics()
+                .setTotalEvents(totalEvents)
+                .setTotalFeedback(totalFeedback)
+                .setTotalRegistrations(totalRegistrations);
+
+        return new AdminEventReportPageResponse()
+                .setMetrics(metrics)
+                .setEvents(eventDTOs);
+    }
+
+
+    public List<Event> getMostPopularEvents() {
+        // Fetch the most popular events based on a popularity metric (e.g., registrations)
+        return eventRepository.findAll().stream()
+                .sorted((e1, e2) -> Integer.compare(e2.getNumberRegistered(), e1.getNumberRegistered())) // Sort by number of registrations in descending order
+                .limit(10) // Limit to top 10 most popular events
+                .collect(Collectors.toList());
+    }
+
+    public List<Event> getUpcomingEvents() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust this pattern to match your date format
+
+        return eventRepository.findAll().stream()
+                .filter(event -> {
+                    try {
+                        LocalDate eventDate = LocalDate.parse(event.getDate(), formatter);
+                        return eventDate.isAfter(LocalDate.now());
+                    } catch (Exception e) {
+                        // Handle parsing exceptions gracefully
+                        return false;
+                    }
+                })
+                .sorted((e1, e2) -> {
+                    try {
+                        LocalDate date1 = LocalDate.parse(e1.getDate(), formatter);
+                        LocalDate date2 = LocalDate.parse(e2.getDate(), formatter);
+                        return date1.compareTo(date2);
+                    } catch (Exception e) {
+                        return 0; // Handle parsing exceptions by treating the dates as equal
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }
 

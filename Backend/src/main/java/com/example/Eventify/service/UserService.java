@@ -9,8 +9,11 @@ import com.example.Eventify.response.UserDashboardItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -81,5 +84,41 @@ public class UserService {
                 .setUserName(userName)
                 .setUserEmail(userEmail)
                 .setPhoneNumber(userPhone);
+    }
+
+
+    public List<User> getActiveUsers() {
+        // Define the date format used in your user dates
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust this pattern to match your date format
+
+        // Fetch active users based on specific criteria (e.g., users who have attended an event or logged in recently)
+        return userRepository.findAll().stream()
+                .filter(user -> {
+                    try {
+                        LocalDate lastLoginDate = LocalDate.parse(user.getLastLogin(), formatter);
+                        return lastLoginDate.isAfter(LocalDate.now().minusDays(30)); // Users active in the last 30 days
+                    } catch (Exception e) {
+                        // Handle parsing exceptions (e.g., invalid date format) gracefully
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getNewRegistrations() {
+        // Define the date format used in your user dates
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // Adjust this pattern to match your date format
+
+        // Fetch users who registered within the past month
+        return userRepository.findAll().stream()
+                .filter(user -> {
+                    try {
+                        LocalDate registeredDate = LocalDate.parse(user.getRegisteredDate(), formatter);
+                        return registeredDate.isAfter(LocalDate.now().minusDays(30)); // Users registered in the last 30 days
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

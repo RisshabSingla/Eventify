@@ -31,6 +31,7 @@ public class User implements UserDetails {
     private String profileImage;
     private String phoneNumber;
     private String lastLogin;
+    private String registeredDate;
 
     @DBRef(lazy = true)
     private List<Event> registeredEvents;  // Reference to Event class

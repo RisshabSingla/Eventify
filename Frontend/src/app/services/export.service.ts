@@ -37,4 +37,48 @@ export class ExportService {
       }
     );
   }
+
+  downloadMostPopularEvents(): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiEndpoint}export/exportMostPopularEvents`, {
+      headers: headers,
+      responseType: 'blob',
+    });
+  }
+
+  downloadUpcomingEvents(): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiEndpoint}export/exportUpcomingEvents`, {
+      headers: headers,
+      responseType: 'blob',
+    });
+  }
+
+  downloadActiveUsers(): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiEndpoint}export/exportActiveUsers`, {
+      headers: headers,
+      responseType: 'blob',
+    });
+  }
+
+  downloadNewRegistrations(): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+    return this.http.get(`${this.apiEndpoint}export/exportNewRegistrations`, {
+      headers: headers,
+      responseType: 'blob',
+    });
+  }
 }

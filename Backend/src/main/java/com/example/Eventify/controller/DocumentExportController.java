@@ -45,11 +45,11 @@ public class DocumentExportController {
             byte[] excelData = documentExportService.generateAttendanceExcelforEvents(events);
 
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attendance.xlsx")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=allEventsAttendance.xlsx")
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(excelData);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -67,9 +67,67 @@ public class DocumentExportController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(excelData);
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/exportMostPopularEvents")
+    public ResponseEntity<byte[]> exportMostPopularEvents() {
+        try {
+            byte[] excelData = documentExportService.generateMostPopularEventsExcel();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=most_popular_events.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(excelData);
+        } catch (Exception e) {
+            System.err.println("Error exporting most popular events: " + e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/exportUpcomingEvents")
+    public ResponseEntity<byte[]> exportUpcomingEvents() {
+        try {
+            byte[] excelData = documentExportService.generateUpcomingEventsExcel();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=upcoming_events.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(excelData);
+        } catch (Exception e) {
+            System.err.println("Error exporting upcoming events: " + e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/exportActiveUsers")
+    public ResponseEntity<byte[]> exportActiveUsers() {
+        try {
+            byte[] excelData = documentExportService.generateActiveUsersExcel();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=active_users.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(excelData);
+        } catch (Exception e) {
+            System.err.println("Error exporting active users: " + e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/exportNewRegistrations")
+    public ResponseEntity<byte[]> exportNewRegistrations() {
+        try {
+            byte[] excelData = documentExportService.generateNewRegistrationsExcel();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=new_registrations.xlsx")
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(excelData);
+        } catch (Exception e) {
+            System.err.println("Error exporting new registrations: " + e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
 }
 
