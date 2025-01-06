@@ -3,7 +3,9 @@ package com.example.Eventify.service;
 import com.example.Eventify.model.Event;
 import com.example.Eventify.model.Feedback;
 import com.example.Eventify.model.User;
+import com.example.Eventify.model.UserStatus;
 import com.example.Eventify.repository.UserRepository;
+import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.UserDetailsUpdateRequest;
 import com.example.Eventify.response.UserDashboardItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserStatusRepository userStatusRepository;
+
     public UserDashboardItemsResponse getUserDashboardDetails(User currentUser) {
 
         String profileImage = (currentUser.getProfileImage() != null) ? currentUser.getProfileImage() : "default-profile-image.png";
@@ -34,9 +39,21 @@ public class UserService {
 
         List<Feedback> feedbacksGiven = (currentUser.getFeedbacksGiven() != null) ? currentUser.getFeedbacksGiven() : new ArrayList<>();
         int feedbackGivenCount = feedbacksGiven.size();
-
         int upcomingEventsCount = 0;
         int eventsAttendedCount = 0;
+        LocalDate currentDate = LocalDate.now();
+
+        for (Event event : registeredEvents) {
+            LocalDate eventDate = LocalDate.parse(event.getDate());
+            if (eventDate.isAfter(currentDate)) {
+                upcomingEventsCount++;
+            }
+
+            UserStatus userStatus = userStatusRepository.findByEventIdAndUserId(event.getId(), currentUser.getId());
+            if (userStatus != null && "Present".equals(userStatus.getCurrentStatus())) {
+                eventsAttendedCount++;
+            }
+        }
 
         return new UserDashboardItemsResponse()
                 .setUserDetails(new UserDashboardItemsResponse.UserDetail()
