@@ -31,19 +31,11 @@ export class EventService {
   constructor(private http: HttpClient) {}
 
   getAllEvents(): Observable<EventDetails[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.token}`,
-    });
-
     return this.http.get<EventDetails[]>(
-      `${this.apiEndpoint}events/exploreEvents`,
-      {
-        headers,
-      }
+      `${this.apiEndpoint}events/exploreEvents`
     );
 
-    return of(DUMMY_EVENTS_DATA);
+    // return of(DUMMY_EVENTS_DATA);
   }
 
   getEventAnalyticsData(id: string): Observable<EventAnalytic> {
