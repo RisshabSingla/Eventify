@@ -2,6 +2,7 @@ package com.example.Eventify.controller;
 
 import com.example.Eventify.model.User;
 import com.example.Eventify.request.UserDetailsUpdateRequest;
+import com.example.Eventify.response.AdminDashboardItemsResponse;
 import com.example.Eventify.response.UserDashboardItemsResponse;
 import com.example.Eventify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,24 @@ public class UserController {
         User currentUser = (User) authentication.getPrincipal();
 
             return ResponseEntity.ok(userService.getUserDetails(currentUser));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+
+    @GetMapping("getAdminDashboardDetails")
+    public ResponseEntity<AdminDashboardItemsResponse> getAdminDashboardDetails() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                System.out.println("User not authenticated");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+
+            User currentUser = (User) authentication.getPrincipal();
+            return ResponseEntity.ok(userService.getAdminDashboardData());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(null);

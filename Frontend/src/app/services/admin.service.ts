@@ -41,7 +41,19 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   getDashboardItems(): Observable<Items> {
-    return of(ADMIN_DASHBOARD_DATA);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token}`,
+    });
+
+    return this.http.get<Items>(
+      `${this.apiEndpoint}users/getAdminDashboardDetails`,
+      {
+        headers,
+      }
+    );
+
+    // return of(ADMIN_DASHBOARD_DATA);
   }
 
   getEventNames(): Observable<Admin_Event_Details[]> {

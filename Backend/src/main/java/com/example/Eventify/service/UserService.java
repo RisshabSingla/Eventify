@@ -1,17 +1,18 @@
 package com.example.Eventify.service;
 
-import com.example.Eventify.model.Event;
-import com.example.Eventify.model.Feedback;
-import com.example.Eventify.model.User;
-import com.example.Eventify.model.UserStatus;
+import com.example.Eventify.model.*;
+import com.example.Eventify.repository.EventRepository;
+import com.example.Eventify.repository.NotificationRepository;
 import com.example.Eventify.repository.UserRepository;
 import com.example.Eventify.repository.UserStatusRepository;
 import com.example.Eventify.request.UserDetailsUpdateRequest;
+import com.example.Eventify.response.AdminDashboardItemsResponse;
 import com.example.Eventify.response.UserDashboardItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,12 @@ public class UserService {
 
     @Autowired
     UserStatusRepository userStatusRepository;
+
+    @Autowired
+    EventRepository eventRepository;
+
+    @Autowired
+    NotificationRepository notificationRepository;
 
     public UserDashboardItemsResponse getUserDashboardDetails(User currentUser) {
 
@@ -137,5 +144,69 @@ public class UserService {
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    public AdminDashboardItemsResponse getAdminDashboardData() {
+        long totalUsers = userRepository.count();
+        long totalEvents = eventRepository.count();
+
+        String todayDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
+        List<Notification> registrationsTodayList = notificationRepository.findByTypeAndTimeStampStartingWith("User Registration", todayDate);
+        long registrationsToday = registrationsTodayList.size();
+        List<AdminDashboardItemsResponse.Metric> metrics = List.of(
+                new AdminDashboardItemsResponse.Metric("Total Users", totalUsers),
+                new AdminDashboardItemsResponse.Metric("Total Events", totalEvents),
+                new AdminDashboardItemsResponse.Metric("Registrations Today", registrationsToday)
+        );
+
+        List<Event> events = eventRepository.findAll();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(events);
+
+        List<AdminDashboardItemsResponse.Event> upcomingEvents = events.stream()
+                .filter(event -> {
+                    try {
+                        LocalDate eventDate = LocalDate.parse(event.getDate(), formatter);
+                        LocalDateTime eventDateTime = eventDate.atStartOfDay();
+                        return eventDateTime.isAfter(now);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        return false;
+                    }
+                }).sorted((e1, e2) -> {
+                    try {
+                        LocalDateTime dateTime1 = LocalDate.parse(e1.getDate(), formatter).atStartOfDay();
+                        LocalDateTime dateTime2 = LocalDate.parse(e2.getDate(), formatter).atStartOfDay();
+                        return dateTime1.compareTo(dateTime2); // Sort by ascending date
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        return 0;
+                    }
+                })             .map(event -> new AdminDashboardItemsResponse.Event()
+                        .setId(event.getId())
+                        .setName(event.getName())
+                        .setDate(event.getDate())
+                        .setTime(event.getTime())
+                )
+                .limit(10)
+                .collect(Collectors.toList());
+
+        List<Notification> notifications = notificationRepository.findTop10ByOrderByTimeStampDesc();
+
+        List<AdminDashboardItemsResponse.Activity> recentActivities = notifications.stream()
+                .map(notification -> new AdminDashboardItemsResponse.Activity()
+                        .setDescription(notification.getType())
+                        .setDetail(notification.getDescription())
+                        .setTimestamp(String.valueOf(notification.getTimeStamp())))
+                .collect(Collectors.toList());
+
+        return new AdminDashboardItemsResponse()
+                .setMetrics(metrics)
+                .setUpcomingEvents(upcomingEvents)
+                .setRecentActivities(recentActivities);
     }
 }
