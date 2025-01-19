@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  apiEndpoint = `http://localhost:8080/`;
+  apiEndpoint = environment.apiEndpoint;
   currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   token = this.currentUser.token;
 

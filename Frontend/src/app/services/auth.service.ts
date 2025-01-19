@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class AuthService {
       role: 'user',
     },
   ];
-  private apiUrl = 'http://localhost:8080/';
+  apiEndpoint = environment.apiEndpoint;
 
   private currentUser!: {
     role: String;
@@ -42,7 +43,7 @@ export class AuthService {
   login(email: string, password: string): Observable<boolean> {
     const payload = { email, password };
     console.log(payload);
-    return this.http.post<any>(`${this.apiUrl}auth/login`, payload).pipe(
+    return this.http.post<any>(`${this.apiEndpoint}auth/login`, payload).pipe(
       tap((user) => {
         console.log(user);
         this.currentUser = user;
@@ -65,7 +66,7 @@ export class AuthService {
   ): Observable<string> {
     const payload = { name, email, password, role };
 
-    return this.http.post<any>(`${this.apiUrl}auth/signup`, payload).pipe(
+    return this.http.post<any>(`${this.apiEndpoint}auth/signup`, payload).pipe(
       tap((response) => {
         console.log('User registered successfully:', response);
         this.currentUser = {

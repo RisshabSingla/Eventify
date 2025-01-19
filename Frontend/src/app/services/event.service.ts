@@ -19,12 +19,13 @@ import { EventEdit } from '../model/event/EventEdit';
 import { EventFeedbackData } from '../model/event/EventFeedback';
 import { EventReports } from '../model/event/EventReport';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  apiEndpoint = `http://localhost:8080/`;
+  apiEndpoint = environment.apiEndpoint;
   currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   token = this.currentUser.token;
 
@@ -53,7 +54,7 @@ export class EventService {
       }
     );
 
-    return of(EVENT_ANALYTIC_DATA);
+    // return of(EVENT_ANALYTIC_DATA);
   }
 
   getEventAttendanceData(id: string): Observable<EventAttendanceData> {

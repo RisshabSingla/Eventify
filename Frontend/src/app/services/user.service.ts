@@ -13,12 +13,13 @@ import { EventQRCode } from '../model/user/QRCode';
 import { EventGiveFeedback } from '../model/user/giveFeedback';
 import { UserFeedback } from '../model/user/viewFeedback';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  apiEndpoint = `http://localhost:8080/`;
+  apiEndpoint = environment.apiEndpoint;
   currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   token = this.currentUser.token;
 

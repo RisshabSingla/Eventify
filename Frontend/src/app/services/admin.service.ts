@@ -30,12 +30,13 @@ import { Event } from '../model/admin/Event';
 import { UserDetail } from '../model/user/Items';
 import { EventReport } from '../model/admin/Event_Reports';
 import { Admin_Event_Details } from '../model/admin/Admin_Event_Details';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  apiEndpoint = `http://localhost:8080/`;
+  apiEndpoint = environment.apiEndpoint;
   currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   token = this.currentUser.token;
   constructor(private http: HttpClient) {}

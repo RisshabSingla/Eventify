@@ -4,12 +4,13 @@ import { adminFeedbackView } from '../model/feedback/adminFeedbackView';
 import { EVENT_GIVE_FEEDBACK, USER_FEEDBACK } from './dummy_data';
 import { EventGiveFeedbackData } from '../model/event/EventGiveFeedback';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeedbackService {
-  apiEndpoint = `http://localhost:8080/`;
+  apiEndpoint = environment.apiEndpoint;
   currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
   token = this.currentUser.token;
   constructor(private http: HttpClient) {}
